@@ -4,7 +4,7 @@ import org.gradle.api.Project
 
 object Utils {
 	fun parseReadme(project: Project): String {
-		val linkRegex = "!\\[([A-z_ ]+)]\\((assets\\/[A-z.\\/_]+)\\)"
+		val linkRegex = "!\\[(.+?)]\\((assets\\/[A-z.\\/_]+)\\)"
 
 		var readme = project.rootProject.file("README.md").readText()
 		val lines = readme.split("\n").toMutableList()
