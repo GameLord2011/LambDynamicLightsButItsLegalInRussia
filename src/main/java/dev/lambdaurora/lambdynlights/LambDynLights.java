@@ -12,6 +12,7 @@ package dev.lambdaurora.lambdynlights;
 import dev.lambdaurora.lambdynlights.accessor.WorldRendererAccessor;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsContext;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsInitializer;
+import dev.lambdaurora.lambdynlights.api.behavior.DynamicLightBehavior;
 import dev.lambdaurora.lambdynlights.api.behavior.DynamicLightBehaviorManager;
 import dev.lambdaurora.lambdynlights.api.entity.EntityLightSourceManager;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
@@ -67,7 +68,7 @@ import java.util.function.Predicate;
  * Represents the LambDynamicLights mod.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.0.1
  * @since 1.0.0
  */
 @ApiStatus.Internal
@@ -149,7 +150,9 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 					var lightSource = it.next();
 
 					// In case of light sources controlled by a DynamicLightBehavior, they might require polling to be removed.
-					if (lightSource instanceof DeferredDynamicLightSource(var behavior)) {
+					if (lightSource instanceof DeferredDynamicLightSource deferred) {
+						DynamicLightBehavior behavior = deferred.behavior();
+
 						if (behavior.isRemoved()) {
 							this.toClear.add(lightSource);
 							it.remove();

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
  * Represents the dynamic lighting behavior manager implementation.
  *
  * @author LambdAurora, Akarys
- * @version 4.0.0
+ * @version 4.0.1
  * @since 4.0.0
  */
 public final class DynamicLightBehaviorSources implements DynamicLightBehaviorManager {
@@ -38,8 +38,6 @@ public final class DynamicLightBehaviorSources implements DynamicLightBehaviorMa
 	public boolean remove(DynamicLightBehavior source) {
 		if (source == null) return false;
 
-		return this.mod.removeLightSources(other -> other instanceof DeferredDynamicLightSource(DynamicLightBehavior otherBehavior)
-				&& otherBehavior == source
-		);
+		return this.mod.removeLightSources(other -> other instanceof DeferredDynamicLightSource deferred && deferred.behavior() == source);
 	}
 }

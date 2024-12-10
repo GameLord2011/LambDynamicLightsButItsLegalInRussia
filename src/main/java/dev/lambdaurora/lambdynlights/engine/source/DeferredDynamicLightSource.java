@@ -25,10 +25,22 @@ import java.util.stream.Stream;
  * Represents a dynamic light source which is deferred to a {@link DynamicLightBehavior}.
  *
  * @author LambdAurora, Akarys
- * @version 4.0.0
+ * @version 4.0.1
  * @since 4.0.0
  */
-public record DeferredDynamicLightSource(DynamicLightBehavior behavior) implements DynamicLightSource {
+public final class DeferredDynamicLightSource implements DynamicLightSource {
+	private final DynamicLightBehavior behavior;
+	private DynamicLightBehavior.BoundingBox previousBoundingBox;
+
+	public DeferredDynamicLightSource(DynamicLightBehavior behavior) {
+		this.behavior = behavior;
+		this.previousBoundingBox = null;
+	}
+
+	public DynamicLightBehavior behavior() {
+		return this.behavior;
+	}
+
 	@Override
 	public Stream<SpatialLookupEntry> splitIntoDynamicLightEntries() {
 		DynamicLightBehavior.BoundingBox boundingBox = this.behavior.getBoundingBox();
@@ -60,6 +72,17 @@ public record DeferredDynamicLightSource(DynamicLightBehavior behavior) implemen
 
 		var chunks = new LongOpenHashSet();
 
+		addBoundingBoxToChunksSet(chunks, boundingBox);
+		if (this.previousBoundingBox != null) {
+			addBoundingBoxToChunksSet(chunks, this.previousBoundingBox);
+		}
+
+		this.previousBoundingBox = boundingBox;
+
+		return chunks;
+	}
+
+	private static void addBoundingBoxToChunksSet(LongSet set, DynamicLightBehavior.BoundingBox boundingBox) {
 		int chunkStartX = getStartChunk(boundingBox.startX());
 		int chunkStartY = getStartChunk(boundingBox.startY());
 		int chunkStartZ = getStartChunk(boundingBox.startZ());
@@ -70,12 +93,10 @@ public record DeferredDynamicLightSource(DynamicLightBehavior behavior) implemen
 		for (int x = chunkStartX; x <= chunkEndX; x++) {
 			for (int y = chunkStartY; y <= chunkEndY; y++) {
 				for (int z = chunkStartZ; z <= chunkEndZ; z++) {
-					chunks.add(ChunkSectionPos.asLong(x, y, z));
+					set.add(ChunkSectionPos.asLong(x, y, z));
 				}
 			}
 		}
-
-		return chunks;
 	}
 
 	private static int getStartChunk(int blockPos) {

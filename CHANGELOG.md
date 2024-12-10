@@ -280,6 +280,7 @@
 
 - Added Malay and Malay (Jawi) translations ([#256](https://github.com/LambdAurora/LambDynamicLights/pull/256)).
 - Fixed Upside-down English translations ([#257](https://github.com/LambdAurora/LambDynamicLights/pull/257)).
+- Fixed custom dynamic light sources sometimes not updating previously lit chunks.
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"

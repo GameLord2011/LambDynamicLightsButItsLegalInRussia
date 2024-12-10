@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Range;
  * Each dynamic lighting behavior have a way to give a light level at a given position, a bounding box, and a way to check for changes.
  *
  * @author LambdAurora, Akarys
- * @version 4.0.0
+ * @version 4.0.1
  * @since 4.0.0
  */
 public interface DynamicLightBehavior {
@@ -38,7 +38,7 @@ public interface DynamicLightBehavior {
 	 * 	double dz = pos.getZ() - this.z + 0.5;
 	 *
 	 * 	double distanceSquared = dx * dx + dy * dy + dz * dz;
-	 * 	return luminance - Math.sqrt(distanceSquared) * falloffRatio;
+	 * 	return Math.max(luminance - Math.sqrt(distanceSquared) * falloffRatio, 0.0);
 	 * }
 	 * </code></pre>
 	 *
@@ -81,15 +81,15 @@ public interface DynamicLightBehavior {
 
 	/**
 	 * Represents the bounding box of a dynamic lighting behavior.
+	 *
+	 * @param startX the starting X-coordinate of this bounding box
+	 * @param startY the starting Y-coordinate of this bounding box
+	 * @param startZ the starting Z-coordinate of this bounding box
+	 * @param endX the ending X-coordinate of this bounding box
+	 * @param endY the ending Y-coordinate of this bounding box
+	 * @param endZ the ending Z-coordinate of this bounding box
 	 */
-	class BoundingBox {
-		int startX;
-		int startY;
-		int startZ;
-		int endX;
-		int endY;
-		int endZ;
-
+	record BoundingBox(int startX, int startY, int startZ, int endX, int endY, int endZ) {
 		public BoundingBox(
 				int startX,
 				int startY,
@@ -104,48 +104,6 @@ public interface DynamicLightBehavior {
 			this.endX = Math.max(startX, endX);
 			this.endY = Math.max(startY, endY);
 			this.endZ = Math.max(startZ, endZ);
-		}
-
-		/**
-		 * {@return the starting X-coordinate of this bounding box}
-		 */
-		public int startX() {
-			return this.startX;
-		}
-
-		/**
-		 * {@return the starting Y-coordinate of this bounding box}
-		 */
-		public int startY() {
-			return this.startY;
-		}
-
-		/**
-		 * {@return the starting Z-coordinate of this bounding box}
-		 */
-		public int startZ() {
-			return this.startZ;
-		}
-
-		/**
-		 * {@return the ending X-coordinate of this bounding box}
-		 */
-		public int endX() {
-			return this.endX;
-		}
-
-		/**
-		 * {@return the ending Y-coordinate of this bounding box}
-		 */
-		public int endY() {
-			return this.endY;
-		}
-
-		/**
-		 * {@return the ending Z-coordinate of this bounding box}
-		 */
-		public int endZ() {
-			return this.endZ;
 		}
 	}
 }
