@@ -276,6 +276,11 @@
 - Updated Italian translations ([#255](https://github.com/LambdAurora/LambDynamicLights/pull/255)).
 - Updated [SpruceUI].
 
+### 4.0.1
+
+- Added Malay and Malay (Jawi) translations ([#256](https://github.com/LambdAurora/LambDynamicLights/pull/256)).
+- Fixed Upside-down English translations ([#257](https://github.com/LambdAurora/LambDynamicLights/pull/257)).
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Sodium]: https://modrinth.com/mod/sodium "Sodium Modrinth page"
