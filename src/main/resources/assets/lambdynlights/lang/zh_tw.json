@@ -22,7 +22,7 @@
     "lambdynlights.option.light_sources.block_entities": "方塊實體",
     "lambdynlights.option.light_sources.entities": "實體",
     "lambdynlights.option.light_sources.guardian_laser": "深海守衛雷射光",
-    "lambdynlights.option.light_sources.guardian_laser.tooltip": "啟用深海守衛發射的雷射光動態光源。",
+    "lambdynlights.option.light_sources.guardian_laser.tooltip": "啟用深海守衛發射雷射光的動態光源。",
     "lambdynlights.option.light_sources.self": "第一人稱",
     "lambdynlights.option.light_sources.water_sensitive_check": "水敏感度檢查",
     "lambdynlights.option.mode": "動態光源",
