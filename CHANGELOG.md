@@ -282,6 +282,11 @@
 - Fixed Upside-down English translations ([#257](https://github.com/LambdAurora/LambDynamicLights/pull/257)).
 - Fixed custom dynamic light sources sometimes not updating previously lit chunks.
 
+### 4.0.2
+
+- Updated Traditional Chinese translations ([#261](https://github.com/LambdAurora/LambDynamicLights/pull/261)).
+- Updated Turkish translations ([#263](https://github.com/LambdAurora/LambDynamicLights/pull/263)).
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Sodium]: https://modrinth.com/mod/sodium "Sodium Modrinth page"
