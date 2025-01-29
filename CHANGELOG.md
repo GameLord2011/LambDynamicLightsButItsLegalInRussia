@@ -282,8 +282,11 @@
 - Fixed Upside-down English translations ([#257](https://github.com/LambdAurora/LambDynamicLights/pull/257)).
 - Fixed custom dynamic light sources sometimes not updating previously lit chunks.
 
-### 4.0.2
+### 4.1.0
 
+- Updated to Minecraft 1.21.5.
+- Added dynamic lighting to Firefly particles.
+- Added support for entity component predicates.
 - Updated Traditional Chinese translations ([#261](https://github.com/LambdAurora/LambDynamicLights/pull/261)).
 - Updated Turkish translations ([#263](https://github.com/LambdAurora/LambDynamicLights/pull/263)).
 

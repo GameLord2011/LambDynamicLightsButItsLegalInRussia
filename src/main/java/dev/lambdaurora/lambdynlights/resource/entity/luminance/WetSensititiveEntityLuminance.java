@@ -52,7 +52,7 @@ public record WetSensititiveEntityLuminance(
 
 	@Override
 	public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Entity entity) {
-		boolean submergedInWater = entity.isInWaterRainOrBubble();
+		boolean submergedInWater = entity.isInWaterOrRain();
 		boolean shouldCareAboutWater = LambDynLights.get().config.getWaterSensitiveCheck().get();
 
 		if (submergedInWater && (shouldCareAboutWater || this.dry.isEmpty())) {

@@ -31,7 +31,7 @@ import java.util.stream.Stream;
  * @param includeRain {@code true} if the wetness check should include rain, or {@code false} otherwise
  * @param always let the item be always considered dry or wet if present
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.1.0
  * @since 4.0.0
  */
 public record ItemDerivedEntityLuminance(ItemStack item, boolean includeRain, Optional<Always> always) implements EntityLuminance {
@@ -53,7 +53,7 @@ public record ItemDerivedEntityLuminance(ItemStack item, boolean includeRain, Op
 		boolean wet = this.always.map(value -> switch (value) {
 			case DRY -> false;
 			case WET -> true;
-		}).orElseGet(() -> this.includeRain ? entity.isInWaterRainOrBubble() : entity.isSubmergedInWater());
+		}).orElseGet(() -> this.includeRain ? entity.isInWaterOrRain() : entity.isSubmergedInWater());
 
 		return itemLightSourceManager.getLuminance(this.item, wet);
 	}

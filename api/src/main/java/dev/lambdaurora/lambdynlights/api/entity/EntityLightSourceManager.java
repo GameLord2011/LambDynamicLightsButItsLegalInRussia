@@ -28,7 +28,7 @@ import java.util.Optional;
  * which provides the ability to register light sources for entities, and to query their luminance.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.1.0
  * @see EntityLightSource
  * @since 4.0.0
  */
@@ -86,7 +86,10 @@ public interface EntityLightSourceManager {
 		default void register(@NotNull EntityType<?> entityType, @Range(from = 0, to = 15) int luminance) {
 			this.register(new EntityLightSource(
 					new EntityLightSource.EntityPredicate(
-							Optional.of(EntityTypePredicate.of(this.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE), entityType)),
+							Optional.of(EntityTypePredicate.of(
+									this.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE), entityType
+							)),
+							Optional.empty(),
 							Optional.empty(),
 							Optional.empty(),
 							Optional.empty(),
@@ -110,7 +113,10 @@ public interface EntityLightSourceManager {
 		default void register(@NotNull EntityType<?> entityType, EntityLuminance... luminance) {
 			this.register(new EntityLightSource(
 					new EntityLightSource.EntityPredicate(
-							Optional.of(EntityTypePredicate.of(this.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE), entityType)),
+							Optional.of(EntityTypePredicate.of(
+									this.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE), entityType
+							)),
+							Optional.empty(),
 							Optional.empty(),
 							Optional.empty(),
 							Optional.empty(),

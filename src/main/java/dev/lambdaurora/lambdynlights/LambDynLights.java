@@ -49,6 +49,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.io.ResourceType;
 import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -68,7 +69,7 @@ import java.util.function.Predicate;
  * Represents the LambDynamicLights mod.
  *
  * @author LambdAurora
- * @version 4.0.1
+ * @version 4.1.0
  * @since 1.0.0
  */
 @ApiStatus.Internal
@@ -509,9 +510,12 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		boolean submergedInFluid = isEyeSubmergedInFluid(entity);
 		int luminance = 0;
 
-		for (var equipped : entity.getAllSlots()) {
-			if (!equipped.isEmpty())
+		for (var equipmentSlot : EquipmentSlot.VALUES) {
+			var equipped = entity.getItemBySlot(equipmentSlot);
+
+			if (!equipped.isEmpty()) {
 				luminance = Math.max(luminance, INSTANCE.itemLightSources.getLuminance(equipped, submergedInFluid));
+			}
 		}
 
 		if (luminance < 15) {

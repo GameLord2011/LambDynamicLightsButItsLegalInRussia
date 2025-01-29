@@ -15,6 +15,7 @@ import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import dev.lambdaurora.lambdynlights.api.predicate.LightSourceLocationPredicate;
 import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.component.DataComponentExactPredicate;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Range;
 
@@ -27,7 +28,7 @@ import java.util.Optional;
  * @param predicate the predicate to select which entities emit the given luminance
  * @param luminances the luminance sources
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.1.0
  * @since 4.0.0
  */
 public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance> luminances) {
@@ -77,20 +78,28 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 			Optional<EntityEquipmentPredicate> equipment,
 			Optional<EntityPredicate> vehicle,
 			Optional<EntityPredicate> passenger,
-			Optional<SlotsPredicate> slots
+			Optional<SlotsPredicate> slots,
+			Optional<DataComponentExactPredicate> components
 	) {
 		public static final Codec<EntityPredicate> CODEC = Codec.recursive(
 				"EntityPredicate",
 				codec -> RecordCodecBuilder.create(
 						instance -> instance.group(
-										EntityTypePredicate.CODEC.optionalFieldOf("type").forGetter(EntityPredicate::entityType),
-										LightSourceLocationPredicate.CODEC.optionalFieldOf("location").forGetter(EntityPredicate::located),
-										MobEffectsPredicate.CODEC.optionalFieldOf("effects").forGetter(EntityPredicate::effects),
-										EntityFlagsPredicate.CODEC.optionalFieldOf("flags").forGetter(EntityPredicate::flags),
-										EntityEquipmentPredicate.CODEC.optionalFieldOf("equipment").forGetter(EntityPredicate::equipment),
+										EntityTypePredicate.CODEC.optionalFieldOf("type")
+												.forGetter(EntityPredicate::entityType),
+										LightSourceLocationPredicate.CODEC.optionalFieldOf("location")
+												.forGetter(EntityPredicate::located),
+										MobEffectsPredicate.CODEC.optionalFieldOf("effects")
+												.forGetter(EntityPredicate::effects),
+										EntityFlagsPredicate.CODEC.optionalFieldOf("flags")
+												.forGetter(EntityPredicate::flags),
+										EntityEquipmentPredicate.CODEC.optionalFieldOf("equipment")
+												.forGetter(EntityPredicate::equipment),
 										codec.optionalFieldOf("vehicle").forGetter(EntityPredicate::vehicle),
 										codec.optionalFieldOf("passenger").forGetter(EntityPredicate::passenger),
-										SlotsPredicate.CODEC.optionalFieldOf("slots").forGetter(EntityPredicate::slots)
+										SlotsPredicate.CODEC.optionalFieldOf("slots").forGetter(EntityPredicate::slots),
+										DataComponentExactPredicate.CODEC.optionalFieldOf("components")
+												.forGetter(EntityPredicate::components)
 								)
 								.apply(instance, EntityPredicate::new)
 				)
@@ -120,8 +129,10 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 			} else if (this.passenger.isPresent()
 					&& entity.getPassengers().stream().noneMatch(passenger -> this.passenger.get().test(passenger))) {
 				return false;
+			} else if (this.slots.isPresent() && !((SlotsPredicate) this.slots.get()).matches(entity)) {
+				return false;
 			} else {
-				return this.slots.isEmpty() || this.slots.get().matches(entity);
+				return this.components.isEmpty() || !this.components.get().test(entity);
 			}
 		}
 	}

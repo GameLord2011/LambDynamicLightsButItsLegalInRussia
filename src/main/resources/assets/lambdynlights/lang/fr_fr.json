@@ -21,6 +21,8 @@
 	"lambdynlights.option.light_sources.beam.tooltip": "Active la lumière dynamique des faisceaux des balises et des passerelles de l'End. Celles-ci devraient se mettre à jour rarement.",
 	"lambdynlights.option.light_sources.block_entities": "Entités de blocs",
 	"lambdynlights.option.light_sources.entities": "Entités",
+	"lambdynlights.option.light_sources.firefly": "Lucioles",
+	"lambdynlights.option.light_sources.firefly.tooltip": "Active la lumière dynamique venant des particules de lucioles aux alentours des bouissons à lucioles.",
 	"lambdynlights.option.light_sources.guardian_laser": "Laser de gardiens",
 	"lambdynlights.option.light_sources.guardian_laser.tooltip": "Active la lumière dynamique venant des lasers projetés par des gardiens.",
 	"lambdynlights.option.light_sources.self": "Première personne",
