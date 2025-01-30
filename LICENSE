@@ -110,11 +110,11 @@ rights under Section 3 for any and all work made after the Revocation Date.
 The revocation does not retroactively apply.
 3.3.2. The Project Owner may impose any additional clause on their
 authorization within the limits provided in 3.3.1.
-3.3.2. If a Project Owner fails to reply within 60 calendar days upon
+3.3.3. If a Project Owner fails to reply within 60 calendar days upon
 receiving a good-faith written request sent through their primary email,
 an irrevocable authorization from that Project Owner is implicitly granted.
-3.3.2.1. A written request made within 180 calendar days upon receiving a negative
-answer is considered implicitly rejected and does not qualify for 3.3.2.
+3.3.3.1. A written request made within 180 calendar days upon receiving a negative
+answer is considered implicitly rejected and does not qualify for 3.3.3.
 
 
 # 4. Remote network interaction
@@ -136,5 +136,5 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM,
 OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-If case of a conflict between the Section 0 ("Foreword") and any other Section, the latter
+In case of a conflict between the Section 0 ("Foreword") and any other Section, the latter
 Section shall prevail.
