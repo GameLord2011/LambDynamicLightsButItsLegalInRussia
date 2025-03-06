@@ -143,6 +143,9 @@ public interface EntityLuminance {
 		public static final Type MINECART_DISPLAY_BLOCK = registerSimple(
 				"minecart/display_block", MinecartDisplayBlockLuminance.INSTANCE
 		);
+		public static final Type THROWABLE_ITEM = registerSimple(
+				"projectile/throwable_item", ThrowableItemLuminance.INSTANCE
+		);
 
 		public static Type register(@NotNull Identifier id, @NotNull MapCodec<? extends EntityLuminance> codec) {
 			var type = new Type(id, codec);

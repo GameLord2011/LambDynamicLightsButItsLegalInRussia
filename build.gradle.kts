@@ -34,6 +34,8 @@ tasks.generateFmj.configure {
 		.withDepend("spruceui", ">=${libs.versions.spruceui.get()}")
 		.withRecommend("modmenu", ">=${libs.versions.modmenu.get()}")
 		.withBreak("optifabric", "*")
+		.withBreak("sodiumdynamiclights", "*")
+		.withBreak("ryoamiclights", "*")
 
 	fabricApiModules.forEach { module -> fmj.withDepend(module.name, ">=${module.version}") }
 }
@@ -141,10 +143,6 @@ modrinth {
 			tasks.modrinth.get().isEnabled = false
 		}
 	}
-}
-
-tasks.modrinth {
-	dependsOn(tasks.modrinthSyncBody)
 }
 
 tasks.register<TaskPublishCurseForge>("curseforge") {

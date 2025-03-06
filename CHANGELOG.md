@@ -284,6 +284,7 @@
 
 ### 4.0.2
 
+- Fixed throwable item projectiles with the `Item` property set not emitting light if the item emits light ([#265](https://github.com/LambdAurora/LambDynamicLights/issues/265)).
 - Updated Traditional Chinese translations ([#261](https://github.com/LambdAurora/LambDynamicLights/pull/261)).
 - Updated Turkish translations ([#263](https://github.com/LambdAurora/LambDynamicLights/pull/263)).
 
