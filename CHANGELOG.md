@@ -287,6 +287,7 @@
 - Fixed throwable item projectiles with the `Item` property set not emitting light if the item emits light ([#265](https://github.com/LambdAurora/LambDynamicLights/issues/265)).
 - Updated Traditional Chinese translations ([#261](https://github.com/LambdAurora/LambDynamicLights/pull/261)).
 - Updated Turkish translations ([#263](https://github.com/LambdAurora/LambDynamicLights/pull/263)).
+- Updated Simplified Chinese translations ([#264](https://github.com/LambdAurora/LambDynamicLights/pull/264)).
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
