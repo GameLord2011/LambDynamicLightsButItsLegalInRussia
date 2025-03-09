@@ -11,7 +11,6 @@ package dev.lambdaurora.lambdynlights.mixin;
 
 import com.mojang.blaze3d.vertex.MatrixStack;
 import dev.lambdaurora.lambdynlights.LambDynLights;
-import dev.lambdaurora.lambdynlights.util.DynamicLightLevelDebugRenderer;
 import dev.lambdaurora.lambdynlights.util.DynamicLightSectionDebugRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;

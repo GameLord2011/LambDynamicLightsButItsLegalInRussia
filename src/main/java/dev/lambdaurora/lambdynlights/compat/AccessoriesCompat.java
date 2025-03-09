@@ -9,7 +9,6 @@
 
 package dev.lambdaurora.lambdynlights.compat;
 
-import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import io.wispforest.accessories.api.AccessoriesCapability;
 import net.minecraft.world.entity.LivingEntity;

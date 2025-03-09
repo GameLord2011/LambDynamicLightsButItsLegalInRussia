@@ -190,7 +190,7 @@ public final class DynamicLightingEngine {
 			if (this.spatialLookupEntries[i] == null) {
 				this.lastEntryCount = i;
 				break;
-			};
+			}
 
 			int key = this.spatialLookupEntries[i].cellKey();
 			int previousKey = i == 0 ? Integer.MAX_VALUE : this.spatialLookupEntries[i - 1].cellKey();
