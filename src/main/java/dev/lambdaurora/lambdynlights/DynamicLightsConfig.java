@@ -59,6 +59,10 @@ public class DynamicLightsConfig {
 	private final List<SettingEntry<?>> settingEntries;
 	private final BooleanSettingEntry entitiesLightSource;
 	private final BooleanSettingEntry selfLightSource;
+	@Deprecated(forRemoval = true)
+	private final BooleanSettingEntry blockEntitiesLightSource = new BooleanSettingEntry(
+			"light_sources.block_entities", false, null, null
+	);
 	private final BooleanSettingEntry waterSensitiveCheck;
 	private final BooleanSettingEntry beamLighting;
 	private final BooleanSettingEntry guardianLaser;
@@ -170,7 +174,7 @@ public class DynamicLightsConfig {
 
 			LambDynLights.error(LOGGER, "Failed to parse configuration file, THIS IS BAD.", e);
 			LambDynLights.error(LOGGER, "Copying the corrupt file to \"{}\".", backupPath);
-			Files.copy(CONFIG_FILE_PATH, backupPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(CONFIG_FILE_PATH, backupPath, StandardCopyOption.REPLACE_EXISTING);
 			this.copyDefaultFile();
 			this.loadFromFile(false);
 		}
@@ -273,6 +277,16 @@ public class DynamicLightsConfig {
 	 */
 	public BooleanSettingEntry getSelfLightSource() {
 		return this.selfLightSource;
+	}
+
+	/**
+	 * {@return the block entities as light source setting holder}
+	 *
+	 * @deprecated Left only to prevent crashes with Puzzle as it won't update for broken versions.
+	 */
+	@Deprecated(forRemoval = true)
+	public BooleanSettingEntry getBlockEntitiesLightSource() {
+		return this.blockEntitiesLightSource;
 	}
 
 	/**

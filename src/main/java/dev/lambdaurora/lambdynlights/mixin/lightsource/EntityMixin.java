@@ -9,6 +9,7 @@
 
 package dev.lambdaurora.lambdynlights.mixin.lightsource;
 
+import dev.lambdaurora.lambdynlights.DynamicLightSource;
 import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSourceBehavior;
 import it.unimi.dsi.fastutil.longs.LongSet;
@@ -21,8 +22,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@SuppressWarnings("removal")
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityDynamicLightSourceBehavior {
+public abstract class EntityMixin implements DynamicLightSource {
 	@Shadow
 	public abstract Level level();
 

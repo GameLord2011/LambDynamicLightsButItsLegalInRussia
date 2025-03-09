@@ -10,6 +10,7 @@
 package dev.lambdaurora.lambdynlights;
 
 import dev.lambdaurora.lambdynlights.accessor.WorldRendererAccessor;
+import dev.lambdaurora.lambdynlights.api.DynamicLightHandlers;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsContext;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsInitializer;
 import dev.lambdaurora.lambdynlights.api.behavior.DynamicLightBehavior;
@@ -51,6 +52,7 @@ import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -96,6 +98,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	boolean shouldForceRefresh = false;
 	private int lastUpdateCount = 0;
 
+	@SuppressWarnings("removal")
 	@Override
 	public void onInitializeClient() {
 		INSTANCE = this;
@@ -177,6 +180,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		});
 
 		this.initializeApi();
+		DynamicLightHandlers.registerDefaultHandlers();
 	}
 
 	/**
@@ -525,6 +529,22 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		}
 
 		return luminance;
+	}
+
+	/**
+	 * {@return the luminance value of the item stack}
+	 *
+	 * @param stack the item stack
+	 * @param submergedInWater {@code true} if the stack is submerged in water, else {@code false}
+	 * @return the luminance
+	 * @deprecated You already shouldn't use this as this is not part of the API, but just in case:
+	 * use {@link ItemLightSourceManager#getLuminance(ItemStack, boolean)} instead.
+	 * <p>
+	 * This is fully removed in LambDynamicLights releases targeting Minecraft 1.21.4 and newer.
+	 */
+	@Deprecated(forRemoval = true)
+	public static int getLuminanceFromItemStack(@NotNull ItemStack stack, boolean submergedInWater) {
+		return INSTANCE.itemLightSources.getLuminance(stack, submergedInWater);
 	}
 
 	/**
