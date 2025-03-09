@@ -11,7 +11,7 @@ spruceui = "6.2.0+1.21.3"
 pridelib = "1.3.0+1.21.2"
 modmenu = "13.0.2"
 trinkets = "3.10.0"
-accessories = "1.2.1-beta.2+1.21.2"
+accessories = "1.2.18-beta+1.21.4"
 
 # Configuration
 nightconfig = "3.8.1"
