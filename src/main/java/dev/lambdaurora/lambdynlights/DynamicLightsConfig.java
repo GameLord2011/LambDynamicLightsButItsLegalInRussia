@@ -215,7 +215,9 @@ public class DynamicLightsConfig {
 
 		try {
 			Files.createDirectories(CONFIG_FILE_PATH.getParent());
-			Files.writeString(CONFIG_FILE_PATH, toml, StandardOpenOption.CREATE, StandardOpenOption.DSYNC);
+			Files.writeString(CONFIG_FILE_PATH, toml,
+					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.DSYNC
+			);
 		} catch (IOException e) {
 			LambDynLights.error(LOGGER, "Failed to save configuration file.", e);
 			return;
