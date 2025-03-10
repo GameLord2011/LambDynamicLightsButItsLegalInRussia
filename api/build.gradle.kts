@@ -29,7 +29,7 @@ val generateNmt = tasks.register("generateNmt", GenerateNmtTask::class) {
 		it.fmj.map { fmj ->
 			fmj.derive(::Nmt)
 				.withLoaderVersion("[2,)")
-				.withDepend("minecraft", "[" + libs.versions.minecraft.get() + ",)")
+				.withDepend("minecraft", "[1.21.2,1.21.3]")
 		}
 	})
 	outputDir.set(project.file("build/generated/generated_resources/"))
