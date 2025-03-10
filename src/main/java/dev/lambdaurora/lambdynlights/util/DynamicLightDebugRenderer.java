@@ -19,9 +19,9 @@ import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.core.ChunkSectionPos;
 import net.minecraft.core.Direction;
@@ -99,7 +99,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 		float faceX = (float) (cellX * cellSize - x);
 		float faceY = (float) (cellY * cellSize - y);
 		float faceZ = (float) (cellZ * cellSize - z);
-		ShapeRenderer.renderFace(
+		LevelRenderer.renderFace(
 				matrices, vertexConsumer, direction,
 				faceX, faceY, faceZ,
 				faceX + cellSize, faceY + cellSize, faceZ + cellSize,
@@ -164,7 +164,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 				float blue = ColorUtil.floatColor(ColorUtil.argbUnpackBlue(COLOR));
 				float alpha = entry.getIntValue() / 4.f;
 
-				ShapeRenderer.renderLineBox(
+				LevelRenderer.renderLineBox(
 						matrices, bufferSource.getBuffer(RenderType.lines()),
 						chunk.minBlockX(), chunk.minBlockY(), chunk.minBlockZ(),
 						ChunkSectionPos.sectionToBlockCoord(chunk.x(), 16), ChunkSectionPos.sectionToBlockCoord(chunk.y(), 16), ChunkSectionPos.sectionToBlockCoord(chunk.z(), 16),

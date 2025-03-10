@@ -48,7 +48,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.ChunkSectionPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.io.ResourceType;
-import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -135,9 +134,9 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 			this.lightSourcesLock.writeLock().lock();
 			if (this.config.getDynamicLightsMode().isEnabled()) {
-				Profiler.get().push("dynamic_lighting_compute_spatial_lookup");
+				level.getProfiler().push("dynamic_lighting_compute_spatial_lookup");
 				this.engine.computeSpatialLookup(this.dynamicLightSources);
-				Profiler.get().pop();
+				level.getProfiler().pop();
 			}
 			this.toClear.forEach(source -> {
 				source.getDynamicLightChunksToRebuild(true).forEach(chunk -> this.scheduleChunkRebuild(renderer, chunk));

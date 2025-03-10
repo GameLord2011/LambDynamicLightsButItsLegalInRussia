@@ -9,16 +9,24 @@
 
 package dev.lambdaurora.lambdynlights.gui;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.*;
 import dev.lambdaurora.spruceui.background.Background;
 import dev.lambdaurora.spruceui.background.SimpleColorBackground;
 import dev.lambdaurora.spruceui.util.ColorUtil;
 import dev.lambdaurora.spruceui.widget.SpruceWidget;
-import io.github.queerbric.pride.*;
+import io.github.queerbric.pride.PrideFlag;
+import io.github.queerbric.pride.PrideFlagShape;
+import io.github.queerbric.pride.PrideFlagShapes;
+import io.github.queerbric.pride.PrideFlags;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Text;
 import net.minecraft.resources.Identifier;
+import org.joml.Matrix4f;
+import org.joml.Vector4f;
 
 import java.util.Random;
 
@@ -58,48 +66,55 @@ public class RandomPrideFlagBackground implements Background {
 		int width = widget.getWidth();
 		int height = widget.getHeight();
 
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 		if (this.nuhUh || this.flag.getShape() == PrideFlagShapes.get(Identifier.of("pride", "horizontal_stripes"))) {
-			graphics.drawSpecial(bufferSource -> {
-				var buffer = bufferSource.getBuffer(PrideClient.FLAG_SHAPE_TRIANGLE_RENDER_TYPE);
+			var model = graphics.matrixStack().peek().model();
+			var tessellator = Tessellator.getInstance();
+			var buffer = tessellator.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
 
-				var colors = this.getColors();
+			var colors = this.getColors();
 
-				float partHeight = height / (colors.size() - 1.f);
+			float partHeight = height / (colors.size() - 1.f);
 
-				// First one
-				float rightY = y;
-				float leftY = y;
+			// First one
+			float rightY = y;
+			float leftY = y;
 
-				int color = colors.getInt(0);
-				buffer.addVertex(x + width, rightY + partHeight, 0).color(color);
-				buffer.addVertex(x + width, rightY, 0).color(color);
-				buffer.addVertex(x, leftY, 0).color(color);
+			int color = colors.getInt(0);
+			vertex(buffer, model,x + width, rightY + partHeight, 0).color(color);
+			vertex(buffer, model,x + width, rightY, 0).color(color);
+			vertex(buffer, model,x, leftY, 0).color(color);
+
+			rightY += partHeight;
+
+			for (int i = 1; i < colors.size() - 1; i++) {
+				color = colors.getInt(i);
+
+				vertex(buffer, model,x + width, rightY + partHeight, 0).color(color);
+				vertex(buffer, model,x + width, rightY, 0).color(color);
+				vertex(buffer, model,x, leftY, 0).color(color);
+
+				vertex(buffer, model,x + width, rightY + partHeight, 0).color(color);
+				vertex(buffer, model,x, leftY, 0).color(color);
+				vertex(buffer, model,x, leftY + partHeight, 0).color(color);
 
 				rightY += partHeight;
+				leftY += partHeight;
+			}
 
-				for (int i = 1; i < colors.size() - 1; i++) {
-					color = colors.getInt(i);
+			// Last one
+			color = colors.getInt(colors.size() - 1);
+			vertex(buffer, model,x + width, rightY, 0).color(color);
+			vertex(buffer, model,x, leftY, 0).color(color);
+			vertex(buffer, model,x, y + height, 0).color(color);
 
-					buffer.addVertex(x + width, rightY + partHeight, 0).color(color);
-					buffer.addVertex(x + width, rightY, 0).color(color);
-					buffer.addVertex(x, leftY, 0).color(color);
-
-					buffer.addVertex(x + width, rightY + partHeight, 0).color(color);
-					buffer.addVertex(x, leftY, 0).color(color);
-					buffer.addVertex(x, leftY + partHeight, 0).color(color);
-
-					rightY += partHeight;
-					leftY += partHeight;
-				}
-
-				// Last one
-				color = colors.getInt(colors.size() - 1);
-				buffer.addVertex(x + width, rightY, 0).color(color);
-				buffer.addVertex(x, leftY, 0).color(color);
-				buffer.addVertex(x, y + height, 0).color(color);
-			});
+			MeshData builtBuffer = buffer.build();
+			if (builtBuffer != null) {
+				BufferUploader.drawWithShader(builtBuffer);
+			}
+			tessellator.clear();
 		} else {
-			this.flag.render(graphics, x, y, widget.getWidth(), widget.getHeight());
+			this.flag.render(graphics.matrixStack(), x, y, widget.getWidth(), widget.getHeight());
 		}
 
 		SECOND_LAYER.render(graphics, widget, vOffset, mouseX, mouseY, delta);
@@ -158,5 +173,10 @@ public class RandomPrideFlagBackground implements Background {
 		int deltaB = ColorUtil.argbUnpackBlue(a) - ColorUtil.argbUnpackBlue(b);
 
 		return (int) Math.sqrt((2 + r / 256.f) * deltaR * deltaR + 4 * deltaG * deltaG + (2 + (255 - r) / 256) * deltaB * deltaB);
+	}
+
+	private static VertexConsumer vertex(BufferBuilder builder, Matrix4f matrix, float x, float y, float z) {
+		Vector4f vector4f = matrix.transform(new Vector4f(x, y, z, 1.0f));
+		return builder.addVertex(vector4f.x(), vector4f.y(), vector4f.z());
 	}
 }

@@ -13,7 +13,6 @@ import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.yumi.commons.event.Event;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -86,7 +85,7 @@ public interface EntityLightSourceManager {
 		default void register(@NotNull EntityType<?> entityType, @Range(from = 0, to = 15) int luminance) {
 			this.register(new EntityLightSource(
 					new EntityLightSource.EntityPredicate(
-							Optional.of(EntityTypePredicate.of(this.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE), entityType)),
+							Optional.of(EntityTypePredicate.of(entityType)),
 							Optional.empty(),
 							Optional.empty(),
 							Optional.empty(),
@@ -110,7 +109,7 @@ public interface EntityLightSourceManager {
 		default void register(@NotNull EntityType<?> entityType, EntityLuminance... luminance) {
 			this.register(new EntityLightSource(
 					new EntityLightSource.EntityPredicate(
-							Optional.of(EntityTypePredicate.of(this.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE), entityType)),
+							Optional.of(EntityTypePredicate.of(entityType)),
 							Optional.empty(),
 							Optional.empty(),
 							Optional.empty(),

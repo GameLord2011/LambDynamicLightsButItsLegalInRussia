@@ -22,6 +22,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.io.Resource;
 import net.minecraft.resources.io.ResourceManager;
+import net.minecraft.util.profiling.Profiler;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -59,7 +60,9 @@ public abstract class LightSourceLoader<L> implements IdentifiableResourceReload
 
 	@Override
 	public CompletableFuture<Void> reload(
-			Synchronizer synchronizer, ResourceManager resourceManager, Executor prepareExecutor, Executor applyExecutor
+			Synchronizer synchronizer, ResourceManager resourceManager,
+			Profiler prepareProfiler, Profiler applyProfiler,
+			Executor prepareExecutor, Executor applyExecutor
 	) {
 		return CompletableFuture.supplyAsync(() -> {
 					this.load(resourceManager);

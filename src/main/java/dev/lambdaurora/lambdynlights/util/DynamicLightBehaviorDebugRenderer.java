@@ -17,9 +17,9 @@ import dev.lambdaurora.lambdynlights.engine.source.DeferredDynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ShapeRenderer;
 
 import java.util.Set;
 
@@ -57,7 +57,7 @@ public class DynamicLightBehaviorDebugRenderer extends DynamicLightDebugRenderer
 
 				DynamicLightBehavior.BoundingBox boundingBox = deferredLightSource.behavior().getBoundingBox();
 
-				ShapeRenderer.renderLineBox(
+				LevelRenderer.renderLineBox(
 						matrices, vertexConsumer,
 						boundingBox.startX(), boundingBox.startY(), boundingBox.startZ(),
 						boundingBox.endX(), boundingBox.endY(), boundingBox.endZ(),

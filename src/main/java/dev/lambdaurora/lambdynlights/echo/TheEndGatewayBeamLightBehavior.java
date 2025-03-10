@@ -27,11 +27,11 @@ import org.jetbrains.annotations.Range;
  */
 public record TheEndGatewayBeamLightBehavior(TheEndGatewayBlockEntity gateway, Level level) implements DynamicLightBehavior {
 	private int getWorldBottom() {
-		return this.level.getMinY();
+		return this.level.getMinBuildHeight();
 	}
 
 	private int getWorldTop() {
-		return this.level.getMaxY();
+		return this.level.getMaxBuildHeight();
 	}
 
 	@Override
