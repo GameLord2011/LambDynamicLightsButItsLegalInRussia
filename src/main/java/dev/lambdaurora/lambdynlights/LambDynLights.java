@@ -75,7 +75,7 @@ import java.util.function.Predicate;
 @ApiStatus.Internal
 public class LambDynLights implements ClientModInitializer, DynamicLightsContext {
 	private static final Logger LOGGER = LoggerFactory.getLogger("LambDynamicLights");
-	public static final EventManager<Identifier> EVENT_MANAGER = new EventManager<>(LambDynLightsConstants.id("default"), Identifier::parse);
+	public static final EventManager<Identifier> EVENT_MANAGER = new EventManager<>(LambDynLightsConstants.id("default"), Identifier::tryParse);
 	private static LambDynLights INSTANCE;
 
 	public final DynamicLightsConfig config = new DynamicLightsConfig(this);
@@ -96,6 +96,8 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	private boolean shouldTick = false;
 	boolean shouldForceRefresh = false;
 	private int lastUpdateCount = 0;
+
+	public boolean gameLoadFinished = false;
 
 	@SuppressWarnings("removal")
 	@Override
@@ -272,10 +274,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	 * @return the modified lightmap coordinates
 	 */
 	public int getLightmapWithDynamicLight(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos, int lightmap) {
-		if (!(level instanceof ClientLevel)) this.lightSourcesLock.readLock().lock();
-		double light = this.getDynamicLightLevel(pos);
-		if (!(level instanceof ClientLevel)) this.lightSourcesLock.readLock().unlock();
-		return this.getLightmapWithDynamicLight(light, lightmap);
+		return this.getLightmapWithDynamicLight(this.getDynamicLightLevel(level, pos), lightmap);
 	}
 
 	/**
@@ -300,6 +299,19 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		}
 
 		return lightmap;
+	}
+
+	/**
+	 * Returns the dynamic light level at the specified position.
+	 *
+	 * @param pos the position
+	 * @return the dynamic light level at the specified position
+	 */
+	public double getDynamicLightLevel(@NotNull BlockAndTintGetter level, @NotNull BlockPos pos) {
+		if (!(level instanceof ClientLevel)) this.lightSourcesLock.readLock().lock();
+		double light = this.engine.getDynamicLightLevel(pos);
+		if (!(level instanceof ClientLevel)) this.lightSourcesLock.readLock().unlock();
+		return light;
 	}
 
 	/**

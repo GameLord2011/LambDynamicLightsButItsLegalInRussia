@@ -32,4 +32,9 @@ public class MinecraftClientMixin {
 	private void onUpdateLevelInEngines(ClientLevel level, CallbackInfo ci) {
 		LambDynLights.get().clearLightSources();
 	}
+
+	@Inject(method = "onGameLoadFinished", at = @At("HEAD"))
+	private void onGameLoadFinished(CallbackInfo ci) {
+		LambDynLights.get().gameLoadFinished = true;
+	}
 }

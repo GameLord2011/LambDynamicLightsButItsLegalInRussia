@@ -50,6 +50,9 @@ public final class EntityLightSources extends LightSourceLoader<EntityLightSourc
 	public static final EntityLuminance.Type WET_SENSITIVE = EntityLuminance.Type.register(
 			LambDynLightsConstants.id("wet_sensitive"), WetSensititiveEntityLuminance.CODEC
 	);
+	public static final EntityLuminance.Type ARROW_ITEM_DERIVED = EntityLuminance.Type.registerSimple(
+			LambDynLightsConstants.id("arrow/derived_from_self_item"), ArrowItemDerivedLuminance.INSTANCE
+	);
 	public static final EntityLuminance.Type CREEPER = EntityLuminance.Type.registerSimple(
 			LambDynLightsConstants.id("creeper"), CreeperLuminance.INSTANCE
 	);
@@ -122,11 +125,11 @@ public final class EntityLightSources extends LightSourceLoader<EntityLightSourc
 			// This should be used rarely to avoid issues.
 			// Errors may be forced to be logged if the property "lambdynamiclights.resource.force_log_errors" is true
 			// or if the environment is a development environment.
-			loaded.ifError(error -> {
+			loaded.error().ifPresent(error -> {
 				LambDynLights.warn(LOGGER, "Failed to load entity light source \"{}\" due to error: {}", loadedData.id(), error.message());
 			});
 		}
-		loaded.ifSuccess(this.lightSources::add);
+		loaded.result().ifPresent(this.lightSources::add);
 	}
 
 	@Override

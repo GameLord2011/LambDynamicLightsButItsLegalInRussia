@@ -11,6 +11,7 @@ package dev.lambdaurora.lambdynlights.api.predicate;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.lambdaurora.lambdynlights.api.utils.CodecUtils;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -24,7 +25,7 @@ import net.minecraft.world.level.LightLayer;
  * @since 4.0.0
  */
 public sealed interface LightSourceLightPredicate {
-	Codec<LightSourceLightPredicate> CODEC = Codec.withAlternative(
+	Codec<LightSourceLightPredicate> CODEC = CodecUtils.withAlternative(
 			Full.CODEC.xmap(full -> full, predicate -> (Full) predicate),
 			Any.CODEC
 	);
@@ -49,8 +50,8 @@ public sealed interface LightSourceLightPredicate {
 			MinMaxBounds.Ints sky
 	) implements LightSourceLightPredicate {
 		public static final Codec<Full> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-				MinMaxBounds.Ints.CODEC.optionalFieldOf("block", MinMaxBounds.Ints.ANY).forGetter(Full::block),
-				MinMaxBounds.Ints.CODEC.optionalFieldOf("sky", MinMaxBounds.Ints.ANY).forGetter(Full::sky)
+				CodecUtils.MIN_MAX_INT_CODEC.optionalFieldOf("block", MinMaxBounds.Ints.ANY).forGetter(Full::block),
+				CodecUtils.MIN_MAX_INT_CODEC.optionalFieldOf("sky", MinMaxBounds.Ints.ANY).forGetter(Full::sky)
 		).apply(instance, Full::new));
 
 		@Override
@@ -67,7 +68,7 @@ public sealed interface LightSourceLightPredicate {
 	 */
 	record Any(MinMaxBounds.Ints light) implements LightSourceLightPredicate {
 		public static final Codec<Any> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-				MinMaxBounds.Ints.CODEC.optionalFieldOf("any", MinMaxBounds.Ints.ANY).forGetter(Any::light)
+				CodecUtils.MIN_MAX_INT_CODEC.optionalFieldOf("any", MinMaxBounds.Ints.ANY).forGetter(Any::light)
 		).apply(instance, Any::new));
 
 		@Override

@@ -11,6 +11,7 @@ package dev.lambdaurora.lambdynlights.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.LambDynLightsConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -24,17 +25,17 @@ import org.spongepowered.asm.mixin.injection.At;
 public class DevModeMixin {
 	@Shadow
 	@Final
-	private Minecraft minecraft;
+	Minecraft minecraft;
 
 	@WrapOperation(
-			method = "Lnet/minecraft/client/renderer/GameRenderer;render(Lnet/minecraft/client/DeltaTracker;Z)V",
+			method = "render(FJZ)V",
 			at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;flush()V")
 	)
 	private void handler(GuiGraphics graphics, Operation<Void> original) {
 		int bottom = this.minecraft.getWindow().getGuiScaledHeight();
 		int y = bottom - this.minecraft.font.lineHeight;
 
-		if (this.minecraft.isGameLoadFinished() && !this.minecraft.getDebugOverlay().showDebugScreen()) {
+		if (LambDynLights.get().gameLoadFinished && !this.minecraft.options.renderDebug) {
 			graphics.fill(
 					0, y - 4,
 					this.minecraft.font.width(LambDynLightsConstants.DEV_MODE_OVERLAY_TEXT) + 4, bottom,

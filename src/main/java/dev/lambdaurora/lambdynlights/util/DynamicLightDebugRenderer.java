@@ -99,7 +99,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 		float faceX = (float) (cellX * cellSize - x);
 		float faceY = (float) (cellY * cellSize - y);
 		float faceZ = (float) (cellZ * cellSize - z);
-		LevelRenderer.renderFace(
+		renderFace(
 				matrices, vertexConsumer, direction,
 				faceX, faceY, faceZ,
 				faceX + cellSize, faceY + cellSize, faceZ + cellSize,
@@ -193,6 +193,61 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 					entry.setValue(entry.getIntValue() - 1);
 				}
 			}
+		}
+	}
+
+	private static void renderFace(
+			MatrixStack matrices,
+			VertexConsumer vertexConsumer,
+			Direction direction,
+			float startX,
+			float startY,
+			float startZ,
+			float endX,
+			float endY,
+			float endZ,
+			float red,
+			float green,
+			float blue,
+			float alpha
+	) {
+		Matrix4f model = matrices.peek().model();
+		switch (direction) {
+			case DOWN:
+				vertexConsumer.addVertex(model, startX, startY, startZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, endX, startY, startZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, endX, startY, endZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, startX, startY, endZ).color(red, green, blue, alpha).endVertex();
+				break;
+			case UP:
+				vertexConsumer.addVertex(model, startX, endY, startZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, startX, endY, endZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, endX, endY, endZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, endX, endY, startZ).color(red, green, blue, alpha).endVertex();
+				break;
+			case NORTH:
+				vertexConsumer.addVertex(model, startX, startY, startZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, startX, endY, startZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, endX, endY, startZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, endX, startY, startZ).color(red, green, blue, alpha).endVertex();
+				break;
+			case SOUTH:
+				vertexConsumer.addVertex(model, startX, startY, endZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, endX, startY, endZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, endX, endY, endZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, startX, endY, endZ).color(red, green, blue, alpha).endVertex();
+				break;
+			case WEST:
+				vertexConsumer.addVertex(model, startX, startY, startZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, startX, startY, endZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, startX, endY, endZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, startX, endY, startZ).color(red, green, blue, alpha).endVertex();
+				break;
+			case EAST:
+				vertexConsumer.addVertex(model, endX, startY, startZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, endX, endY, startZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, endX, endY, endZ).color(red, green, blue, alpha).endVertex();
+				vertexConsumer.addVertex(model, endX, startY, endZ).color(red, green, blue, alpha).endVertex();
 		}
 	}
 }

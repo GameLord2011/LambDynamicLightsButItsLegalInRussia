@@ -10,12 +10,11 @@
 package dev.lambdaurora.lambdynlights.mixin;
 
 import dev.lambdaurora.lambdynlights.gui.DynamicLightsOptionsOption;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.screens.OptionsSubScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.options.OptionsSubScreen;
-import net.minecraft.client.gui.screens.options.VideoSettingsScreen;
+import net.minecraft.client.gui.screens.VideoSettingsScreen;
 import net.minecraft.network.chat.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,12 +33,12 @@ public abstract class VideoSettingsScreenMixin extends OptionsSubScreen {
 	}
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	private void onConstruct(Screen parent, Minecraft client, Options gameOptions, CallbackInfo ci) {
+	private void onConstruct(Screen parent, Options gameOptions, CallbackInfo ci) {
 		this.lambdynlights$option = DynamicLightsOptionsOption.getOption(this);
 	}
 
 	@ModifyArg(
-			method = "addOptions",
+			method = "init",
 			at = @At(
 					value = "INVOKE",
 					target = "Lnet/minecraft/client/gui/components/OptionsList;addSmall([Lnet/minecraft/client/OptionInstance;)V"

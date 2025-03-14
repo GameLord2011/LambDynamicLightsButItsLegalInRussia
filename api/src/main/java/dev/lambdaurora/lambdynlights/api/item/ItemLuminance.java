@@ -12,10 +12,12 @@ package dev.lambdaurora.lambdynlights.api.item;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.lambdaurora.lambdynlights.api.utils.CodecUtils;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Brightness;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -33,8 +35,8 @@ import java.util.stream.Stream;
  * @since 3.0.0
  */
 public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance.BlockReference, ItemLuminance.BlockSelf {
-	Codec<ItemLuminance> CODEC = Codec.withAlternative(
-			Type.CODEC.dispatch(ItemLuminance::type, Type::codec),
+	Codec<ItemLuminance> CODEC = CodecUtils.withAlternative(
+			Type.CODEC.dispatch(ItemLuminance::type, type -> new MapCodec.MapCodecCodec<>(type.codec())),
 			Value.DIRECT_CODEC
 	);
 
@@ -139,7 +141,7 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 		private static final Map<String, Type> BY_NAME = Util.make(
 				() -> Stream.of(values()).collect(HashMap::new, (map, type) -> map.put(type.getName(), type), HashMap::putAll)
 		);
-		public static final Codec<Type> CODEC = Codec.stringResolver(Type::getName, Type::byName);
+		public static final Codec<Type> CODEC = ExtraCodecs.stringResolverCodec(Type::getName, Type::byName);
 
 		private final String name;
 		private final MapCodec<? extends ItemLuminance> codec;

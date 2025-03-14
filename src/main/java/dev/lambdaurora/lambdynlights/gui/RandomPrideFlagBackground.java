@@ -44,9 +44,9 @@ public class RandomPrideFlagBackground implements Background {
 	private static final IntList DEFAULT_RAINBOW_COLORS = IntList.of(
 			0xffff0018, 0xffffa52c, 0xffffff41, 0xff008018, 0xff0000f9, 0xff86007d
 	);
-	private static final PrideFlagShape PROGRESS = PrideFlagShapes.get(Identifier.of("pride", "progress"));
+	private static final PrideFlagShape PROGRESS = PrideFlagShapes.get(new Identifier("pride", "progress"));
 	private static final PrideFlagShape HORIZONTAL_STRIPES
-			= PrideFlagShapes.get(Identifier.of("pride", "horizontal_stripes"));
+			= PrideFlagShapes.get(new Identifier("pride", "horizontal_stripes"));
 	private static final Random RANDOM = new Random();
 
 	private final PrideFlag flag;
@@ -72,7 +72,8 @@ public class RandomPrideFlagBackground implements Background {
 		if (this.nuhUh || this.flag.getShape() == HORIZONTAL_STRIPES) {
 			var model = graphics.matrixStack().peek().model();
 			var tessellator = Tessellator.getInstance();
-			var buffer = tessellator.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
+			var buffer = tessellator.getBuilder();
+			buffer.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);;
 
 			var colors = this.getColors();
 
@@ -83,22 +84,22 @@ public class RandomPrideFlagBackground implements Background {
 			float leftY = y;
 
 			int color = colors.getInt(0);
-			vertex(buffer, model,x + width, rightY + partHeight, 0).color(color);
-			vertex(buffer, model,x + width, rightY, 0).color(color);
-			vertex(buffer, model,x, leftY, 0).color(color);
+			vertex(buffer, model,x + width, rightY + partHeight, 0).color(color).endVertex();
+			vertex(buffer, model,x + width, rightY, 0).color(color).endVertex();
+			vertex(buffer, model,x, leftY, 0).color(color).endVertex();
 
 			rightY += partHeight;
 
 			for (int i = 1; i < colors.size() - 1; i++) {
 				color = colors.getInt(i);
 
-				vertex(buffer, model,x + width, rightY + partHeight, 0).color(color);
-				vertex(buffer, model,x + width, rightY, 0).color(color);
-				vertex(buffer, model,x, leftY, 0).color(color);
+				vertex(buffer, model,x + width, rightY + partHeight, 0).color(color).endVertex();
+				vertex(buffer, model,x + width, rightY, 0).color(color).endVertex();
+				vertex(buffer, model,x, leftY, 0).color(color).endVertex();
 
-				vertex(buffer, model,x + width, rightY + partHeight, 0).color(color);
-				vertex(buffer, model,x, leftY, 0).color(color);
-				vertex(buffer, model,x, leftY + partHeight, 0).color(color);
+				vertex(buffer, model,x + width, rightY + partHeight, 0).color(color).endVertex();
+				vertex(buffer, model,x, leftY, 0).color(color).endVertex();
+				vertex(buffer, model,x, leftY + partHeight, 0).color(color).endVertex();
 
 				rightY += partHeight;
 				leftY += partHeight;
@@ -106,15 +107,11 @@ public class RandomPrideFlagBackground implements Background {
 
 			// Last one
 			color = colors.getInt(colors.size() - 1);
-			vertex(buffer, model,x + width, rightY, 0).color(color);
-			vertex(buffer, model,x, leftY, 0).color(color);
-			vertex(buffer, model,x, y + height, 0).color(color);
+			vertex(buffer, model,x + width, rightY, 0).color(color).endVertex();
+			vertex(buffer, model,x, leftY, 0).color(color).endVertex();
+			vertex(buffer, model,x, y + height, 0).color(color).endVertex();
 
-			MeshData builtBuffer = buffer.build();
-			if (builtBuffer != null) {
-				BufferUploader.drawWithShader(builtBuffer);
-			}
-			tessellator.clear();
+			tessellator.end();
 		} else {
 			this.flag.render(graphics.matrixStack(), x, y, widget.getWidth(), widget.getHeight());
 		}

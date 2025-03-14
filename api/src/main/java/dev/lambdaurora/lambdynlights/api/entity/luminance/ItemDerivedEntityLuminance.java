@@ -14,6 +14,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import net.minecraft.Util;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +69,7 @@ public record ItemDerivedEntityLuminance(ItemStack item, boolean includeRain, Op
 		private static final Map<String, Always> BY_NAME = Util.make(
 				() -> Stream.of(values()).collect(HashMap::new, (map, type) -> map.put(type.getName(), type), HashMap::putAll)
 		);
-		public static final Codec<Always> CODEC = Codec.stringResolver(Always::getName, Always::byName);
+		public static final Codec<Always> CODEC = ExtraCodecs.stringResolverCodec(Always::getName, Always::byName);
 
 		private final String name = this.name().toLowerCase();
 

@@ -2,7 +2,7 @@
 	"required": true,
 	"package": "dev.lambdaurora.lambdynlights.mixin",
 	"plugin": "dev.lambdaurora.lambdynlights.LambDynLightsMixinPlugin",
-	"compatibilityLevel": "JAVA_21",
+	"compatibilityLevel": "JAVA_17",
 	"client": [
 		"ClientLevelMixin",
 		"CommonLevelRendererMixin",
@@ -14,6 +14,9 @@
 		"MinecraftClientMixin",
 		"VideoSettingsScreenMixin",
 		"fabric.AoCalculatorMixin",
+		"sodium.ArrayLightDataCacheMixin",
+		"sodium.LightDataAccessMixin",
+		"sodium.OldSodiumOptionsGuiMixin",
 		"sodium.SodiumOptionsGuiMixin"
 	],
 	"injectors": {

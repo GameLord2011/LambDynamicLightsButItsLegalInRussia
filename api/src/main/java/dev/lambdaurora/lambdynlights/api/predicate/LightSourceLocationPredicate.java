@@ -11,6 +11,7 @@ package dev.lambdaurora.lambdynlights.api.predicate;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.lambdaurora.lambdynlights.api.utils.CodecUtils;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -159,9 +160,9 @@ public record LightSourceLocationPredicate(
 	public record PositionPredicate(MinMaxBounds.Doubles x, MinMaxBounds.Doubles y, MinMaxBounds.Doubles z) {
 		public static final Codec<PositionPredicate> CODEC = RecordCodecBuilder.create(
 				instance -> instance.group(
-								MinMaxBounds.Doubles.CODEC.optionalFieldOf("x", MinMaxBounds.Doubles.ANY).forGetter(PositionPredicate::x),
-								MinMaxBounds.Doubles.CODEC.optionalFieldOf("y", MinMaxBounds.Doubles.ANY).forGetter(PositionPredicate::y),
-								MinMaxBounds.Doubles.CODEC.optionalFieldOf("z", MinMaxBounds.Doubles.ANY).forGetter(PositionPredicate::z)
+								CodecUtils.MIN_MAX_DOUBLE_CODEC.optionalFieldOf("x", MinMaxBounds.Doubles.ANY).forGetter(PositionPredicate::x),
+								CodecUtils.MIN_MAX_DOUBLE_CODEC.optionalFieldOf("y", MinMaxBounds.Doubles.ANY).forGetter(PositionPredicate::y),
+								CodecUtils.MIN_MAX_DOUBLE_CODEC.optionalFieldOf("z", MinMaxBounds.Doubles.ANY).forGetter(PositionPredicate::z)
 						)
 						.apply(instance, PositionPredicate::new)
 		);

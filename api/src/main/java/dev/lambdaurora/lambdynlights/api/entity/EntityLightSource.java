@@ -13,8 +13,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
+import dev.lambdaurora.lambdynlights.api.predicate.EntityEquipmentPredicate;
+import dev.lambdaurora.lambdynlights.api.predicate.EntityTypePredicate;
 import dev.lambdaurora.lambdynlights.api.predicate.LightSourceLocationPredicate;
-import net.minecraft.advancements.critereon.*;
+import dev.lambdaurora.lambdynlights.api.utils.CodecUtils;
+import net.minecraft.advancements.critereon.EntityFlagsPredicate;
+import net.minecraft.advancements.critereon.MobEffectsPredicate;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Range;
 
@@ -67,7 +71,6 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 	 * @param equipment the equipment predicate to match if present
 	 * @param vehicle the vehicle predicate to match if present
 	 * @param passenger the passenger predicate to match if present
-	 * @param slots the slots predicate to match if present
 	 */
 	public record EntityPredicate(
 			Optional<EntityTypePredicate> entityType,
@@ -76,21 +79,19 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 			Optional<EntityFlagsPredicate> flags,
 			Optional<EntityEquipmentPredicate> equipment,
 			Optional<EntityPredicate> vehicle,
-			Optional<EntityPredicate> passenger,
-			Optional<SlotsPredicate> slots
+			Optional<EntityPredicate> passenger
 	) {
-		public static final Codec<EntityPredicate> CODEC = Codec.recursive(
+		public static final Codec<EntityPredicate> CODEC = CodecUtils.recursive(
 				"EntityPredicate",
 				codec -> RecordCodecBuilder.create(
 						instance -> instance.group(
 										EntityTypePredicate.CODEC.optionalFieldOf("type").forGetter(EntityPredicate::entityType),
 										LightSourceLocationPredicate.CODEC.optionalFieldOf("location").forGetter(EntityPredicate::located),
-										MobEffectsPredicate.CODEC.optionalFieldOf("effects").forGetter(EntityPredicate::effects),
-										EntityFlagsPredicate.CODEC.optionalFieldOf("flags").forGetter(EntityPredicate::flags),
+										CodecUtils.MOB_EFFECTS_PREDICATE_CODEC.optionalFieldOf("effects").forGetter(EntityPredicate::effects),
+										CodecUtils.ENTITY_FLAGS_PREDICATE_CODEC.optionalFieldOf("flags").forGetter(EntityPredicate::flags),
 										EntityEquipmentPredicate.CODEC.optionalFieldOf("equipment").forGetter(EntityPredicate::equipment),
 										codec.optionalFieldOf("vehicle").forGetter(EntityPredicate::vehicle),
-										codec.optionalFieldOf("passenger").forGetter(EntityPredicate::passenger),
-										SlotsPredicate.CODEC.optionalFieldOf("slots").forGetter(EntityPredicate::slots)
+										codec.optionalFieldOf("passenger").forGetter(EntityPredicate::passenger)
 								)
 								.apply(instance, EntityPredicate::new)
 				)
@@ -117,11 +118,9 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 				return false;
 			} else if (this.vehicle.isPresent() && !this.vehicle.get().test(entity.getVehicle())) {
 				return false;
-			} else if (this.passenger.isPresent()
-					&& entity.getPassengers().stream().noneMatch(passenger -> this.passenger.get().test(passenger))) {
-				return false;
 			} else {
-				return this.slots.isEmpty() || this.slots.get().matches(entity);
+				return this.passenger.isEmpty()
+						|| entity.getPassengers().stream().noneMatch(passenger -> this.passenger.get().test(passenger));
 			}
 		}
 	}

@@ -1,17 +1,17 @@
 [versions]
-minecraft = "1.21.1"
+minecraft = "1.20.1"
 fabric-loader = "0.16.9"
-fabric-api = "0.105.0+1.21.1"
-mappings-yalmm = "3"
+fabric-api = "0.92.3+1.20.1"
+mappings-yalmm = "4"
 mappings-parchment = "2024.07.28"
 
 # Dependencies
 yumi-commons = "1.0.0-alpha.5"
-spruceui = "6.2.1+1.21"
-pridelib = "1.2.1+1.21"
-modmenu = "11.0.3"
-trinkets = "3.10.0"
-accessories = "1.1.0-beta.16+1.21.1"
+spruceui = "6.2.1+1.20"
+pridelib = "1.2.0+1.19.4"
+modmenu = "7.2.2"
+trinkets = "3.7.2"
+accessories = "1.0.0-beta.40+1.20.1"
 
 # Configuration
 nightconfig = "3.8.1"

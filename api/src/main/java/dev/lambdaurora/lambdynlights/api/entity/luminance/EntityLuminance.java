@@ -14,6 +14,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
+import dev.lambdaurora.lambdynlights.api.utils.CodecUtils;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Brightness;
@@ -36,16 +37,16 @@ public interface EntityLuminance {
 	/**
 	 * Represents the Codec of an entity luminance provider.
 	 */
-	Codec<EntityLuminance> CODEC = Codec.withAlternative(
-			Type.CODEC.dispatch(EntityLuminance::type, Type::codec),
+	Codec<EntityLuminance> CODEC = CodecUtils.withAlternative(
+			Type.CODEC.dispatch(EntityLuminance::type, type -> new MapCodec.MapCodecCodec<>(type.codec())),
 			Value.DIRECT_CODEC
 	);
 	/**
 	 * Represents the Codec of a list of entity luminance providers.
 	 */
-	Codec<List<EntityLuminance>> LIST_CODEC = Codec.withAlternative(
+	Codec<List<EntityLuminance>> LIST_CODEC = CodecUtils.withAlternative(
 			CODEC.listOf(),
-			CODEC.xmap(List::of, List::getFirst)
+			CODEC.xmap(List::of, list -> list.get(0))
 	);
 
 	/**
@@ -132,9 +133,6 @@ public interface EntityLuminance {
 		);
 
 		public static final Type VALUE = register("value", Value.CODEC);
-		public static final Type ARROW_ITEM_DERIVED = registerSimple(
-				"arrow/derived_from_self_item", ArrowItemDerivedLuminance.INSTANCE
-		);
 		public static final Type ENDERMAN = registerSimple("enderman", EndermanLuminance.INSTANCE);
 		public static final Type FALLING_BLOCK = registerSimple("falling_block", FallingBlockLuminance.INSTANCE);
 		public static final Type ITEM = register("item", ItemDerivedEntityLuminance.CODEC);
@@ -154,7 +152,7 @@ public interface EntityLuminance {
 		}
 
 		private static Type register(String name, MapCodec<? extends EntityLuminance> codec) {
-			return register(Identifier.of("lambdynlights", name), codec);
+			return register(new Identifier("lambdynlights", name), codec);
 		}
 
 		public static Type registerSimple(@NotNull Identifier id, @NotNull EntityLuminance singleton) {
@@ -162,7 +160,7 @@ public interface EntityLuminance {
 		}
 
 		private static Type registerSimple(String name, EntityLuminance singleton) {
-			return registerSimple(Identifier.of("lambdynlights", name), singleton);
+			return registerSimple(new Identifier("lambdynlights", name), singleton);
 		}
 	}
 }

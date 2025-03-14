@@ -103,7 +103,7 @@ public abstract class LightSourceLoader<L> implements IdentifiableResourceReload
 	}
 
 	protected void load(Identifier resourceId, Resource resource) {
-		var id = Identifier.of(resourceId.namespace(), resourceId.path().replace(".json", ""));
+		var id = new Identifier(resourceId.namespace(), resourceId.path().replace(".json", ""));
 
 		try (var reader = new InputStreamReader(resource.open())) {
 			var rawJson = JsonParser.parseReader(reader);

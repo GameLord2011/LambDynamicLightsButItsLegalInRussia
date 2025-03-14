@@ -135,7 +135,7 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		} else if (filter.startsWith("$")) {
 			var valueFilter = this.evaluateValueFilter(filter.substring(1));
 			return Text.literal(filter + " ").withStyle(switch (valueFilter) {
-				case TriState.TRUE, TriState.FALSE -> TextFormatting.GOLD;
+				case TRUE, FALSE -> TextFormatting.GOLD;
 				default -> TextFormatting.RED;
 			});
 		} else {

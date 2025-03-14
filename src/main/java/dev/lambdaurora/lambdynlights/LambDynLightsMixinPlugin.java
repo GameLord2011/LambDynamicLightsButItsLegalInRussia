@@ -30,7 +30,26 @@ public class LambDynLightsMixinPlugin implements IMixinConfigPlugin {
 
 	public LambDynLightsMixinPlugin() {
 		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.DevModeMixin", LambDynLightsConstants.isDevMode());
-		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.sodium.SodiumOptionsGuiMixin", LambDynLightsCompat.isSodiumInstalled());
+		this.conditionalMixins.put(
+				"dev.lambdaurora.lambdynlights.mixin.sodium.SodiumOptionsGuiMixin",
+				LambDynLightsCompat.isSodiumInstalled() == LambDynLightsCompat.SodiumInstallation.V06X
+		);
+		this.conditionalMixins.put(
+				"dev.lambdaurora.lambdynlights.mixin.sodium.OldSodiumOptionsGuiMixin",
+				LambDynLightsCompat.isSodiumInstalled() == LambDynLightsCompat.SodiumInstallation.V05X
+		);
+		this.conditionalMixins.put(
+				"dev.lambdaurora.lambdynlights.mixin.sodium.ArrayLightDataCacheMixin",
+				LambDynLightsCompat.isSodiumInstalled() == LambDynLightsCompat.SodiumInstallation.V05X
+		);
+		this.conditionalMixins.put(
+				"dev.lambdaurora.lambdynlights.mixin.sodium.FlatLightPipelineMixin",
+				LambDynLightsCompat.isSodiumInstalled() == LambDynLightsCompat.SodiumInstallation.V05X
+		);
+		this.conditionalMixins.put(
+				"dev.lambdaurora.lambdynlights.mixin.sodium.LightDataAccessMixin",
+				LambDynLightsCompat.isSodiumInstalled() == LambDynLightsCompat.SodiumInstallation.V05X
+		);
 	}
 
 	@Override

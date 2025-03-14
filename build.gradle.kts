@@ -36,6 +36,10 @@ tasks.generateFmj.configure {
 		.withBreak("optifabric", "*")
 		.withBreak("sodiumdynamiclights", "*")
 		.withBreak("ryoamiclights", "*")
+		// Attempted to preserve a way for Create: Dynamic Lights to work,
+		// but it is so entangled with the mod's internals that it is not possible.
+		// Preventive break clause for known broken versions.
+		.withBreak("createdynlight", "<=1.0.2")
 
 	fabricApiModules.forEach { module -> fmj.withDepend(module.name, ">=${module.version}") }
 }
@@ -55,6 +59,7 @@ repositories {
 		url = uri("https://maven.ladysnake.org/releases")
 	}
 	maven { url = uri("https://maven.wispforest.io/releases") }
+	maven { url = uri("https://maven.shedaniel.me/") }
 }
 
 loom {

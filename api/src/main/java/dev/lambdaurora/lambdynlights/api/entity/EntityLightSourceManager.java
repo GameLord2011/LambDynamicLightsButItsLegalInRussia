@@ -10,8 +10,8 @@
 package dev.lambdaurora.lambdynlights.api.entity;
 
 import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
+import dev.lambdaurora.lambdynlights.api.predicate.EntityTypePredicate;
 import dev.yumi.commons.event.Event;
-import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
@@ -91,7 +91,6 @@ public interface EntityLightSourceManager {
 							Optional.empty(),
 							Optional.empty(),
 							Optional.empty(),
-							Optional.empty(),
 							Optional.empty()
 					),
 					List.of(new EntityLuminance.Value(luminance))
@@ -110,7 +109,6 @@ public interface EntityLightSourceManager {
 			this.register(new EntityLightSource(
 					new EntityLightSource.EntityPredicate(
 							Optional.of(EntityTypePredicate.of(entityType)),
-							Optional.empty(),
 							Optional.empty(),
 							Optional.empty(),
 							Optional.empty(),

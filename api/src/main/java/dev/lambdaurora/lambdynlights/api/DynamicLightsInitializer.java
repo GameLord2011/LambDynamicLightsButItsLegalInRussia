@@ -9,8 +9,6 @@
 
 package dev.lambdaurora.lambdynlights.api;
 
-import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
-
 /**
  * Represents the entrypoint for LambDynamicLights' API.
  *
@@ -37,19 +35,18 @@ public interface DynamicLightsInitializer {
 	 * @param context the dynamic lights context, containing references to managers for each source type provided by the API
 	 */
 	default void onInitializeDynamicLights(DynamicLightsContext context) {
-		this.onInitializeDynamicLights(context.itemLightSourceManager());
+		this.onInitializeDynamicLights();
 	}
 
 	/**
 	 * Called when LambDynamicLights is initialized to register custom dynamic light handlers and item light sources.
 	 *
-	 * @param itemLightSourceManager the manager for item light sources
 	 * @deprecated Please use the {@link #onInitializeDynamicLights(DynamicLightsContext)} instead, and read
 	 * <a href="https://lambdaurora.dev/projects/lambdynamiclights/docs/v4/java.html">the official documentation</a>.
 	 * <p>
-	 * This is fully removed in LambDynamicLights releases targeting Minecraft 1.21.4 and newer.
+	 * This is fully removed in LambDynamicLights releases targeting Minecraft 1.21 and newer.
 	 */
 	@SuppressWarnings("DeprecatedIsStillUsed")
 	@Deprecated(forRemoval = true)
-	void onInitializeDynamicLights(ItemLightSourceManager itemLightSourceManager);
+	void onInitializeDynamicLights();
 }

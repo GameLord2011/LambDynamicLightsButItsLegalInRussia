@@ -7,9 +7,11 @@
  * see the LICENSE file.
  */
 
-package dev.lambdaurora.lambdynlights.api.entity.luminance;
+package dev.lambdaurora.lambdynlights.resource.entity.luminance;
 
+import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
+import dev.lambdaurora.lambdynlights.resource.entity.EntityLightSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import org.jetbrains.annotations.NotNull;
@@ -29,13 +31,13 @@ public final class ArrowItemDerivedLuminance implements EntityLuminance {
 
 	@Override
 	public @NotNull Type type() {
-		return Type.ARROW_ITEM_DERIVED;
+		return EntityLightSources.ARROW_ITEM_DERIVED;
 	}
 
 	@Override
 	public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Entity entity) {
 		if (entity instanceof AbstractArrow arrow) {
-			return itemLightSourceManager.getLuminance(arrow.getPickupItemStackOrigin(), entity.isSubmergedInWater());
+			return itemLightSourceManager.getLuminance(arrow.getPickupItem(), entity.isSubmergedInWater());
 		}
 
 		return 0;

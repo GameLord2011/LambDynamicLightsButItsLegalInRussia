@@ -9,8 +9,8 @@
 
 package dev.lambdaurora.lambdynlights.api.item;
 
+import dev.lambdaurora.lambdynlights.api.predicate.ItemPredicate;
 import dev.yumi.commons.event.Event;
-import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
