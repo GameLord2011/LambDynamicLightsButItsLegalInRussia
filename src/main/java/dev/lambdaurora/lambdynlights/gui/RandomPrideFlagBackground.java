@@ -36,7 +36,7 @@ import java.util.Random;
  * If you have an issue with this, I don't care.
  *
  * @author LambdAurora
- * @version 3.2.3
+ * @version 4.0.2
  * @since 2.1.0
  */
 public class RandomPrideFlagBackground implements Background {
@@ -45,6 +45,8 @@ public class RandomPrideFlagBackground implements Background {
 			0xffff0018, 0xffffa52c, 0xffffff41, 0xff008018, 0xff0000f9, 0xff86007d
 	);
 	private static final PrideFlagShape PROGRESS = PrideFlagShapes.get(Identifier.of("pride", "progress"));
+	private static final PrideFlagShape HORIZONTAL_STRIPES
+			= PrideFlagShapes.get(Identifier.of("pride", "horizontal_stripes"));
 	private static final Random RANDOM = new Random();
 
 	private final PrideFlag flag;
@@ -67,7 +69,7 @@ public class RandomPrideFlagBackground implements Background {
 		int height = widget.getHeight();
 
 		RenderSystem.setShader(GameRenderer::getPositionColorShader);
-		if (this.nuhUh || this.flag.getShape() == PrideFlagShapes.get(Identifier.of("pride", "horizontal_stripes"))) {
+		if (this.nuhUh || this.flag.getShape() == HORIZONTAL_STRIPES) {
 			var model = graphics.matrixStack().peek().model();
 			var tessellator = Tessellator.getInstance();
 			var buffer = tessellator.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);

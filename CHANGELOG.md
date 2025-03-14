@@ -291,6 +291,7 @@
 - Updated Traditional Chinese translations ([#261](https://github.com/LambdAurora/LambDynamicLights/pull/261)).
 - Updated Turkish translations ([#263](https://github.com/LambdAurora/LambDynamicLights/pull/263)).
 - Updated Simplified Chinese translations ([#264](https://github.com/LambdAurora/LambDynamicLights/pull/264)).
+- Updated [SpruceUI].
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
