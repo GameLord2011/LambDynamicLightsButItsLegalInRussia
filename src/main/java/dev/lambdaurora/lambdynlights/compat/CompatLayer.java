@@ -24,7 +24,7 @@ import java.util.List;
  * Represents a compatibility layer with another mod.
  *
  * @author LambdAurora
- * @version 3.1.4
+ * @version 4.0.2
  * @since 3.1.4
  */
 public interface CompatLayer {
@@ -53,7 +53,16 @@ public interface CompatLayer {
 			if (FabricLoader.getInstance().isModLoaded("accessories")) {
 				layers.add(new AccessoriesCompat());
 			} else if (FabricLoader.getInstance().isModLoaded("trinkets")) {
-				layers.add(new TrinketsCompat());
+				if (FabricLoader.getInstance().isModLoaded("radiantgear")) {
+					LambDynLights.warn(LOGGER, "Radiant Gear has been detected, built-in Trinkets integration will not be enabled.");
+					LambDynLights.warn(LOGGER, "Radiant Gear is no longer needed on Fabric with LambDynamicLights.");
+				} else {
+					layers.add(new TrinketsCompat());
+				}
+			} else if (FabricLoader.getInstance().isModLoaded("curios")) {
+				if (!FabricLoader.getInstance().isModLoaded("radiantgear")) {
+					layers.add(new CuriosCompat());
+				}
 			}
 		} catch (LinkageError e) {
 			LambDynLights.error(

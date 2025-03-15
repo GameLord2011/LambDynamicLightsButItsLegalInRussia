@@ -286,6 +286,7 @@
 
 - Improved loading/saving of the configuration file, this should significantly reduce corruption issues.
   - If the file still somehow corrupts, now the file is backed up and a default configuration is loaded instead.
+- Added support for Curios. This is only relevant with Sinytra Connector or forks.
 - Fixed entity dynamic light sources not being saved and loaded at/from the right path in the configuration.
 - Fixed throwable item projectiles with the `Item` property set not emitting light if the item emits light ([#265](https://github.com/LambdAurora/LambDynamicLights/issues/265)).
 - Updated Traditional Chinese translations ([#261](https://github.com/LambdAurora/LambDynamicLights/pull/261)).
