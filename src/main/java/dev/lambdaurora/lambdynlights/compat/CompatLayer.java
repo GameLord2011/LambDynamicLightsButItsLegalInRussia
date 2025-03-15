@@ -24,7 +24,7 @@ import java.util.List;
  * Represents a compatibility layer with another mod.
  *
  * @author LambdAurora
- * @version 3.1.4
+ * @version 4.0.2
  * @since 3.1.4
  */
 public interface CompatLayer {
@@ -54,6 +54,8 @@ public interface CompatLayer {
 				layers.add(new AccessoriesCompat());
 			} else if (FabricLoader.getInstance().isModLoaded("trinkets")) {
 				layers.add(new TrinketsCompat());
+			} else if (FabricLoader.getInstance().isModLoaded("curios")) {
+				layers.add(new CuriosCompat());
 			}
 		} catch (LinkageError e) {
 			LambDynLights.error(
