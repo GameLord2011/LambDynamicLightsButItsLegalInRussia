@@ -55,6 +55,10 @@ repositories {
 		url = uri("https://maven.ladysnake.org/releases")
 	}
 	maven { url = uri("https://maven.wispforest.io/releases") }
+	maven {
+		name = "Curios"
+		url = uri("https://maven.theillusivec4.top/")
+	}
 }
 
 loom {
@@ -83,6 +87,9 @@ dependencies {
 	// Mod compatibility
 	modCompileOnly(libs.trinkets)
 	modCompileOnly(libs.accessories)
+	compileOnly("${libs.curios.get().module}:${libs.versions.curios.get()}:api") {
+		this.isTransitive = false
+	}
 
 	shadow(libs.yumi.commons.core) {
 		isTransitive = false
