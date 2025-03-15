@@ -543,6 +543,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	 * This is fully removed in LambDynamicLights releases targeting Minecraft 1.21.4 and newer.
 	 */
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "4.0.0+1.21.4")
 	public static int getLuminanceFromItemStack(@NotNull ItemStack stack, boolean submergedInWater) {
 		return INSTANCE.itemLightSources.getLuminance(stack, submergedInWater);
 	}
