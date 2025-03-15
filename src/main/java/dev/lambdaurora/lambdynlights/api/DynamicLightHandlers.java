@@ -39,6 +39,7 @@ import java.util.Map;
  */
 @SuppressWarnings({"removal", "DeprecatedIsStillUsed"})
 @Deprecated(forRemoval = true)
+@ApiStatus.ScheduledForRemoval(inVersion = "4.0.0+1.21.4")
 public final class DynamicLightHandlers {
 	private static final Map<EntityType<?>, DynamicLightHandler<?>> HANDLERS = new HashMap<>();
 	private static final EntityLuminance.Type DUMMY_RETROFIT_TYPE = new EntityLuminance.Type(

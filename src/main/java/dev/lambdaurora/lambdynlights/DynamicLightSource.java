@@ -12,6 +12,7 @@ package dev.lambdaurora.lambdynlights;
 import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSourceBehavior;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -30,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
  * </ul>
  */
 @Deprecated(forRemoval = true)
+@ApiStatus.ScheduledForRemoval(inVersion = "4.0.0+1.21.4")
 public interface DynamicLightSource extends EntityDynamicLightSourceBehavior {
 	/**
 	 * Returns the dynamic light source world.
@@ -40,7 +42,9 @@ public interface DynamicLightSource extends EntityDynamicLightSourceBehavior {
 		return this.dynamicLightWorld();
 	}
 
-	default boolean lambdynlights$updateDynamicLight(@NotNull LevelRenderer renderer) {return false;}
+	default boolean lambdynlights$updateDynamicLight(@NotNull LevelRenderer renderer) {
+		return false;
+	}
 
 	default void lambdynlights$scheduleTrackedChunksRebuild(@NotNull LevelRenderer renderer) {}
 }
