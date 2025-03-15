@@ -14,6 +14,7 @@ import dev.lambdaurora.lambdynlights.resource.entity.luminance.CreeperLuminance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Creeper;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,6 +34,7 @@ import java.util.function.Function;
  * This is fully removed in LambDynamicLights releases targeting Minecraft 1.21.4 and newer.
  */
 @Deprecated(forRemoval = true)
+@ApiStatus.ScheduledForRemoval(inVersion = "4.0.0+1.21.4")
 public interface DynamicLightHandler<T> {
 	/**
 	 * Returns the luminance of the light source.

@@ -12,6 +12,7 @@ package dev.lambdaurora.lambdynlights.api.item;
 import dev.lambdaurora.lambdynlights.LambDynLights;
 import net.minecraft.resources.io.ResourceManager;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Represents an item light sources manager.
@@ -26,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
  * This is fully removed in LambDynamicLights releases targeting Minecraft 1.21 and newer.
  */
 @Deprecated(forRemoval = true)
+@ApiStatus.ScheduledForRemoval(inVersion = "3.0.0+1.21.1")
 public final class ItemLightSources {
 	/**
 	 * Loads the item light source data from resource pack.

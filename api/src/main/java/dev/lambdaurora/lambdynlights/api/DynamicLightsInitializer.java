@@ -9,6 +9,8 @@
 
 package dev.lambdaurora.lambdynlights.api;
 
+import org.jetbrains.annotations.ApiStatus;
+
 /**
  * Represents the entrypoint for LambDynamicLights' API.
  *
@@ -48,5 +50,6 @@ public interface DynamicLightsInitializer {
 	 */
 	@SuppressWarnings("DeprecatedIsStillUsed")
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "3.0.0+1.21.1")
 	void onInitializeDynamicLights();
 }

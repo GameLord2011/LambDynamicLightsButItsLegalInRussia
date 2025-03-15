@@ -17,6 +17,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Range;
 
 /**
@@ -85,6 +86,7 @@ public class ItemLightSource {
 	 * This is fully removed in LambDynamicLights releases targeting Minecraft 1.21 and newer.
 	 */
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "3.0.0+1.21.1")
 	public Identifier id() {
 		return null;
 	}
@@ -100,6 +102,7 @@ public class ItemLightSource {
 	 * This is fully removed in LambDynamicLights releases targeting Minecraft 1.21 and newer.
 	 */
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "3.0.0+1.21.1")
 	public Item item() {
 		return this.predicate.items()
 				.flatMap(items -> items.stream().findFirst())
@@ -134,6 +137,7 @@ public class ItemLightSource {
 	 * This is fully removed in LambDynamicLights releases targeting Minecraft 1.21 and newer.
 	 */
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "3.0.0+1.21.1")
 	public int getLuminance(ItemStack stack, boolean submergedInWater) {
 		return this.getLuminance(stack);
 	}
@@ -146,6 +150,7 @@ public class ItemLightSource {
 	 * This is fully removed in LambDynamicLights releases targeting Minecraft 1.21 and newer.
 	 */
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "3.0.0+1.21.1")
 	public static class StaticItemLightSource extends ItemLightSource {
 		public StaticItemLightSource(Identifier id, Item item, int luminance, boolean waterSensitive) {
 			super(ItemPredicate.Builder.item().of(item).build(), new ItemLuminance.Value(luminance), waterSensitive);
@@ -164,6 +169,7 @@ public class ItemLightSource {
 	 * This is fully removed in LambDynamicLights releases targeting Minecraft 1.21 and newer.
 	 */
 	@Deprecated(forRemoval = true)
+	@ApiStatus.ScheduledForRemoval(inVersion = "3.0.0+1.21.1")
 	public static class BlockItemLightSource extends ItemLightSource {
 		public BlockItemLightSource(Identifier id, Item item, BlockState block, boolean waterSensitive) {
 			super(ItemPredicate.Builder.item().of(item).build(), new ItemLuminance.BlockReference(block.getBlock()), waterSensitive);
