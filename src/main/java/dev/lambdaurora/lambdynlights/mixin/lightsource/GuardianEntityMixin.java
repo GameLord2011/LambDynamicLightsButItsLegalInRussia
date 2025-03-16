@@ -9,8 +9,8 @@
 
 package dev.lambdaurora.lambdynlights.mixin.lightsource;
 
-import dev.lambdaurora.lambdynlights.echo.GuardianEntityLightSource;
 import dev.lambdaurora.lambdynlights.api.behavior.LineLightBehavior;
+import dev.lambdaurora.lambdynlights.echo.GuardianEntityLightSource;
 import net.minecraft.world.entity.monster.Guardian;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

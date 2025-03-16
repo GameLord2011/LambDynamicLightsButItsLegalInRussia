@@ -9,8 +9,11 @@
 
 package dev.lambdaurora.lambdynlights;
 
-import com.electronwill.nightconfig.core.file.FileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
+import com.electronwill.nightconfig.core.CommentedConfig;
+import com.electronwill.nightconfig.core.io.ParsingException;
+import com.electronwill.nightconfig.core.io.ParsingMode;
+import com.electronwill.nightconfig.toml.TomlParser;
+import com.electronwill.nightconfig.toml.TomlWriter;
 import dev.lambdaurora.lambdynlights.config.BooleanSettingEntry;
 import dev.lambdaurora.lambdynlights.config.SettingEntry;
 import dev.lambdaurora.spruceui.option.SpruceCyclingOption;
@@ -23,8 +26,11 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.file.Path;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents the mod configuration.
@@ -44,8 +50,10 @@ public class DynamicLightsConfig {
 	private static final int DEFAULT_DEBUG_CELL_DISPLAY_RADIUS = 0;
 	private static final int DEFAULT_DEBUG_LIGHT_LEVEL_RADIUS = 0;
 
-	public static final Path CONFIG_FILE_PATH = FabricLoader.getInstance().getConfigDir().resolve("lambdynlights.toml");
-	protected final FileConfig config;
+	public static final Path CONFIG_FILE_PATH = FabricLoader.getInstance().getConfigDir()
+			.resolve("lambdynlights.toml")
+			.normalize();
+	private final CommentedConfig config;
 	private final LambDynLights mod;
 	private DynamicLightsMode dynamicLightsMode;
 	private final List<SettingEntry<?>> settingEntries;
@@ -74,12 +82,8 @@ public class DynamicLightsConfig {
 
 	public DynamicLightsConfig(@NotNull LambDynLights mod) {
 		this.mod = mod;
+		this.config = CommentedConfig.inMemory();
 
-		this.config = FileConfig.builder(CONFIG_FILE_PATH)
-				.defaultResource("/lambdynlights.toml")
-				.autosave()
-				.writingMode(WritingMode.REPLACE_ATOMIC)
-				.build();
 		this.entitiesLightSource = new BooleanSettingEntry("light_sources.entities", DEFAULT_ENTITIES_LIGHT_SOURCE, this.config,
 				Text.translatable("lambdynlights.tooltip.entities"));
 		this.selfLightSource = new BooleanSettingEntry("light_sources.self", DEFAULT_SELF_LIGHT_SOURCE, this.config,
@@ -133,7 +137,11 @@ public class DynamicLightsConfig {
 	 * Loads the configuration.
 	 */
 	public void load() {
-		this.config.load();
+		try {
+			this.loadFromFile(true);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 
 		String dynamicLightsModeValue = this.config.getOrElse("mode", DEFAULT_DYNAMIC_LIGHTS_MODE.getName());
 		this.dynamicLightsMode = DynamicLightsMode.byId(dynamicLightsModeValue)
@@ -149,6 +157,53 @@ public class DynamicLightsConfig {
 		LambDynLights.log(LOGGER, "Configuration loaded.");
 	}
 
+	private void loadFromFile(boolean firstAttempt) throws IOException {
+		try (var reader = Files.newBufferedReader(CONFIG_FILE_PATH)) {
+			new TomlParser().parse(reader, this.config, ParsingMode.REPLACE);
+		} catch (NoSuchFileException | FileNotFoundException e) {
+			if (!firstAttempt) {
+				throw e;
+			}
+
+			this.copyDefaultFile();
+			this.loadFromFile(false);
+		} catch (ParsingException e) {
+			if (!firstAttempt) {
+				throw e;
+			}
+
+			var backupPath = CONFIG_FILE_PATH.resolveSibling("lambdynlights.toml.old").toAbsolutePath().normalize();
+
+			LambDynLights.error(LOGGER, "Failed to parse configuration file, THIS IS BAD.", e);
+			LambDynLights.error(LOGGER, "Copying the corrupt file to \"{}\".", backupPath);
+			Files.copy(CONFIG_FILE_PATH, backupPath, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+			this.copyDefaultFile();
+			this.loadFromFile(false);
+		}
+	}
+
+	/**
+	 * Copies the default configuration file from this mod's JAR.
+	 *
+	 * @throws IOException if copying the file fails
+	 */
+	private void copyDefaultFile() throws IOException {
+		Files.createDirectories(CONFIG_FILE_PATH.getParent());
+
+		try (var defaultStream = DynamicLightsConfig.class.getResourceAsStream("/lambdynlights.toml")) {
+			Files.copy(
+					Objects.requireNonNull(
+							defaultStream,
+							"This distribution of LambDynamicLights is broken: "
+									+ "cannot find the default configuration file inside of the mod's JAR."
+					),
+					CONFIG_FILE_PATH,
+					StandardCopyOption.REPLACE_EXISTING
+			);
+			LambDynLights.log(LOGGER, "Copied default configuration file.");
+		}
+	}
+
 	/**
 	 * Loads the setting.
 	 *
@@ -162,7 +217,19 @@ public class DynamicLightsConfig {
 	 * Saves the configuration.
 	 */
 	public void save() {
-		this.config.save();
+		var toml = new TomlWriter().writeToString(this.config);
+
+		try {
+			Files.createDirectories(CONFIG_FILE_PATH.getParent());
+			Files.writeString(CONFIG_FILE_PATH, toml,
+					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.DSYNC
+			);
+		} catch (IOException e) {
+			LambDynLights.error(LOGGER, "Failed to save configuration file.", e);
+			return;
+		}
+
+		LambDynLights.log(LOGGER, "Configuration saved.");
 	}
 
 	/**

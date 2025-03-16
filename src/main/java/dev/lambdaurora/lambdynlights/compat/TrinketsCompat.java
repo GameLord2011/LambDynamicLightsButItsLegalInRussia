@@ -10,7 +10,6 @@
 package dev.lambdaurora.lambdynlights.compat;
 
 import dev.emi.trinkets.api.TrinketsApi;
-import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import net.minecraft.world.entity.LivingEntity;
 

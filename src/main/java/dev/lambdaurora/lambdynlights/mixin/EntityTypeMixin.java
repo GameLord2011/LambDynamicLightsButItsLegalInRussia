@@ -41,9 +41,9 @@ public abstract class EntityTypeMixin<T extends Entity> implements DynamicLightH
 				return null;
 			}
 
-			this.lambdynlights$setting = new LightSourceSettingEntry(this.getDescriptionId(),
-					true, null, null
-			);
+			String key = id.namespace() + "." + id.path();
+
+			this.lambdynlights$setting = new LightSourceSettingEntry(key, this.getDescriptionId(), true, null, null);
 			LambDynLights.get().config.load(this.lambdynlights$setting);
 		}
 

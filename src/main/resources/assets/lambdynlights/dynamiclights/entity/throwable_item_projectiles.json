@@ -1,0 +1,14 @@
+{
+	"match": {
+		"type": [
+			"minecraft:egg",
+			"minecraft:ender_pearl",
+			"minecraft:experience_bottle",
+			"minecraft:snowball",
+			"minecraft:potion"
+		]
+	},
+	"luminance": {
+		"type": "lambdynlights:projectile/throwable_item"
+	}
+}

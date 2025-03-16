@@ -18,14 +18,16 @@ import java.util.function.Consumer;
 
 public abstract class SettingEntry<T> {
 	private final String key;
+	private final String guiKey;
 	private final SpruceOption option;
 	private final T defaultValue;
 	protected @Nullable Config config;
 	private T value;
 	protected @Nullable Consumer<T> onSet;
 
-	protected SettingEntry(String key, T defaultValue, @Nullable Config config, @Nullable Text tooltip) {
+	protected SettingEntry(String key, String guiKey, T defaultValue, @Nullable Config config, @Nullable Text tooltip) {
 		this.key = key;
+		this.guiKey = guiKey;
 		this.defaultValue = defaultValue;
 		this.config = config;
 		this.option = this.buildOption(tooltip);
@@ -33,11 +35,15 @@ public abstract class SettingEntry<T> {
 	}
 
 	protected SettingEntry(String key, T defaultValue, @Nullable Config config) {
-		this(key, defaultValue, config, null);
+		this(key, key, defaultValue, config, null);
 	}
 
 	public String key() {
 		return this.key;
+	}
+
+	protected String guiKey() {
+		return this.guiKey;
 	}
 
 	public T get() {

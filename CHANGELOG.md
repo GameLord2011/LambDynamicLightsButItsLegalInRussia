@@ -282,13 +282,24 @@
 - Fixed Upside-down English translations ([#257](https://github.com/LambdAurora/LambDynamicLights/pull/257)).
 - Fixed custom dynamic light sources sometimes not updating previously lit chunks.
 
+### 4.0.2
+
+- Improved loading/saving of the configuration file, this should significantly reduce corruption issues.
+  - If the file still somehow corrupts, now the file is backed up and a default configuration is loaded instead.
+- Added support for Curios. This is only relevant with Sinytra Connector or forks.
+- Fixed entity dynamic light sources not being saved and loaded at/from the right path in the configuration.
+- Fixed throwable item projectiles with the `Item` property set not emitting light if the item emits light ([#265](https://github.com/LambdAurora/LambDynamicLights/issues/265)).
+- Updated Traditional Chinese translations ([#261](https://github.com/LambdAurora/LambDynamicLights/pull/261)).
+- Updated Turkish translations ([#263](https://github.com/LambdAurora/LambDynamicLights/pull/263)).
+- Updated Simplified Chinese translations ([#264](https://github.com/LambdAurora/LambDynamicLights/pull/264)).
+- Updated [SpruceUI].
+
 ### 4.1.0
 
 - Updated to Minecraft 1.21.5.
 - Added dynamic lighting to Firefly particles.
 - Added support for entity component predicates.
-- Updated Traditional Chinese translations ([#261](https://github.com/LambdAurora/LambDynamicLights/pull/261)).
-- Updated Turkish translations ([#263](https://github.com/LambdAurora/LambDynamicLights/pull/263)).
+- Updated [SpruceUI].
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"

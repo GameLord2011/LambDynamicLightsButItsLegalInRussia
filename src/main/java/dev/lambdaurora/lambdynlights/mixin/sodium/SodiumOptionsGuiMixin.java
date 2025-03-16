@@ -38,7 +38,7 @@ public class SodiumOptionsGuiMixin extends Screen {
 	@Dynamic
 	@Inject(method = "<init>", at = @At("RETURN"))
 	private void lambdynlights$onInit(Screen prevScreen, CallbackInfo ci) {
-		pages.add(this.lambDynLights = SodiumOptionPage.makeSodiumOptionPage(Text.literal("LambDynamicLights")));
+		this.pages.add(this.lambDynLights = SodiumOptionPage.makeSodiumOptionPage(Text.literal("LambDynamicLights")));
 	}
 
 	@Dynamic

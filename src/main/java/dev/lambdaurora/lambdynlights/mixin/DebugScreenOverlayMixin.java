@@ -33,7 +33,9 @@ import java.util.List;
  */
 @Mixin(DebugScreenOverlay.class)
 public class DebugScreenOverlayMixin {
-	@Shadow @Final private Minecraft minecraft;
+	@Shadow
+	@Final
+	private Minecraft minecraft;
 
 	@Inject(method = "getGameInformation", at = @At("RETURN"))
 	private void onGetLeftText(CallbackInfoReturnable<List<String>> cir) {

@@ -34,6 +34,8 @@ tasks.generateFmj.configure {
 		.withDepend("spruceui", ">=${libs.versions.spruceui.get()}")
 		.withRecommend("modmenu", ">=${libs.versions.modmenu.get()}")
 		.withBreak("optifabric", "*")
+		.withBreak("sodiumdynamiclights", "*")
+		.withBreak("ryoamiclights", "*")
 
 	fabricApiModules.forEach { module -> fmj.withDepend(module.name, ">=${module.version}") }
 }
@@ -127,7 +129,9 @@ modrinth {
 	syncBodyFrom.set(Utils.parseReadme(project))
 	dependencies.set(
 		listOf(
-			ModDependency("P7dR8mSH", "required")
+			ModDependency("P7dR8mSH", "required"),
+			ModDependency("reCfnRvJ", "incompatible"),
+			ModDependency("PxQSWIcD", "incompatible")
 		)
 	)
 
@@ -141,10 +145,6 @@ modrinth {
 			tasks.modrinth.get().isEnabled = false
 		}
 	}
-}
-
-tasks.modrinth {
-	dependsOn(tasks.modrinthSyncBody)
 }
 
 tasks.register<TaskPublishCurseForge>("curseforge") {

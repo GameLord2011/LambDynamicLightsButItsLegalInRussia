@@ -20,18 +20,16 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class LightSourceSettingEntry extends BooleanSettingEntry {
-	public LightSourceSettingEntry(String key, boolean defaultValue, @Nullable Config config, @Nullable Text tooltip) {
-		super(key, defaultValue, config, tooltip);
-	}
-
-	public LightSourceSettingEntry(String key, boolean defaultValue, @Nullable Config config) {
-		super(key, defaultValue, config);
+	public LightSourceSettingEntry(
+			String key, String guiKey, boolean defaultValue, @Nullable Config config, @Nullable Text tooltip
+	) {
+		super("light_sources.settings.entities." + key, guiKey, defaultValue, config, tooltip);
 	}
 
 	@Override
 	protected SpruceOption buildOption(@Nullable Text tooltip) {
 		return new Option(
-				this.key(),
+				this.guiKey(),
 				this::get,
 				this::set,
 				tooltip
