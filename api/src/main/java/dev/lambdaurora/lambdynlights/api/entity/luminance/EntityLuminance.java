@@ -90,6 +90,15 @@ public interface EntityLuminance {
 	}
 
 	/**
+	 * Creates a new {@link Value} instance.
+	 * @param luminance The luminance value between 0 and 15
+	 * @return the {@link Value} instance.
+	 */
+	static Value of(@Range(from = 0, to = 15) int luminance) {
+		return new Value(luminance);
+	}
+
+	/**
 	 * Represents a direct entity luminance value.
 	 *
 	 * @param luminance the luminance
@@ -132,8 +141,8 @@ public interface EntityLuminance {
 		);
 
 		public static final Type VALUE = register("value", Value.CODEC);
-		public static final Type WATER_SENSITIVE = register("water_sensitive", WaterSensititiveEntityLuminance.CODEC);
-		public static final Type WET_SENSITIVE = register("wet_sensitive", WetSensititiveEntityLuminance.CODEC);
+		public static final Type WATER_SENSITIVE = register("water_sensitive", WaterSensitiveEntityLuminance.CODEC);
+		public static final Type WET_SENSITIVE = register("wet_sensitive", WetSensitiveEntityLuminance.CODEC);
 
 		public static final Type ARROW_ITEM_DERIVED = registerSimple(
 				"arrow/derived_from_self_item", ArrowItemDerivedLuminance.INSTANCE

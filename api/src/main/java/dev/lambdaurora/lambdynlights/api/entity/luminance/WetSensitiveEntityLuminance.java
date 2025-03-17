@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,19 +28,19 @@ import java.util.List;
  * @version 4.1.0
  * @since 4.1.0
  */
-public record WetSensititiveEntityLuminance(
+public record WetSensitiveEntityLuminance(
 		List<EntityLuminance> dry,
 		List<EntityLuminance> wet
 ) implements EntityLuminance {
-	public static final MapCodec<WetSensititiveEntityLuminance> CODEC = RecordCodecBuilder.mapCodec(
+	public static final MapCodec<WetSensitiveEntityLuminance> CODEC = RecordCodecBuilder.mapCodec(
 			instance -> instance.group(
 					EntityLuminance.LIST_CODEC
 							.optionalFieldOf("dry", List.of())
-							.forGetter(WetSensititiveEntityLuminance::dry),
+							.forGetter(WetSensitiveEntityLuminance::dry),
 					EntityLuminance.LIST_CODEC
 							.optionalFieldOf("wet", List.of())
-							.forGetter(WetSensititiveEntityLuminance::wet)
-			).apply(instance, WetSensititiveEntityLuminance::new)
+							.forGetter(WetSensitiveEntityLuminance::wet)
+			).apply(instance, WetSensitiveEntityLuminance::new)
 	);
 
 	@Override
@@ -55,6 +56,49 @@ public record WetSensititiveEntityLuminance(
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.wet);
 		} else {
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.dry);
+		}
+	}
+
+	/**
+	 * Creates a new builder instance.
+	 * @return The builder instance.
+	 * @since 4.1.0
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	/**
+	 * A builder for creating a new {@link WetSensitiveEntityLuminance} instance.
+	 *
+	 * @since 4.1.0
+	 */
+	public static class Builder {
+		private final List<EntityLuminance> dry = new ArrayList<>();
+		private final List<EntityLuminance> wet = new ArrayList<>();
+
+		public Builder dry(EntityLuminance... luminances) {
+			this.dry.addAll(List.of(luminances));
+			return this;
+		}
+
+		public Builder dry(List<EntityLuminance> luminances) {
+			this.dry.addAll(luminances);
+			return this;
+		}
+
+		public Builder wet(EntityLuminance... luminances) {
+			this.wet.addAll(List.of(luminances));
+			return this;
+		}
+
+		public Builder wet(List<EntityLuminance> luminances) {
+			this.wet.addAll(luminances);
+			return this;
+		}
+
+		public WetSensitiveEntityLuminance build() {
+			return new WetSensitiveEntityLuminance(List.copyOf(this.dry), List.copyOf(this.wet));
 		}
 	}
 }

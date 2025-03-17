@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,19 +28,19 @@ import java.util.List;
  * @version 4.1.0
  * @since 4.1.0
  */
-public record WaterSensititiveEntityLuminance(
+public record WaterSensitiveEntityLuminance(
 		List<EntityLuminance> outOfWater,
 		List<EntityLuminance> inWater
 ) implements EntityLuminance {
-	public static final MapCodec<WaterSensititiveEntityLuminance> CODEC = RecordCodecBuilder.mapCodec(
+	public static final MapCodec<WaterSensitiveEntityLuminance> CODEC = RecordCodecBuilder.mapCodec(
 			instance -> instance.group(
 					EntityLuminance.LIST_CODEC
 							.optionalFieldOf("out_of_water", List.of())
-							.forGetter(WaterSensititiveEntityLuminance::outOfWater),
+							.forGetter(WaterSensitiveEntityLuminance::outOfWater),
 					EntityLuminance.LIST_CODEC
 							.optionalFieldOf("in_water", List.of())
-							.forGetter(WaterSensititiveEntityLuminance::inWater)
-			).apply(instance, WaterSensititiveEntityLuminance::new)
+							.forGetter(WaterSensitiveEntityLuminance::inWater)
+			).apply(instance, WaterSensitiveEntityLuminance::new)
 	);
 
 	@Override
@@ -55,6 +56,49 @@ public record WaterSensititiveEntityLuminance(
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.inWater);
 		} else {
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.outOfWater);
+		}
+	}
+
+	/**
+	 * Creates a new builder instance.
+	 * @return The builder instance.
+	 * @since 4.1.0
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	/**
+	 * A builder for creating a new {@link WaterSensitiveEntityLuminance} instance.
+	 *
+	 * @since 4.1.0
+	 */
+	public static class Builder {
+		private final List<EntityLuminance> outOfWater = new ArrayList<>();
+		private final List<EntityLuminance> inWater = new ArrayList<>();
+
+		public Builder outOfWater(EntityLuminance... luminances) {
+			this.outOfWater.addAll(List.of(luminances));
+			return this;
+		}
+
+		public Builder outOfWater(List<EntityLuminance> luminances) {
+			this.outOfWater.addAll(luminances);
+			return this;
+		}
+
+		public Builder inWater(EntityLuminance... luminances) {
+			this.inWater.addAll(List.of(luminances));
+			return this;
+		}
+
+		public Builder inWater(List<EntityLuminance> luminances) {
+			this.inWater.addAll(luminances);
+			return this;
+		}
+
+		public WaterSensitiveEntityLuminance build() {
+			return new WaterSensitiveEntityLuminance(List.copyOf(this.outOfWater), List.copyOf(this.inWater));
 		}
 	}
 }
