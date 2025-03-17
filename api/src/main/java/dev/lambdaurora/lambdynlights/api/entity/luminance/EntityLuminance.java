@@ -29,7 +29,7 @@ import java.util.Optional;
  * Represents the provider of a luminance value of a given entity.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.1.0
  * @since 4.0.0
  */
 public interface EntityLuminance {
