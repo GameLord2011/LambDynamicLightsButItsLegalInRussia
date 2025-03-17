@@ -58,7 +58,7 @@ public record WetSensitiveEntityLuminance(
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.dry);
 		}
 	}
-
+  
 	/**
 	 * Creates a new builder instance.
 	 * @return The builder instance.
