@@ -36,7 +36,7 @@ import java.util.List;
  * Represents an entity light source manager.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.1.0
  * @since 4.0.0
  */
 public final class EntityLightSources extends LightSourceLoader<EntityLightSource> implements EntityLightSourceManager {
