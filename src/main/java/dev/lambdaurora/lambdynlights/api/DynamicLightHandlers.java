@@ -12,7 +12,7 @@ package dev.lambdaurora.lambdynlights.api;
 import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.LambDynLightsConstants;
 import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
-import dev.lambdaurora.lambdynlights.api.entity.luminance.WaterSensititiveEntityLuminance;
+import dev.lambdaurora.lambdynlights.api.entity.luminance.WaterSensitiveEntityLuminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightingEngine;
 import net.minecraft.world.entity.Entity;
@@ -60,7 +60,7 @@ public final class DynamicLightHandlers {
 			HANDLERS.forEach((type, handler) -> {
 				var actualHandler = (DynamicLightHandler<Entity>) handler;
 
-				context.register(type, new WaterSensititiveEntityLuminance(
+				context.register(type, new WaterSensitiveEntityLuminance(
 						List.of(retrofitHandler(actualHandler, false)),
 						List.of(retrofitHandler(actualHandler, true))
 				));
