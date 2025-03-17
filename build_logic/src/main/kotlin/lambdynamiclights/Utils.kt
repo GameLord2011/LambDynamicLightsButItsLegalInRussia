@@ -41,13 +41,11 @@ object Utils {
 		if (matcher != null) {
 			var changelogContent = matcher.groupValues[1]
 
-			val changelogLines = changelogText.split("\n")
-			val linkRefRegex = "^\\[([A-z\\d _\\-/+.]+)]: ".toRegex()
-			for (i in changelogLines.size - 1 downTo 0) {
-				val line = changelogLines[i]
+			val changelogLines = changelogText.substring(matcher.range.last).split("\n")
+			val linkRefRegex = "^\\[([A-z\\d _\\-/+.#]+)]: .+$".toRegex()
+			for (line in changelogLines) {
 				if (line matches linkRefRegex)
 					changelogContent += "\n" + line
-				else break
 			}
 			return changelogContent
 		} else {
