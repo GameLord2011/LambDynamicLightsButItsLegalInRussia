@@ -19,42 +19,42 @@ import org.jetbrains.annotations.Range;
 import java.util.List;
 
 /**
- * Provides a conditional luminance value depending on whether the entity is in or out of water.
+ * Provides a conditional luminance value depending on whether the entity is wet or dry.
  *
- * @param outOfWater the luminance values if the entity is out of water
- * @param inWater the luminance values if the entity is in water
+ * @param dry the luminance values if the entity is dry
+ * @param wet the luminance values if the entity is wet
  * @author LambdAurora
  * @version 4.1.0
  * @since 4.1.0
  */
-public record WaterSensititiveEntityLuminance(
-		List<EntityLuminance> outOfWater,
-		List<EntityLuminance> inWater
+public record WetSensitiveEntityLuminance(
+		List<EntityLuminance> dry,
+		List<EntityLuminance> wet
 ) implements EntityLuminance {
-	public static final MapCodec<WaterSensititiveEntityLuminance> CODEC = RecordCodecBuilder.mapCodec(
+	public static final MapCodec<WetSensitiveEntityLuminance> CODEC = RecordCodecBuilder.mapCodec(
 			instance -> instance.group(
 					EntityLuminance.LIST_CODEC
-							.optionalFieldOf("out_of_water", List.of())
-							.forGetter(WaterSensititiveEntityLuminance::outOfWater),
+							.optionalFieldOf("dry", List.of())
+							.forGetter(WetSensitiveEntityLuminance::dry),
 					EntityLuminance.LIST_CODEC
-							.optionalFieldOf("in_water", List.of())
-							.forGetter(WaterSensititiveEntityLuminance::inWater)
-			).apply(instance, WaterSensititiveEntityLuminance::new)
+							.optionalFieldOf("wet", List.of())
+							.forGetter(WetSensitiveEntityLuminance::wet)
+			).apply(instance, WetSensitiveEntityLuminance::new)
 	);
 
 	@Override
 	public @NotNull Type type() {
-		return EntityLuminance.Type.WATER_SENSITIVE;
+		return EntityLuminance.Type.WET_SENSITIVE;
 	}
 
 	@Override
 	public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Entity entity) {
-		boolean submergedInWater = entity.isSubmergedInWater();
+		boolean submergedInWater = entity.isInWaterRainOrBubble();
 
 		if (submergedInWater) {
-			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.inWater);
+			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.wet);
 		} else {
-			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.outOfWater);
+			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.dry);
 		}
 	}
 }

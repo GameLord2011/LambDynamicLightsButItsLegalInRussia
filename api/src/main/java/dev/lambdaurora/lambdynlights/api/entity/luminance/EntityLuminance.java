@@ -132,8 +132,8 @@ public interface EntityLuminance {
 		);
 
 		public static final Type VALUE = register("value", Value.CODEC);
-		public static final Type WATER_SENSITIVE = register("water_sensitive", WaterSensititiveEntityLuminance.CODEC);
-		public static final Type WET_SENSITIVE = register("wet_sensitive", WetSensititiveEntityLuminance.CODEC);
+		public static final Type WATER_SENSITIVE = register("water_sensitive", WaterSensitiveEntityLuminance.CODEC);
+		public static final Type WET_SENSITIVE = register("wet_sensitive", WetSensitiveEntityLuminance.CODEC);
 
 		public static final Type ARROW_ITEM_DERIVED = registerSimple(
 				"arrow/derived_from_self_item", ArrowItemDerivedLuminance.INSTANCE
