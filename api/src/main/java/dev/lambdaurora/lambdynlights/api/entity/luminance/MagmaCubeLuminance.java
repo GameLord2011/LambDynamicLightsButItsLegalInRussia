@@ -7,11 +7,9 @@
  * see the LICENSE file.
  */
 
-package dev.lambdaurora.lambdynlights.resource.entity.luminance;
+package dev.lambdaurora.lambdynlights.api.entity.luminance;
 
-import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
-import dev.lambdaurora.lambdynlights.resource.entity.EntityLightSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.MagmaCube;
 import org.jetbrains.annotations.NotNull;
@@ -21,8 +19,8 @@ import org.jetbrains.annotations.Range;
  * Provides the luminance value of a magma cube.
  *
  * @author LambdAurora
- * @version 4.0.0
- * @since 4.0.0
+ * @version 4.1.0
+ * @since 4.1.0
  */
 public final class MagmaCubeLuminance implements EntityLuminance {
 	public static final MagmaCubeLuminance INSTANCE = new MagmaCubeLuminance();
@@ -31,7 +29,7 @@ public final class MagmaCubeLuminance implements EntityLuminance {
 
 	@Override
 	public @NotNull Type type() {
-		return EntityLightSources.MAGMA_CUBE;
+		return EntityLuminance.Type.MAGMA_CUBE;
 	}
 
 	@Override

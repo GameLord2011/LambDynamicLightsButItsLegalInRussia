@@ -36,7 +36,7 @@ import java.util.List;
  * Represents an entity light source manager.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.1.0
  * @since 4.0.0
  */
 public final class EntityLightSources extends LightSourceLoader<EntityLightSource> implements EntityLightSourceManager {
@@ -44,23 +44,11 @@ public final class EntityLightSources extends LightSourceLoader<EntityLightSourc
 	private static final Identifier RESOURCE_RELOADER_ID = LambDynLightsConstants.id("entity_dynamic_lights");
 	private static final List<Identifier> RESOURCE_RELOADER_DEPENDENCIES = List.of(ItemLightSources.RESOURCE_RELOADER_ID);
 
-	public static final EntityLuminance.Type WATER_SENSITIVE = EntityLuminance.Type.register(
-			LambDynLightsConstants.id("water_sensitive"), WaterSensititiveEntityLuminance.CODEC
-	);
-	public static final EntityLuminance.Type WET_SENSITIVE = EntityLuminance.Type.register(
-			LambDynLightsConstants.id("wet_sensitive"), WetSensititiveEntityLuminance.CODEC
-	);
 	public static final EntityLuminance.Type ARROW_ITEM_DERIVED = EntityLuminance.Type.registerSimple(
 			LambDynLightsConstants.id("arrow/derived_from_self_item"), ArrowItemDerivedLuminance.INSTANCE
 	);
 	public static final EntityLuminance.Type CREEPER = EntityLuminance.Type.registerSimple(
 			LambDynLightsConstants.id("creeper"), CreeperLuminance.INSTANCE
-	);
-	public static final EntityLuminance.Type GLOW_SQUID = EntityLuminance.Type.registerSimple(
-			LambDynLightsConstants.id("glow_squid"), GlowSquidLuminance.INSTANCE
-	);
-	public static final EntityLuminance.Type MAGMA_CUBE = EntityLuminance.Type.registerSimple(
-			LambDynLightsConstants.id("magma_cube"), MagmaCubeLuminance.INSTANCE
 	);
 
 	public static final EntityLuminance.Type DISPLAY = EntityLuminance.Type.register(

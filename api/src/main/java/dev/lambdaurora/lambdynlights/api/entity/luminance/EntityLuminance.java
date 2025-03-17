@@ -30,7 +30,7 @@ import java.util.Optional;
  * Represents the provider of a luminance value of a given entity.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.1.0
  * @since 4.0.0
  */
 public interface EntityLuminance {
@@ -133,7 +133,12 @@ public interface EntityLuminance {
 		);
 
 		public static final Type VALUE = register("value", Value.CODEC);
+		public static final Type WATER_SENSITIVE = register("water_sensitive", WaterSensititiveEntityLuminance.CODEC);
+		public static final Type WET_SENSITIVE = register("wet_sensitive", WetSensititiveEntityLuminance.CODEC);
+
 		public static final Type ENDERMAN = registerSimple("enderman", EndermanLuminance.INSTANCE);
+		public static final Type GLOW_SQUID = registerSimple("glow_squid", GlowSquidLuminance.INSTANCE);
+		public static final Type MAGMA_CUBE = registerSimple("magma_cube", MagmaCubeLuminance.INSTANCE);
 		public static final Type FALLING_BLOCK = registerSimple("falling_block", FallingBlockLuminance.INSTANCE);
 		public static final Type ITEM = register("item", ItemDerivedEntityLuminance.CODEC);
 		public static final Type ITEM_ENTITY = registerSimple("item_entity", ItemEntityLuminance.INSTANCE);

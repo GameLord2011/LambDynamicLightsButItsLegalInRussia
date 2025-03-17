@@ -134,7 +134,9 @@ modrinth {
 	syncBodyFrom.set(Utils.parseReadme(project))
 	dependencies.set(
 		listOf(
-			ModDependency("P7dR8mSH", "required")
+			ModDependency("P7dR8mSH", "required"),
+			ModDependency("reCfnRvJ", "incompatible"),
+			ModDependency("PxQSWIcD", "incompatible")
 		)
 	)
 
