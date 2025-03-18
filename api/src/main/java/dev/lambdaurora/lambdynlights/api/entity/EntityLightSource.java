@@ -16,6 +16,7 @@ import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import dev.lambdaurora.lambdynlights.api.predicate.LightSourceLocationPredicate;
 import net.minecraft.advancements.critereon.*;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderSet;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -155,8 +156,16 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 			private Optional<EntityPredicate> passenger = Optional.empty();
 			private Optional<SlotsPredicate> slots = Optional.empty();
 
-			public @NotNull Builder of(@NotNull HolderGetter<EntityType<?>> holderGetter, @NotNull EntityType<?> entityType) {
-				this.entityType = Optional.of(EntityTypePredicate.of(holderGetter, entityType));
+			public @NotNull Builder of(@NotNull HolderGetter<EntityType<?>> holderGetter, @NotNull EntityType<?> type) {
+				this.entityType = Optional.of(EntityTypePredicate.of(holderGetter, type));
+				return this;
+			}
+
+			@SuppressWarnings("deprecation")
+			public @NotNull Builder of(@NotNull HolderGetter<EntityType<?>> holderGetter, @NotNull EntityType<?>... types) {
+				// Follow the pattern set by Vanilla's EntityTypePredicate.of,
+				// which does not seem to use holderGetter for direct sets.
+				this.entityType = Optional.of(new EntityTypePredicate(HolderSet.direct(EntityType::builtInRegistryHolder, types)));
 				return this;
 			}
 
