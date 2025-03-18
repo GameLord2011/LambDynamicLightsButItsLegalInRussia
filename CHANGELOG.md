@@ -294,7 +294,14 @@
 - Updated Simplified Chinese translations ([#264](https://github.com/LambdAurora/LambDynamicLights/pull/264)).
 - Updated [SpruceUI].
 
-### 4.1.0
+## 4.1.0
+
+- Added datagen and helper methods to API ([#267](https://github.com/LambdAurora/LambDynamicLights/pull/267)).
+  - This should allow any modders who wishes to datagen LambDynamicLights item or entity light source JSON files to do so easily.
+- Moved `lambdynlights:glow_squid`, `lambdynlights:magma_cube`, `lambdynlights:water_sensitive`, and `lambdynlights:wet_sensitive` to the API artifact.
+  - The water sensitivity setting doesn't affect entity luminance anymore (items are still affected), however this still can be tweaked through resource packs.
+
+## 4.2.0
 
 - Updated to Minecraft 1.21.5.
 - Added dynamic lighting to Firefly particles.

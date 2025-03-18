@@ -15,8 +15,14 @@ import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import dev.lambdaurora.lambdynlights.api.predicate.LightSourceLocationPredicate;
 import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentExactPredicate;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.util.List;
@@ -28,7 +34,7 @@ import java.util.Optional;
  * @param predicate the predicate to select which entities emit the given luminance
  * @param luminances the luminance sources
  * @author LambdAurora
- * @version 4.1.0
+ * @version 4.2.0
  * @since 4.0.0
  */
 public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance> luminances) {
@@ -133,6 +139,203 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 				return false;
 			} else {
 				return this.components.isEmpty() || !this.components.get().test(entity);
+			}
+		}
+
+		/**
+		 * Creates a new builder instance.
+		 *
+		 * @return The builder instance.
+		 * @since 4.1.0
+		 */
+		public static Builder builder() {
+			return new Builder();
+		}
+
+		/**
+		 * Represents a builder for creating new {@link EntityLightSource} instances.
+		 *
+		 * @since 4.1.0
+		 */
+		public static class Builder {
+			private Optional<EntityTypePredicate> entityType = Optional.empty();
+			private Optional<LightSourceLocationPredicate> located = Optional.empty();
+			private Optional<MobEffectsPredicate> effects = Optional.empty();
+			private Optional<EntityFlagsPredicate> flags = Optional.empty();
+			private Optional<EntityEquipmentPredicate> equipment = Optional.empty();
+			private Optional<EntityPredicate> vehicle = Optional.empty();
+			private Optional<EntityPredicate> passenger = Optional.empty();
+			private Optional<SlotsPredicate> slots = Optional.empty();
+			private Optional<DataComponentExactPredicate> components = Optional.empty();
+
+			public @NotNull Builder of(@NotNull HolderGetter<EntityType<?>> holderGetter, @NotNull EntityType<?> type) {
+				this.entityType = Optional.of(EntityTypePredicate.of(holderGetter, type));
+				return this;
+			}
+
+			@SuppressWarnings("deprecation")
+			public @NotNull Builder of(@NotNull HolderGetter<EntityType<?>> holderGetter, @NotNull EntityType<?>... types) {
+				// Follow the pattern set by Vanilla's EntityTypePredicate.of,
+				// which does not seem to use holderGetter for direct sets.
+				this.entityType = Optional.of(new EntityTypePredicate(HolderSet.direct(EntityType::builtInRegistryHolder, types)));
+				return this;
+			}
+
+			public @NotNull Builder of(@NotNull HolderGetter<EntityType<?>> holderGetter, @NotNull TagKey<EntityType<?>> tag) {
+				this.entityType = Optional.of(EntityTypePredicate.of(holderGetter, tag));
+				return this;
+			}
+
+			/**
+			 * Sets the entity type predicate to match with.
+			 *
+			 * @param entityTypePredicate the entity type predicate to match if present
+			 * @return {@code this}
+			 */
+			@Contract("_ -> this")
+			public Builder entityType(@NotNull EntityTypePredicate entityTypePredicate) {
+				this.entityType = Optional.of(entityTypePredicate);
+				return this;
+			}
+
+			/**
+			 * Sets the location predicate to match with.
+			 *
+			 * @param builder the location predicate builder
+			 * @return {@code this}
+			 */
+			@Contract("_ -> this")
+			public Builder located(@NotNull LightSourceLocationPredicate.Builder builder) {
+				this.located = Optional.of(builder.build());
+				return this;
+			}
+
+			/**
+			 * Sets the effects predicate to match with.
+			 *
+			 * @param builder the effects predicate builder
+			 * @return {@code this}
+			 */
+			@Contract("_ -> this")
+			public Builder effects(@NotNull MobEffectsPredicate.Builder builder) {
+				this.effects = builder.build();
+				return this;
+			}
+
+			/**
+			 * Sets the entity flags predicate to match with.
+			 *
+			 * @param builder the entity flags predicate builder
+			 * @return {@code this}
+			 */
+			@Contract("_ -> this")
+			public Builder flags(@NotNull EntityFlagsPredicate.Builder builder) {
+				this.flags = Optional.of(builder.build());
+				return this;
+			}
+
+			/**
+			 * Sets the equipment predicate to match with.
+			 *
+			 * @param builder the equipment predicate builder
+			 * @return {@code this}
+			 */
+			@Contract("_ -> this")
+			public Builder equipment(@NotNull EntityEquipmentPredicate.Builder builder) {
+				this.equipment = Optional.of(builder.build());
+				return this;
+			}
+
+			/**
+			 * Sets the equipment predicate to match with.
+			 *
+			 * @param equipmentPredicate the equipment predicate to match
+			 * @return {@code this}
+			 */
+			@Contract("_ -> this")
+			public Builder equipment(@NotNull EntityEquipmentPredicate equipmentPredicate) {
+				this.equipment = Optional.of(equipmentPredicate);
+				return this;
+			}
+
+			/**
+			 * Sets the vehicle entity predicate to match with.
+			 *
+			 * @param builder the vehicle entity predicate builder
+			 * @return {@code this}
+			 */
+			@Contract("_ -> this")
+			public Builder vehicle(@NotNull Builder builder) {
+				this.vehicle = Optional.of(builder.build());
+				return this;
+			}
+
+			/**
+			 * Sets the passenger entity predicate to match with.
+			 *
+			 * @param builder the passenger entity predicate builder
+			 * @return {@code this}
+			 */
+			@Contract("_ -> this")
+			public Builder passenger(@NotNull Builder builder) {
+				this.passenger = Optional.of(builder.build());
+				return this;
+			}
+
+			/**
+			 * Sets the slots predicate to match with.
+			 *
+			 * @param slotsPredicate the slots predicate to match if present
+			 * @return {@code this}
+			 */
+			@Contract("_ -> this")
+			public Builder slots(@NotNull SlotsPredicate slotsPredicate) {
+				this.slots = Optional.of(slotsPredicate);
+				return this;
+			}
+
+			/**
+			 * Sets the exact data components predicate to match with.
+			 *
+			 * @param builder the exact data components predicate builder
+			 * @return {@code this}
+			 * @since 4.2.0
+			 */
+			@Contract("_ -> this")
+			public Builder components(@NotNull DataComponentExactPredicate.Builder builder) {
+				return this.components(builder.build());
+			}
+
+			/**
+			 * Sets the exact data components predicate to match with.
+			 *
+			 * @param componentsPredicate the exact data components predicate to match if present
+			 * @return {@code this}
+			 * @since 4.2.0
+			 */
+			@Contract("_ -> this")
+			public Builder components(@NotNull DataComponentExactPredicate componentsPredicate) {
+				this.components = Optional.of(componentsPredicate);
+				return this;
+			}
+
+			/**
+			 * Builds the resulting {@link EntityPredicate}.
+			 *
+			 * @return the resulting {@link EntityPredicate}
+			 */
+			public @NotNull EntityPredicate build() {
+				return new EntityPredicate(
+						this.entityType,
+						this.located,
+						this.effects,
+						this.flags,
+						this.equipment,
+						this.vehicle,
+						this.passenger,
+						this.slots,
+						this.components
+				);
 			}
 		}
 	}

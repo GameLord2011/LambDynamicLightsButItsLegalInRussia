@@ -29,7 +29,7 @@ import java.util.stream.Stream;
  * Represents the luminance value of an item.
  *
  * @author LambdAurora
- * @version 3.0.0
+ * @version 4.1.0
  * @since 3.0.0
  */
 public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance.BlockReference, ItemLuminance.BlockSelf {
@@ -51,6 +51,28 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 	 */
 	@Range(from = 0, to = 15)
 	int getLuminance(@NotNull ItemStack stack);
+
+	/**
+	 * Creates a new {@linkplain Value constant item luminance} with the given value.
+	 *
+	 * @param luminance the luminance value between {@code 0} and {@code 15}
+	 * @return the {@linkplain Value constant item luminance} instance
+	 * @since 4.1.0
+	 */
+	static @NotNull Value of(@Range(from = 0, to = 15) int luminance) {
+		return new ItemLuminance.Value(luminance);
+	}
+
+	/**
+	 * Creates a new item luminance instance that's derived from the given block.
+	 *
+	 * @param block the block to derive from
+	 * @return the {@link BlockReference} instance
+	 * @since 4.1.0
+	 */
+	static @NotNull BlockReference ofBlock(@NotNull Block block) {
+		return new ItemLuminance.BlockReference(block);
+	}
 
 	/**
 	 * Represents a direct item luminance value.

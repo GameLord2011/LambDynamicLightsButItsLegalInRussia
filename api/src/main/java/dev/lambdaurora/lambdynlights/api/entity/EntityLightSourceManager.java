@@ -28,7 +28,7 @@ import java.util.Optional;
  * which provides the ability to register light sources for entities, and to query their luminance.
  *
  * @author LambdAurora
- * @version 4.1.0
+ * @version 4.2.0
  * @see EntityLightSource
  * @since 4.0.0
  */
