@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(FireflyParticle.class)
 public abstract class FireflyParticleMixin extends TextureSheetParticle implements EntityDynamicLightSourceBehavior {
 	@Shadow
-	public abstract int getLightColor(float f);
+	public abstract int getLightColor(float tickDelta);
 
 	protected FireflyParticleMixin(ClientLevel level, double x, double y, double z) {
 		super(level, x, y, z);
