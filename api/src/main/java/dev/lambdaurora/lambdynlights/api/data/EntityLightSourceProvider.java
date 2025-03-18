@@ -11,56 +11,205 @@ package dev.lambdaurora.lambdynlights.api.data;
 
 import dev.lambdaurora.lambdynlights.api.entity.EntityLightSource;
 import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
+import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Provides the means to generate entity light source JSON files via datagen.
+ * Provides the means to generate entity light source JSON files via data-generation.
  *
- * @author Thomas Glasser
+ * @author LambdAurora, Thomas Glasser
  * @version 4.1.0
  * @since 4.1.0
  */
-public abstract class EntityLightSourceProvider extends LightSourceProvider<EntityLightSource> {
-    public EntityLightSourceProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registryProvider, String modId) {
-        super(packOutput, registryProvider, modId, "entity", EntityLightSource.CODEC);
-    }
+public abstract class EntityLightSourceProvider
+		extends LightSourceProvider<EntityLightSource, EntityLightSourceProvider.Context> {
+	public EntityLightSourceProvider(
+			PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registryProvider, String defaultNamespace
+	) {
+		super(packOutput, registryProvider, defaultNamespace, "entity", EntityLightSource.CODEC);
+	}
 
-    /**
-     * Adds a new entity light source to the provider.
-     *
-     * @param key The name of the JSON file. Supports subfolders.
-     * @param predicate the predicate to select which entities emit the given luminance
-     * @param luminances the luminance sources
-     */
-    protected void add(String key, EntityLightSource.EntityPredicate predicate, EntityLuminance... luminances) {
-        add(key, new EntityLightSource(predicate, List.of(luminances)));
-    }
+	@Override
+	protected @NotNull Context createContext(HolderLookup.@NotNull Provider lookupProvider) {
+		return new Context(lookupProvider);
+	}
 
-    /**
-     * Adds a new entity light source to the provider.
-     *
-     * @param key The name of the JSON file. Supports subfolders.
-     * @param type The entity type that emits the given luminance.
-     * @param luminances The luminances to use.
-     */
-    protected void add(String key, EntityType<?> type, EntityLuminance... luminances) {
-        add(key, EntityLightSource.EntityPredicate.builder().of(type).build(), luminances);
-    }
+	/**
+	 * Represents the data-generation context.
+	 */
+	public class Context extends LightSourceProvider<EntityLightSource, Context>.Context {
+		protected Context(HolderLookup.Provider lookupProvider) {
+			super(lookupProvider);
+		}
 
-    /**
-     * Adds a new entity light source to the provider.
-     *
-     * @param key The name of the JSON file. Supports subfolders.
-     * @param tag The tag that selects the entity types that emit the given luminance.
-     * @param luminances The luminances to use.
-     */
-    protected void add(String key, TagKey<EntityType<?>> tag, EntityLuminance... luminances) {
-        add(key, EntityLightSource.EntityPredicate.builder().of(tag).build(), luminances);
-    }
+		/**
+		 * Adds a new entity light source to the provider.
+		 *
+		 * @param key the name of the JSON file
+		 * @param predicate the predicate to select which entities emit the given luminance
+		 * @param luminances the luminance sources
+		 * @see #add(String, EntityLightSource.EntityPredicate, EntityLuminance...)
+		 */
+		public void add(
+				@NotNull Identifier key,
+				@NotNull EntityLightSource.EntityPredicate predicate, @NotNull EntityLuminance... luminances
+		) {
+			this.add(key, new EntityLightSource(predicate, List.of(luminances)));
+		}
+
+		/**
+		 * Adds a new entity light source to the provider.
+		 *
+		 * @param key the name of the JSON file within the default namespace
+		 * @param predicate the predicate to select which entities emit the given luminance
+		 * @param luminances the luminance sources
+		 * @see #add(Identifier, EntityLightSource.EntityPredicate, EntityLuminance...)
+		 */
+		public void add(
+				@NotNull String key,
+				@NotNull EntityLightSource.EntityPredicate predicate, @NotNull EntityLuminance... luminances
+		) {
+			this.add(this.idOf(key), predicate, luminances);
+		}
+
+		/**
+		 * Adds a new entity light source to the provider.
+		 *
+		 * @param key the name of the JSON file
+		 * @param type the entity type which emits the given luminance
+		 * @param luminances the luminances to use
+		 * @see #add(String, List, EntityLuminance...)
+		 * @see #add(String, EntityType, EntityLuminance...)
+		 * @see #add(String, List, EntityLuminance...)
+		 * @see #add(EntityType, EntityLuminance...)
+		 */
+		public void add(@NotNull Identifier key, @NotNull EntityType<?> type, @NotNull EntityLuminance... luminances) {
+			this.add(key, EntityLightSource.EntityPredicate.builder().of(this.entityTypeLookup(), type).build(), luminances);
+		}
+
+		/**
+		 * Adds a new entity light source to the provider.
+		 *
+		 * @param key the name of the JSON file
+		 * @param types the entity types which emit the given luminance
+		 * @param luminances the luminances to use
+		 * @see #add(Identifier, EntityType, EntityLuminance...)
+		 * @see #add(String, EntityType, EntityLuminance...)
+		 * @see #add(String, List, EntityLuminance...)
+		 * @see #add(EntityType, EntityLuminance...)
+		 */
+		@SuppressWarnings("deprecation")
+		public void add(@NotNull Identifier key, @NotNull List<EntityType<?>> types, @NotNull EntityLuminance... luminances) {
+			var holderSet = HolderSet.direct(EntityType::builtInRegistryHolder, types);
+
+			this.add(
+					key,
+					EntityLightSource.EntityPredicate.builder().entityType(new EntityTypePredicate(holderSet)).build(),
+					luminances
+			);
+		}
+
+		/**
+		 * Adds a new entity light source to the provider.
+		 *
+		 * @param key the name of the JSON file within the default namespace
+		 * @param type the entity type which emits the given luminance
+		 * @param luminances the luminances to use
+		 * @see #add(Identifier, EntityType, EntityLuminance...)
+		 * @see #add(Identifier, List, EntityLuminance...)
+		 * @see #add(String, List, EntityLuminance...)
+		 * @see #add(EntityType, EntityLuminance...)
+		 */
+		public void add(@NotNull String key, @NotNull EntityType<?> type, @NotNull EntityLuminance... luminances) {
+			this.add(this.idOf(key), type, luminances);
+		}
+
+		/**
+		 * Adds a new entity light source to the provider.
+		 *
+		 * @param key the name of the JSON file within the default namespace
+		 * @param types the entity types which emit the given luminance
+		 * @param luminances the luminances to use
+		 * @see #add(Identifier, EntityType, EntityLuminance...)
+		 * @see #add(Identifier, List, EntityLuminance...)
+		 * @see #add(String, EntityType, EntityLuminance...)
+		 * @see #add(EntityType, EntityLuminance...)
+		 */
+		public void add(
+				@NotNull String key, @NotNull List<EntityType<?>> types, @NotNull EntityLuminance... luminances
+		) {
+			this.add(this.idOf(key), types, luminances);
+		}
+
+		/**
+		 * Adds a new entity light source to the provider.
+		 * <p>
+		 * The key is derived from the entity type's identifier following the rules of {@link #deriveId(Identifier)}.
+		 *
+		 * @param type the entity type which emits the given luminance
+		 * @param luminances the luminances to use
+		 * @see #add(Identifier, EntityType, EntityLuminance...)
+		 * @see #add(Identifier, List, EntityLuminance...)
+		 * @see #add(String, EntityType, EntityLuminance...)
+		 * @see #add(String, List, EntityLuminance...)
+		 */
+		@SuppressWarnings("deprecation")
+		public void add(@NotNull EntityType<?> type, @NotNull EntityLuminance... luminances) {
+			var typeId = type.builtInRegistryHolder().key().value();
+			this.add(this.deriveId(typeId), type, luminances);
+		}
+
+		/**
+		 * Adds a new entity light source to the provider.
+		 *
+		 * @param key the name of the JSON file
+		 * @param tag the tag that selects the entity types which emit the given luminance
+		 * @param luminances the luminances to use
+		 * @see #add(String, TagKey, EntityLuminance...)
+		 * @see #add(TagKey, EntityLuminance...)
+		 */
+		public void add(
+				@NotNull Identifier key, @NotNull TagKey<EntityType<?>> tag, @NotNull EntityLuminance... luminances
+		) {
+			this.add(key, EntityLightSource.EntityPredicate.builder().of(this.entityTypeLookup(), tag).build(), luminances);
+		}
+
+		/**
+		 * Adds a new entity light source to the provider.
+		 *
+		 * @param key the name of the JSON file
+		 * @param tag the tag that selects the entity types which emit the given luminance
+		 * @param luminances the luminances to use
+		 * @see #add(Identifier, TagKey, EntityLuminance...)
+		 * @see #add(TagKey, EntityLuminance...)
+		 */
+		public void add(
+				@NotNull String key, @NotNull TagKey<EntityType<?>> tag, @NotNull EntityLuminance... luminances
+		) {
+			this.add(this.idOf(key), tag, luminances);
+		}
+
+		/**
+		 * Adds a new entity light source to this provider.
+		 * <p>
+		 * The key is derived from the tag's identifier following the rules of {@link #deriveId(Identifier)}.
+		 *
+		 * @param tag the tag that selects the entity types which emit the given luminance
+		 * @param luminances the luminances to use
+		 * @see #add(Identifier, TagKey, EntityLuminance...)
+		 * @see #add(String, TagKey, EntityLuminance...)
+		 */
+		public void add(@NotNull TagKey<EntityType<?>> tag, @NotNull EntityLuminance... luminances) {
+			this.add(this.deriveId(tag.id()), tag, luminances);
+		}
+	}
 }

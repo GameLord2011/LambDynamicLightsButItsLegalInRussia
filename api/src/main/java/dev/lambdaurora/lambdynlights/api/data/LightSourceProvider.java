@@ -11,73 +11,193 @@ package dev.lambdaurora.lambdynlights.api.data;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Provides the means to generate light source JSON files via datagen.
+ * Provides the means to generate light source JSON files via data-generation.
  *
- * @param <L> The type of the light source.
- * @author Thomas Glasser
+ * @param <L> the type of light source
+ * @author LambdAurora, Thomas Glasser
  * @version 4.1.0
  * @since 4.1.0
  */
-public abstract class LightSourceProvider<L> implements DataProvider {
-    private final PackOutput.PathProvider pathProvider;
-    private final CompletableFuture<HolderLookup.Provider> registryProvider;
-    private final String modId;
-    private final String subPath;
-    private final Codec<L> codec;
+public abstract class LightSourceProvider<L, C extends LightSourceProvider<L, C>.Context>
+		implements DataProvider {
+	private final PackOutput.PathProvider pathProvider;
+	private final CompletableFuture<HolderLookup.Provider> registryProvider;
+	private final String defaultNamespace;
+	private final String subPath;
+	private final Codec<L> codec;
 
-    protected final Map<String, L> sources;
+	public LightSourceProvider(
+			PackOutput packOutput,
+			CompletableFuture<HolderLookup.Provider> registryProvider,
+			String defaultNamespace,
+			String subPath,
+			Codec<L> codec
+	) {
+		this.registryProvider = registryProvider;
+		this.defaultNamespace = defaultNamespace;
+		this.pathProvider = packOutput.createPathProvider(PackOutput.Target.RESOURCE_PACK, "dynamiclights/" + subPath);
+		this.subPath = subPath;
+		this.codec = codec;
+	}
 
-    public LightSourceProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registryProvider, String modId, String subPath, Codec<L> codec) {
-        this.registryProvider = registryProvider;
-        this.modId = modId;
-        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.RESOURCE_PACK, "dynamiclights/" + subPath);
-        this.subPath = subPath;
-        this.codec = codec;
-        this.sources = new HashMap<>();
-    }
+	/**
+	 * {@return the default namespace used for this light source data provider}
+	 */
+	public @NotNull String defaultNamespace() {
+		return this.defaultNamespace;
+	}
 
-    /**
-     * Adds a new light source to the provider.
-     *
-     * @param id The name of the JSON file. Supports subfolders.
-     * @param source The light source
-     */
-    protected void add(String id, L source) {
-        sources.put(id, source);
-    }
+	/**
+	 * Creates the context for data-generation.
+	 *
+	 * @param lookupProvider the lookup provider
+	 * @return the context
+	 */
+	protected abstract @NotNull C createContext(@NotNull HolderLookup.Provider lookupProvider);
 
-    /**
-     * Generates the light sources and adds them to the list.
-     * @param provider The registry provider
-     */
-    protected abstract void generate(HolderLookup.Provider provider);
+	/**
+	 * Generates the light sources and adds them to the list.
+	 *
+	 * @param context the light source data generation context
+	 */
+	protected abstract void generate(@NotNull C context);
 
-    @Override
-    public CompletableFuture<?> run(CachedOutput cachedOutput) {
-        return registryProvider.thenCompose(provider -> {
-            generate(provider);
-            List<CompletableFuture<?>> futures = new ArrayList<>();
-            sources.forEach((id, source) -> {
-                futures.add(DataProvider.saveStable(cachedOutput, provider, codec, source, pathProvider.json(Identifier.of(modId, id))));
-            });
-            return CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-        });
-    }
+	@Override
+	public @NotNull CompletableFuture<?> run(CachedOutput cachedOutput) {
+		return this.registryProvider.thenCompose(provider -> {
+			var context = this.createContext(provider);
+			this.generate(context);
+			return CompletableFuture.allOf(
+					context.sources.entrySet().stream()
+							.map(entry -> DataProvider.saveStable(
+									cachedOutput, provider, this.codec, entry.getValue(), this.pathProvider.json(entry.getKey()))
+							).toArray(CompletableFuture[]::new)
+			);
+		});
+	}
 
-    @Override
-    public String getName() {
-        return subPath + " Light Sources Provider";
-    }
+	@Override
+	public @NotNull String getName() {
+		return this.subPath + " Light Sources Provider";
+	}
+
+	/**
+	 * Represents the data-generation context.
+	 */
+	protected abstract class Context {
+		private final HolderLookup.Provider lookupProvider;
+		private final HolderLookup<Item> itemLookup;
+		private final HolderLookup<EntityType<?>> entityTypeLookup;
+
+		protected final Map<Identifier, L> sources = new HashMap<>();
+
+		protected Context(HolderLookup.Provider lookupProvider) {
+			this.lookupProvider = lookupProvider;
+			this.itemLookup = this.lookupProvider.lookupOrThrow(Registries.ITEM);
+			this.entityTypeLookup = this.lookupProvider.lookupOrThrow(Registries.ENTITY_TYPE);
+		}
+
+		/**
+		 * {@return the lookup provider}
+		 */
+		public @NotNull HolderLookup.Provider lookupProvider() {
+			return this.lookupProvider;
+		}
+
+		/**
+		 * {@return the item lookup}
+		 */
+		public @NotNull HolderLookup<Item> itemLookup() {
+			return this.itemLookup;
+		}
+
+		/**
+		 * {@return the entity type lookup}
+		 */
+		public @NotNull HolderLookup<EntityType<?>> entityTypeLookup() {
+			return this.entityTypeLookup;
+		}
+
+		/**
+		 * Creates an identifier of the given {@code path} and the default namespace given to the light source data provider.
+		 *
+		 * @param path the path of the identifier
+		 * @return the identifier of the given {@code path} and the default namespace
+		 */
+		public @NotNull Identifier idOf(@NotNull String path) {
+			return Identifier.of(LightSourceProvider.this.defaultNamespace, path);
+		}
+
+		/**
+		 * Creates an identifier that's derived from the given identifier as follows:
+		 * <ul>
+		 *     <li>the resulting identifier is within the default namespace;</li>
+		 *     <li>
+		 *         the path may be prefixed by a subdirectory of the given identifier's namespace
+		 *         if the namespace is different from the default namespace and {@value  Identifier#DEFAULT_NAMESPACE};
+		 *     </li>
+		 *     <li>the rest of the path is the given identifier's path.</li>
+		 * </ul>
+		 *
+		 * @param originalId the identifier to derive from
+		 * @return the derived identifier
+		 */
+		public @NotNull Identifier deriveId(@NotNull Identifier originalId) {
+			var id = originalId;
+
+			if (!id.namespace().equals(LightSourceProvider.this.defaultNamespace())) {
+				// The namespace is different:
+				id = this.idOf(originalId.path());
+
+				if (!originalId.namespace().equals(Identifier.DEFAULT_NAMESPACE)) {
+					id = id.withPrefix(originalId.namespace() + "/");
+				}
+			}
+
+			return id;
+		}
+
+		/**
+		 * Adds a new light source to the provider.
+		 *
+		 * @param id the name of the JSON file
+		 * @param source the light source
+		 * @see #add(String, Object)
+		 */
+		public void add(@NotNull Identifier id, @NotNull L source) {
+			this.sources.put(id, source);
+		}
+
+		/**
+		 * Adds a new light source to the provider.
+		 *
+		 * @param key the name of the JSON file within the default namespace
+		 * @param source The light source
+		 * @see #add(Identifier, Object)
+		 */
+		public void add(@NotNull String key, @NotNull L source) {
+			this.add(this.idOf(key), source);
+		}
+
+		/**
+		 * {@return the sources to be registered}
+		 */
+		public @NotNull Map<Identifier, L> sources() {
+			return this.sources;
+		}
+	}
 }
