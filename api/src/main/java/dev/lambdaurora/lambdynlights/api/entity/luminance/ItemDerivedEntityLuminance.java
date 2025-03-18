@@ -59,6 +59,35 @@ public record ItemDerivedEntityLuminance(ItemStack item, boolean includeRain, Op
 	}
 
 	/**
+	 * A builder for creating a new {@link ItemDerivedEntityLuminance} instance.
+	 *
+	 * @since 4.1.0
+	 */
+	public static class Builder {
+		private final ItemStack item;
+		private boolean includeRain;
+		private Optional<Always> always = Optional.empty();
+
+		private Builder(ItemStack item, boolean includeRain) {
+			this.item = item;
+			this.includeRain = includeRain;
+		}
+
+		public static Builder of(ItemStack item, boolean includeRain) {
+			return new Builder(item, includeRain);
+		}
+
+		public Builder always(Always always) {
+			this.always = Optional.of(always);
+			return this;
+		}
+
+		public ItemDerivedEntityLuminance build() {
+			return new ItemDerivedEntityLuminance(this.item, this.includeRain, this.always);
+		}
+	}
+
+	/**
 	 * Represents whether the item should always be considered dry or wet.
 	 */
 	public enum Always {

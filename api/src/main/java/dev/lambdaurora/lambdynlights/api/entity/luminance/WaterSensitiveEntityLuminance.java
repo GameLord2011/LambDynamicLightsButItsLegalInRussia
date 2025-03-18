@@ -16,6 +16,7 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +56,49 @@ public record WaterSensitiveEntityLuminance(
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.inWater);
 		} else {
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.outOfWater);
+		}
+	}
+
+	/**
+	 * Creates a new builder instance.
+	 * @return The builder instance.
+	 * @since 4.1.0
+	 */
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	/**
+	 * A builder for creating a new {@link WaterSensitiveEntityLuminance} instance.
+	 *
+	 * @since 4.1.0
+	 */
+	public static class Builder {
+		private final List<EntityLuminance> outOfWater = new ArrayList<>();
+		private final List<EntityLuminance> inWater = new ArrayList<>();
+
+		public Builder outOfWater(EntityLuminance... luminances) {
+			this.outOfWater.addAll(List.of(luminances));
+			return this;
+		}
+
+		public Builder outOfWater(List<EntityLuminance> luminances) {
+			this.outOfWater.addAll(luminances);
+			return this;
+		}
+
+		public Builder inWater(EntityLuminance... luminances) {
+			this.inWater.addAll(List.of(luminances));
+			return this;
+		}
+
+		public Builder inWater(List<EntityLuminance> luminances) {
+			this.inWater.addAll(luminances);
+			return this;
+		}
+
+		public WaterSensitiveEntityLuminance build() {
+			return new WaterSensitiveEntityLuminance(List.copyOf(this.outOfWater), List.copyOf(this.inWater));
 		}
 	}
 }

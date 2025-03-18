@@ -15,9 +15,13 @@ import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import dev.lambdaurora.lambdynlights.api.predicate.LightSourceLocationPredicate;
 import net.minecraft.advancements.critereon.*;
+import net.minecraft.core.HolderSet;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.Range;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +31,7 @@ import java.util.Optional;
  * @param predicate the predicate to select which entities emit the given luminance
  * @param luminances the luminance sources
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.1.0
  * @since 4.0.0
  */
 public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance> luminances) {
@@ -122,6 +126,105 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 				return false;
 			} else {
 				return this.slots.isEmpty() || this.slots.get().matches(entity);
+			}
+		}
+
+		/**
+		 * Creates a new builder instance.
+		 *
+		 * @return The builder instance.
+		 * @since 4.1.0
+		 */
+		public static Builder builder() {
+			return new Builder();
+		}
+
+		/**
+		 * A builder for creating a new {@link EntityLightSource} instance.
+		 *
+		 * @since 4.1.0
+		 */
+		public static class Builder {
+			Optional<EntityTypePredicate> entityType = Optional.empty();
+			Optional<LightSourceLocationPredicate> located = Optional.empty();
+			Optional<MobEffectsPredicate> effects = Optional.empty();
+			Optional<EntityFlagsPredicate> flags = Optional.empty();
+			Optional<EntityEquipmentPredicate> equipment = Optional.empty();
+			Optional<EntityPredicate> vehicle = Optional.empty();
+			Optional<EntityPredicate> passenger = Optional.empty();
+			Optional<SlotsPredicate> slots = Optional.empty();
+
+			public Builder of(EntityType<?> entityType) {
+				this.entityType = Optional.of(EntityTypePredicate.of(entityType));
+				return this;
+			}
+
+			public Builder of(EntityType<?>... entityTypes) {
+				this.entityType = Optional.of(new EntityTypePredicate(HolderSet.direct(Arrays.stream(entityTypes).map(EntityType::builtInRegistryHolder).toList())));
+				return this;
+			}
+
+			public Builder of(TagKey<EntityType<?>> tagKey) {
+				this.entityType = Optional.of(EntityTypePredicate.of(tagKey));
+				return this;
+			}
+
+			public Builder entityType(EntityTypePredicate entityTypePredicate) {
+				this.entityType = Optional.of(entityTypePredicate);
+				return this;
+			}
+
+			public Builder located(LightSourceLocationPredicate.Builder builder) {
+				this.located = Optional.of(builder.build());
+				return this;
+			}
+
+			public Builder effects(MobEffectsPredicate.Builder builder) {
+				this.effects = builder.build();
+				return this;
+			}
+
+			public Builder flags(EntityFlagsPredicate.Builder builder) {
+				this.flags = Optional.of(builder.build());
+				return this;
+			}
+
+			public Builder equipment(EntityEquipmentPredicate.Builder builder) {
+				this.equipment = Optional.of(builder.build());
+				return this;
+			}
+
+			public Builder equipment(EntityEquipmentPredicate entityEquipmentPredicate) {
+				this.equipment = Optional.of(entityEquipmentPredicate);
+				return this;
+			}
+
+			public Builder vehicle(Builder builder) {
+				this.vehicle = Optional.of(builder.build());
+				return this;
+			}
+
+			public Builder passenger(Builder builder) {
+				this.passenger = Optional.of(builder.build());
+				return this;
+			}
+
+			public Builder slots(SlotsPredicate slotsPredicate) {
+				this.slots = Optional.of(slotsPredicate);
+				return this;
+			}
+
+			public EntityPredicate build() {
+				return new EntityPredicate(
+						this.entityType,
+						this.located,
+						this.effects,
+						this.flags,
+						this.equipment,
+						this.vehicle,
+						this.passenger,
+						this.slots
+				);
 			}
 		}
 	}

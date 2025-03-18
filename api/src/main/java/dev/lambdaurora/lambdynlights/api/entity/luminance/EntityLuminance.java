@@ -90,6 +90,15 @@ public interface EntityLuminance {
 	}
 
 	/**
+	 * Creates a new {@link Value} instance.
+	 * @param luminance The luminance value between 0 and 15
+	 * @return the {@link Value} instance.
+	 */
+	static Value of(@Range(from = 0, to = 15) int luminance) {
+		return new Value(luminance);
+	}
+
+	/**
 	 * Represents a direct entity luminance value.
 	 *
 	 * @param luminance the luminance
