@@ -13,9 +13,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +57,80 @@ public record WetSensitiveEntityLuminance(
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.wet);
 		} else {
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.dry);
+		}
+	}
+
+	/**
+	 * Creates a new {@link WetSensitiveEntityLuminance} builder.
+	 *
+	 * @return the builder
+	 */
+	public static @NotNull Builder builder() {
+		return new Builder();
+	}
+
+	/**
+	 * Represents a builder for creating new {@link WetSensitiveEntityLuminance} instances.
+	 */
+	public static class Builder {
+		private final List<EntityLuminance> dry = new ArrayList<>();
+		private final List<EntityLuminance> wet = new ArrayList<>();
+
+		/**
+		 * Adds the given luminance values to use in the case the entity is dry.
+		 *
+		 * @param luminances the luminance values if the entity is dry
+		 * @return {@code this}
+		 */
+		@Contract("_ -> this")
+		public Builder dry(@NotNull EntityLuminance... luminances) {
+			this.dry.addAll(List.of(luminances));
+			return this;
+		}
+
+		/**
+		 * Adds the given luminance values to use in the case the entity is dry.
+		 *
+		 * @param luminances the luminance values if the entity is dry
+		 * @return {@code this}
+		 */
+		@Contract("_ -> this")
+		public Builder dry(@NotNull List<EntityLuminance> luminances) {
+			this.dry.addAll(luminances);
+			return this;
+		}
+
+		/**
+		 * Adds the given luminance values to use in the case the entity is wet.
+		 *
+		 * @param luminances the luminance values if the entity is wet
+		 * @return {@code this}
+		 */
+		@Contract("_ -> this")
+		public Builder wet(@NotNull EntityLuminance... luminances) {
+			this.wet.addAll(List.of(luminances));
+			return this;
+		}
+
+		/**
+		 * Adds the given luminance values to use in the case the entity is wet.
+		 *
+		 * @param luminances the luminance values if the entity is wet
+		 * @return {@code this}
+		 */
+		@Contract("_ -> this")
+		public Builder wet(@NotNull List<EntityLuminance> luminances) {
+			this.wet.addAll(luminances);
+			return this;
+		}
+
+		/**
+		 * Builds the resulting {@link WetSensitiveEntityLuminance}.
+		 *
+		 * @return the resulting {@link WetSensitiveEntityLuminance}
+		 */
+		public @NotNull WetSensitiveEntityLuminance build() {
+			return new WetSensitiveEntityLuminance(List.copyOf(this.dry), List.copyOf(this.wet));
 		}
 	}
 }

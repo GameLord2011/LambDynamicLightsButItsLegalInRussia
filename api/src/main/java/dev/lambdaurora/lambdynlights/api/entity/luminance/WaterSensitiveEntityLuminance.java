@@ -13,9 +13,11 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -55,6 +57,80 @@ public record WaterSensitiveEntityLuminance(
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.inWater);
 		} else {
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.outOfWater);
+		}
+	}
+
+	/**
+	 * Creates a new {@link WaterSensitiveEntityLuminance} builder.
+	 *
+	 * @return the builder
+	 */
+	public static @NotNull Builder builder() {
+		return new Builder();
+	}
+
+	/**
+	 * Represents a builder for creating new {@link WaterSensitiveEntityLuminance} instances.
+	 */
+	public static class Builder {
+		private final List<EntityLuminance> outOfWater = new ArrayList<>();
+		private final List<EntityLuminance> inWater = new ArrayList<>();
+
+		/**
+		 * Adds the given luminance values to use in the case the entity is out of water.
+		 *
+		 * @param luminances the luminance values if the entity is out of water
+		 * @return {@code this}
+		 */
+		@Contract("_ -> this")
+		public Builder outOfWater(EntityLuminance... luminances) {
+			this.outOfWater.addAll(List.of(luminances));
+			return this;
+		}
+
+		/**
+		 * Adds the given luminance values to use in the case the entity is out of water.
+		 *
+		 * @param luminances the luminance values if the entity is out of water
+		 * @return {@code this}
+		 */
+		@Contract("_ -> this")
+		public Builder outOfWater(List<EntityLuminance> luminances) {
+			this.outOfWater.addAll(luminances);
+			return this;
+		}
+
+		/**
+		 * Adds the given luminance values to use in the case the entity is in water.
+		 *
+		 * @param luminances the luminance values if the entity is in water
+		 * @return {@code this}
+		 */
+		@Contract("_ -> this")
+		public Builder inWater(EntityLuminance... luminances) {
+			this.inWater.addAll(List.of(luminances));
+			return this;
+		}
+
+		/**
+		 * Adds the given luminance values to use in the case the entity is in water.
+		 *
+		 * @param luminances the luminance values if the entity is in water
+		 * @return {@code this}
+		 */
+		@Contract("_ -> this")
+		public Builder inWater(List<EntityLuminance> luminances) {
+			this.inWater.addAll(luminances);
+			return this;
+		}
+
+		/**
+		 * Builds the resulting {@link WaterSensitiveEntityLuminance}.
+		 *
+		 * @return the resulting {@link WaterSensitiveEntityLuminance}
+		 */
+		public @NotNull WaterSensitiveEntityLuminance build() {
+			return new WaterSensitiveEntityLuminance(List.copyOf(this.outOfWater), List.copyOf(this.inWater));
 		}
 	}
 }

@@ -14,6 +14,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
+import dev.lambdaurora.lambdynlights.api.item.ItemLuminance;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Brightness;
@@ -87,6 +88,17 @@ public interface EntityLuminance {
 		}
 
 		return luminance;
+	}
+
+	/**
+	 * Creates a new {@linkplain Value constant entity luminance} with the given value.
+	 *
+	 * @param luminance the luminance value between {@code 0} and {@code 15}
+	 * @return the {@linkplain Value constant entity luminance} instance
+	 * @since 4.1.0
+	 */
+	static Value of(@Range(from = 0, to = 15) int luminance) {
+		return new Value(luminance);
 	}
 
 	/**
