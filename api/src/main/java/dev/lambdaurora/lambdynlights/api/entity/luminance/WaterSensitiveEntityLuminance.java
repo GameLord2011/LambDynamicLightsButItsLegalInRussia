@@ -83,7 +83,7 @@ public record WaterSensitiveEntityLuminance(
 		 * @return {@code this}
 		 */
 		@Contract("_ -> this")
-		public Builder outOfWater(EntityLuminance... luminances) {
+		public Builder outOfWater(@NotNull EntityLuminance... luminances) {
 			this.outOfWater.addAll(List.of(luminances));
 			return this;
 		}
@@ -95,7 +95,7 @@ public record WaterSensitiveEntityLuminance(
 		 * @return {@code this}
 		 */
 		@Contract("_ -> this")
-		public Builder outOfWater(List<EntityLuminance> luminances) {
+		public Builder outOfWater(@NotNull List<EntityLuminance> luminances) {
 			this.outOfWater.addAll(luminances);
 			return this;
 		}
@@ -107,7 +107,7 @@ public record WaterSensitiveEntityLuminance(
 		 * @return {@code this}
 		 */
 		@Contract("_ -> this")
-		public Builder inWater(EntityLuminance... luminances) {
+		public Builder inWater(@NotNull EntityLuminance... luminances) {
 			this.inWater.addAll(List.of(luminances));
 			return this;
 		}
@@ -119,7 +119,7 @@ public record WaterSensitiveEntityLuminance(
 		 * @return {@code this}
 		 */
 		@Contract("_ -> this")
-		public Builder inWater(List<EntityLuminance> luminances) {
+		public Builder inWater(@NotNull List<EntityLuminance> luminances) {
 			this.inWater.addAll(luminances);
 			return this;
 		}
