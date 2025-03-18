@@ -53,6 +53,24 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 	int getLuminance(@NotNull ItemStack stack);
 
 	/**
+	 * Creates a new {@link Value} instance.
+	 * @param luminance The luminance value between 0 and 15
+	 * @return the {@link Value} instance.
+	 */
+	static Value of(int luminance) {
+		return new ItemLuminance.Value(luminance);
+	}
+
+	/**
+	 * Creates a new {@link BlockReference} instance.
+	 * @param block The block to reference.
+	 * @return the {@link BlockReference} instance.
+	 */
+	static BlockReference ofBlock(Block block) {
+		return new ItemLuminance.BlockReference(block);
+	}
+
+	/**
 	 * Represents a direct item luminance value.
 	 *
 	 * @param luminance the luminance
