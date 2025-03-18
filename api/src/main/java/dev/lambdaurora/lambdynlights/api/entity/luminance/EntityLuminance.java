@@ -14,7 +14,6 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
-import dev.lambdaurora.lambdynlights.api.item.ItemLuminance;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Brightness;
