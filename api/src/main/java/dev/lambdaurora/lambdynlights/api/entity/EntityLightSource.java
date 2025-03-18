@@ -199,7 +199,7 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 			/**
 			 * Sets the effects predicate to match with.
 			 *
-			 * @param builder the location predicate to match if present
+			 * @param builder the effects predicate builder
 			 * @return {@code this}
 			 */
 			@Contract("_ -> this")
@@ -209,9 +209,9 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 			}
 
 			/**
-			 * Sets the location predicate to match with.
+			 * Sets the entity flags predicate to match with.
 			 *
-			 * @param builder the location predicate to match if present
+			 * @param builder the entity flags predicate builder
 			 * @return {@code this}
 			 */
 			@Contract("_ -> this")
@@ -221,9 +221,9 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 			}
 
 			/**
-			 * Sets the location predicate to match with.
+			 * Sets the equipment predicate to match with.
 			 *
-			 * @param builder the location predicate to match if present
+			 * @param builder the equipment predicate builder
 			 * @return {@code this}
 			 */
 			@Contract("_ -> this")
@@ -233,9 +233,9 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 			}
 
 			/**
-			 * Sets the location predicate to match with.
+			 * Sets the equipment predicate to match with.
 			 *
-			 * @param equipmentPredicate the location predicate to match if present
+			 * @param equipmentPredicate the equipment predicate to match
 			 * @return {@code this}
 			 */
 			@Contract("_ -> this")
@@ -245,9 +245,9 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 			}
 
 			/**
-			 * Sets the location predicate to match with.
+			 * Sets the vehicle entity predicate to match with.
 			 *
-			 * @param builder the location predicate to match if present
+			 * @param builder the vehicle entity predicate builder
 			 * @return {@code this}
 			 */
 			@Contract("_ -> this")
@@ -257,9 +257,9 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 			}
 
 			/**
-			 * Sets the location predicate to match with.
+			 * Sets the passenger entity predicate to match with.
 			 *
-			 * @param builder the passenger predicate builder
+			 * @param builder the passenger entity predicate builder
 			 * @return {@code this}
 			 */
 			@Contract("_ -> this")
