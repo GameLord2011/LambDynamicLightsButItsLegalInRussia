@@ -30,9 +30,9 @@ import java.util.concurrent.CompletableFuture;
  * @version 4.1.0
  * @since 4.1.0
  */
-public abstract class EntityLightSourceProvider
-		extends LightSourceProvider<EntityLightSource, EntityLightSourceProvider.Context> {
-	public EntityLightSourceProvider(
+public abstract class EntityLightSourceDataProvider
+		extends LightSourceDataProvider<EntityLightSource, EntityLightSourceDataProvider.Context> {
+	public EntityLightSourceDataProvider(
 			PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registryProvider, String defaultNamespace
 	) {
 		super(packOutput, registryProvider, defaultNamespace, "entity", EntityLightSource.CODEC);
@@ -46,7 +46,7 @@ public abstract class EntityLightSourceProvider
 	/**
 	 * Represents the data-generation context.
 	 */
-	public class Context extends LightSourceProvider<EntityLightSource, Context>.Context {
+	public class Context extends LightSourceDataProvider<EntityLightSource, Context>.Context {
 		protected Context(HolderLookup.Provider lookupProvider) {
 			super(lookupProvider);
 		}

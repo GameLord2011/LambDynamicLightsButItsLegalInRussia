@@ -29,23 +29,23 @@ import java.util.concurrent.CompletableFuture;
  * @version 4.1.0
  * @since 4.1.0
  */
-public abstract class ItemLightSourceProvider
-		extends LightSourceProvider<ItemLightSource, ItemLightSourceProvider.Context> {
-	public ItemLightSourceProvider(
+public abstract class ItemLightSourceDataProvider
+		extends LightSourceDataProvider<ItemLightSource, ItemLightSourceDataProvider.Context> {
+	public ItemLightSourceDataProvider(
 			PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registryProvider, String defaultNamespace
 	) {
 		super(packOutput, registryProvider, defaultNamespace, "item", ItemLightSource.CODEC);
 	}
 
 	@Override
-	protected @NotNull ItemLightSourceProvider.Context createContext(HolderLookup.@NotNull Provider lookupProvider) {
+	protected @NotNull ItemLightSourceDataProvider.Context createContext(HolderLookup.@NotNull Provider lookupProvider) {
 		return new Context(lookupProvider);
 	}
 
 	/**
 	 * Represents the data-generation context.
 	 */
-	protected class Context extends LightSourceProvider<ItemLightSource, Context>.Context {
+	protected class Context extends LightSourceDataProvider<ItemLightSource, Context>.Context {
 		protected Context(HolderLookup.Provider lookupProvider) {
 			super(lookupProvider);
 		}

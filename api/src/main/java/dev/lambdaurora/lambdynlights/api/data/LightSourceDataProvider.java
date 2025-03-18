@@ -32,7 +32,7 @@ import java.util.concurrent.CompletableFuture;
  * @version 4.1.0
  * @since 4.1.0
  */
-public abstract class LightSourceProvider<L, C extends LightSourceProvider<L, C>.Context>
+public abstract class LightSourceDataProvider<L, C extends LightSourceDataProvider<L, C>.Context>
 		implements DataProvider {
 	private final PackOutput.PathProvider pathProvider;
 	private final CompletableFuture<HolderLookup.Provider> registryProvider;
@@ -40,7 +40,7 @@ public abstract class LightSourceProvider<L, C extends LightSourceProvider<L, C>
 	private final String subPath;
 	private final Codec<L> codec;
 
-	public LightSourceProvider(
+	public LightSourceDataProvider(
 			PackOutput packOutput,
 			CompletableFuture<HolderLookup.Provider> registryProvider,
 			String defaultNamespace,
@@ -139,7 +139,7 @@ public abstract class LightSourceProvider<L, C extends LightSourceProvider<L, C>
 		 * @return the identifier of the given {@code path} and the default namespace
 		 */
 		public @NotNull Identifier idOf(@NotNull String path) {
-			return Identifier.of(LightSourceProvider.this.defaultNamespace, path);
+			return Identifier.of(LightSourceDataProvider.this.defaultNamespace, path);
 		}
 
 		/**
@@ -159,7 +159,7 @@ public abstract class LightSourceProvider<L, C extends LightSourceProvider<L, C>
 		public @NotNull Identifier deriveId(@NotNull Identifier originalId) {
 			var id = originalId;
 
-			if (!id.namespace().equals(LightSourceProvider.this.defaultNamespace())) {
+			if (!id.namespace().equals(LightSourceDataProvider.this.defaultNamespace())) {
 				// The namespace is different:
 				id = this.idOf(originalId.path());
 
