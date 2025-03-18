@@ -91,6 +91,17 @@ public interface EntityLuminance {
 	}
 
 	/**
+	 * Creates a new {@linkplain Value constant entity luminance} with the given value.
+	 *
+	 * @param luminance the luminance value between {@code 0} and {@code 15}
+	 * @return the {@linkplain Value constant entity luminance} instance
+	 * @since 4.1.0
+	 */
+	static Value of(@Range(from = 0, to = 15) int luminance) {
+		return new Value(luminance);
+	}
+
+	/**
 	 * Represents a direct entity luminance value.
 	 *
 	 * @param luminance the luminance
@@ -133,8 +144,8 @@ public interface EntityLuminance {
 		);
 
 		public static final Type VALUE = register("value", Value.CODEC);
-		public static final Type WATER_SENSITIVE = register("water_sensitive", WaterSensititiveEntityLuminance.CODEC);
-		public static final Type WET_SENSITIVE = register("wet_sensitive", WetSensititiveEntityLuminance.CODEC);
+		public static final Type WATER_SENSITIVE = register("water_sensitive", WaterSensitiveEntityLuminance.CODEC);
+		public static final Type WET_SENSITIVE = register("wet_sensitive", WetSensitiveEntityLuminance.CODEC);
 
 		public static final Type ENDERMAN = registerSimple("enderman", EndermanLuminance.INSTANCE);
 		public static final Type GLOW_SQUID = registerSimple("glow_squid", GlowSquidLuminance.INSTANCE);
