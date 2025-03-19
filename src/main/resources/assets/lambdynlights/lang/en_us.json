@@ -21,7 +21,7 @@
 	"lambdynlights.option.light_sources.beam.tooltip": "Enables the dynamic lighting of Beacon or End Gateway beams. They should rarely update.",
 	"lambdynlights.option.light_sources.block_entities": "Block Entities",
 	"lambdynlights.option.light_sources.entities": "Entities",
-	"lambdynlights.option.light_sources.firefly": "Firefly",
+	"lambdynlights.option.light_sources.firefly": "Fireflies",
 	"lambdynlights.option.light_sources.firefly.tooltip": "Enables the dynamic lighting of firefly particles emitted by Firefly Bushes.",
 	"lambdynlights.option.light_sources.guardian_laser": "Guardian Lasers",
 	"lambdynlights.option.light_sources.guardian_laser.tooltip": "Enables the dynamic lighting of the lasers shot by Guardians.",
