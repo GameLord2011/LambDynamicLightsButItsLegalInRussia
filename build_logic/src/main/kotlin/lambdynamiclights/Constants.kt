@@ -7,7 +7,7 @@ object Constants {
 	const val NAME = "lambdynamiclights"
 	const val NAMESPACE = "lambdynlights"
 	const val PRETTY_NAME = "LambDynamicLights"
-	const val VERSION = "4.2.0-alpha.1"
+	const val VERSION = "4.2.0"
 	const val JAVA_VERSION = 21
 
 	const val DESCRIPTION = "The most feature-complete dynamic lighting mod for Fabric."
@@ -15,6 +15,7 @@ object Constants {
 
 	@JvmField
 	val AUTHORS = listOf("LambdAurora")
+
 	@JvmField
 	val CONTRIBUTORS = listOf("Akarys")
 	const val PROJECT_LINK = "https://lambdaurora.dev/projects/lambdynamiclights"
@@ -31,9 +32,20 @@ object Constants {
 		return this.minecraftVersion!!
 	}
 
+	fun mcVersionTag(): String {
+		val mcVersion = this.mcVersion()
+		val parts = mcVersion.split("-")
+
+		if (parts.size == 2 && parts[1].startsWith("rc")) {
+			return parts[0]
+		}
+
+		return mcVersion
+	}
+
 	fun isMcVersionNonRelease(): Boolean {
 		return this.mcVersion().matches(Regex("^\\d\\dw\\d\\d[a-z]$"))
-				|| this.mcVersion().matches(Regex("\\d+\\.\\d+-(pre|rc)(\\d+)"))
+				|| this.mcVersion().matches(Regex("\\d+\\.\\d+-(pre)(\\d+)"))
 	}
 
 	fun getMcVersionString(): String {

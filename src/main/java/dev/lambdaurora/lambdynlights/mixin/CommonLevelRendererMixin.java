@@ -28,11 +28,14 @@ public abstract class CommonLevelRendererMixin implements WorldRendererAccessor 
 	public abstract void lambdynlights$scheduleChunkRebuild(int x, int y, int z, boolean important);
 
 	@Inject(
-			method = "getLightColor(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)I",
+			method = "getLightColor*",
 			at = @At("TAIL"),
 			cancellable = true
 	)
-	private static void onGetLightmapCoordinates(BlockAndTintGetter level, BlockState state, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
+	private static void onGetLightmapCoordinates(
+			LevelRenderer.BrightnessGetter getter, BlockAndTintGetter level, BlockState state, BlockPos pos,
+			CallbackInfoReturnable<Integer> cir
+	) {
 		if (!level.getBlockState(pos).isSolidRender() && LambDynLights.get().config.getDynamicLightsMode().isEnabled())
 			cir.setReturnValue(LambDynLights.get().getLightmapWithDynamicLight(level, pos, cir.getReturnValue()));
 	}

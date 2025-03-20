@@ -12,7 +12,7 @@ val libs = the<LibrariesForLibs>()
 Constants.finalizeInit(libs)
 
 group = Constants.GROUP
-version = "${Constants.VERSION}+${Constants.mcVersion()}"
+version = "${Constants.VERSION}+${Constants.mcVersionTag()}"
 
 loom {
 	runtimeOnlyLog4j = true
