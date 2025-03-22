@@ -170,7 +170,7 @@ tasks.register<TaskPublishCurseForge>("curseforge") {
 
 	val mainFile = upload(project.property("curseforge_id"), tasks.remapJar.get())
 	mainFile.releaseType = Constants.getVersionType()
-	mainFile.addGameVersion(Constants.mcVersion())
+	mainFile.addGameVersion(Utils.getCurseForgeMinecraftVersion())
 	mainFile.addModLoader("Fabric", "Quilt")
 	mainFile.addJavaVersion("Java 21", "Java 22")
 	mainFile.addEnvironment("Client")

@@ -52,4 +52,11 @@ object Utils {
 			return null;
 		}
 	}
+
+	fun getCurseForgeMinecraftVersion(): String {
+		val regex = Regex("^(\\d+\\.\\d+(?:\\.\\d+)?)-(pre|rc)(\\d+)$")
+		val result = regex.find(Constants.mcVersion()) ?: return Constants.mcVersion()
+
+		return result.groupValues[1] + "-Snapshot"
+	}
 }
