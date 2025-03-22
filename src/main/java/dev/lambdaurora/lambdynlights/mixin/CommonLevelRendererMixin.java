@@ -28,7 +28,7 @@ public abstract class CommonLevelRendererMixin implements WorldRendererAccessor 
 	public abstract void lambdynlights$scheduleChunkRebuild(int x, int y, int z, boolean important);
 
 	@Inject(
-			method = "getLightColor*",
+			method = "getLightColor(Lnet/minecraft/client/renderer/LevelRenderer$BrightnessGetter;Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)I",
 			at = @At("TAIL"),
 			cancellable = true
 	)

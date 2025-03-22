@@ -308,6 +308,11 @@
 - Added support for entity component predicates.
 - Updated [SpruceUI].
 
+### 4.2.1
+
+- Fixed a crash on start due to a bad mixin remap.
+- Fixed the throwable item projectiles entity dynamic light source JSON.
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Sodium]: https://modrinth.com/mod/sodium "Sodium Modrinth page"
