@@ -1,4 +1,5 @@
 import com.modrinth.minotaur.dependencies.ModDependency
+import dev.lambdaurora.mcdev.api.McVersionLookup
 import lambdynamiclights.Constants
 import lambdynamiclights.Utils
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
@@ -98,11 +99,10 @@ dependencies {
 }
 
 tasks.processResources {
-	val version = project.version
-	inputs.property("version", version)
+	inputs.property("version", project.version)
 
 	filesMatching("fabric.mod.json") {
-		expand("version" to version)
+		expand("version" to inputs.properties["version"])
 	}
 }
 
@@ -121,7 +121,7 @@ tasks.remapJar {
 
 modrinth {
 	projectId = project.property("modrinth_id") as String
-	versionName = "${Constants.PRETTY_NAME} ${Constants.VERSION} (${Constants.mcVersion()})"
+	versionName = "${Constants.PRETTY_NAME} ${Constants.VERSION} (${McVersionLookup.getVersionTag(Constants.mcVersion())})"
 	uploadFile.set(tasks.remapJar.get())
 	loaders.set(listOf("fabric", "quilt"))
 	gameVersions.set(listOf(Constants.mcVersion()))
@@ -170,12 +170,12 @@ tasks.register<TaskPublishCurseForge>("curseforge") {
 
 	val mainFile = upload(project.property("curseforge_id"), tasks.remapJar.get())
 	mainFile.releaseType = Constants.getVersionType()
-	mainFile.addGameVersion(Utils.getCurseForgeMinecraftVersion())
+	mainFile.addGameVersion(McVersionLookup.getCurseForgeEquivalent(Constants.mcVersion()))
 	mainFile.addModLoader("Fabric", "Quilt")
 	mainFile.addJavaVersion("Java 21", "Java 22")
 	mainFile.addEnvironment("Client")
 
-	mainFile.displayName = "${Constants.PRETTY_NAME} ${Constants.VERSION} (${Constants.mcVersion()})"
+	mainFile.displayName = "${Constants.PRETTY_NAME} ${Constants.VERSION} (${McVersionLookup.getVersionTag(Constants.mcVersion())})"
 	mainFile.addRequirement("fabric-api")
 	mainFile.addOptional("modmenu")
 	mainFile.addIncompatibility("optifabric")

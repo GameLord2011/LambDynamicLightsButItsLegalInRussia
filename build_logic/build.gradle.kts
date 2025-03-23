@@ -13,12 +13,16 @@ repositories {
 		name = "Fabric"
 		url = uri("https://maven.fabricmc.net/")
 	}
+	maven {
+		name = "Gegy"
+		url = uri("https://maven.gegy.dev/releases/")
+	}
 }
 
 dependencies {
 	implementation(libs.gradle.licenser)
 	implementation(libs.gradle.loom)
-	implementation(libs.mappingio)
+	implementation(libs.gradle.lambdamcdev)
 	implementation(libs.gson)
 
 	// A bit of a hack you definitely should not worry about.

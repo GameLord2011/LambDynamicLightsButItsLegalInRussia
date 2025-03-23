@@ -1,6 +1,5 @@
 import lambdynamiclights.Constants
 import lambdynamiclights.data.Fmj
-import lambdynamiclights.mappings.MojangMappingsSpec
 import lambdynamiclights.task.GenerateFmjTask
 import org.gradle.accessors.dm.LibrariesForLibs
 
@@ -59,8 +58,8 @@ sourceSets {
 
 dependencies {
 	@Suppress("UnstableApiUsage")
-	mappings(loom.layered {
-		addLayer(MojangMappingsSpec(false))
+	mappings(lambdamcdev.layered {
+		officialMojangMappings()
 		// Parchment is currently broken when used with the hacked mojmap layer due to remapping shenanigans.
 		//parchment("org.parchmentmc.data:parchment-${Constants.getMcVersionString()}:${libs.versions.mappings.parchment.get()}@zip")
 		mappings("dev.lambdaurora:yalmm:${Constants.mcVersion()}+build.${libs.versions.mappings.yalmm.get()}")

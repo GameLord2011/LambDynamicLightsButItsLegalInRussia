@@ -1,62 +1,17 @@
 package lambdynamiclights
 
+import dev.lambdaurora.mcdev.api.ModUtils
 import org.gradle.api.Project
 
 object Utils {
 	fun parseReadme(project: Project): String {
-		val linkRegex = "!\\[(.+?)]\\((assets\\/[A-z.\\/_]+)\\)"
-
-		var readme = project.rootProject.file("README.md").readText()
-		val lines = readme.split("\n").toMutableList()
-		val it = lines.listIterator()
-
-		var shouldRemove = false;
-		while (it.hasNext()) {
-			val line = it.next();
-
-			if (line == "<!-- modrinth_exclude.long_start -->") {
-				shouldRemove = true
-			}
-
-			if (shouldRemove) {
-				it.remove()
-			}
-
-			if (line == "<!-- modrinth_exclude.long_end -->") {
-				shouldRemove = false
-			}
-		}
-
-		readme = lines.joinToString("\n")
-		readme = readme.replace(linkRegex.toRegex(), "![\$1](https://raw.githubusercontent.com/LambdAurora/LambDynamicLights/1.21.4/\$2)")
-		return readme
+		return ModUtils.parseReadme(
+			project,
+			"https://raw.githubusercontent.com/LambdAurora/LambDynamicLights/1.21.4/\$2"
+		)
 	}
 
 	fun fetchChangelog(project: Project): String? {
-		val changelogText = project.rootProject.file("CHANGELOG.md").readText()
-		val regexVersion = Constants.VERSION.replace("\\.".toRegex(), "\\.").replace("\\+".toRegex(), "\\+")
-		val changelogRegex = "###? ${regexVersion}\\n\\n(( *- .+\\n)+)".toRegex()
-		val matcher = changelogRegex.find(changelogText)
-
-		if (matcher != null) {
-			var changelogContent = matcher.groupValues[1]
-
-			val changelogLines = changelogText.substring(matcher.range.last).split("\n")
-			val linkRefRegex = "^\\[([A-z\\d _\\-/+.#]+)]: .+$".toRegex()
-			for (line in changelogLines) {
-				if (line matches linkRefRegex)
-					changelogContent += "\n" + line
-			}
-			return changelogContent
-		} else {
-			return null;
-		}
-	}
-
-	fun getCurseForgeMinecraftVersion(): String {
-		val regex = Regex("^(\\d+\\.\\d+(?:\\.\\d+)?)-(pre|rc)(\\d+)$")
-		val result = regex.find(Constants.mcVersion()) ?: return Constants.mcVersion()
-
-		return result.groupValues[1] + "-Snapshot"
+		return ModUtils.fetchChangelog(project, Constants.VERSION)
 	}
 }

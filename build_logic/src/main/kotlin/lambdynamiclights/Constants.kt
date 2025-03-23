@@ -1,5 +1,6 @@
 package lambdynamiclights
 
+import dev.lambdaurora.mcdev.api.ModUtils
 import org.gradle.accessors.dm.LibrariesForLibs
 
 object Constants {
@@ -32,37 +33,7 @@ object Constants {
 		return this.minecraftVersion!!
 	}
 
-	fun mcVersionTag(): String {
-		val mcVersion = this.mcVersion()
-		val parts = mcVersion.split("-")
-
-		if (parts.size == 2 && parts[1].startsWith("rc")) {
-			return parts[0]
-		}
-
-		return mcVersion
-	}
-
-	fun isMcVersionNonRelease(): Boolean {
-		return this.mcVersion().matches(Regex("^\\d\\dw\\d\\d[a-z]$"))
-				|| this.mcVersion().matches(Regex("\\d+\\.\\d+-(pre)(\\d+)"))
-	}
-
-	fun getMcVersionString(): String {
-		if (isMcVersionNonRelease()) {
-			return this.mcVersion()
-		}
-		val version = this.mcVersion().split("\\.".toRegex())
-		return version[0] + "." + version[1]
-	}
-
 	fun getVersionType(): String {
-		return if (this.isMcVersionNonRelease() || "-alpha." in this.VERSION) {
-			"alpha"
-		} else if ("-beta." in this.VERSION) {
-			"beta"
-		} else {
-			"release"
-		}
+		return ModUtils.fetchVersionType(this.VERSION, this.mcVersion())
 	}
 }

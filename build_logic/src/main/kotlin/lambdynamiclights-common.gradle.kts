@@ -1,9 +1,10 @@
+import dev.lambdaurora.mcdev.api.McVersionLookup
 import lambdynamiclights.Constants
-import lambdynamiclights.mappings.MojangMappingsSpec
 import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
 	id("fabric-loom")
+	id("dev.lambdaurora.mcdev")
 }
 
 // Seriously you should not worry about it, definitely not a hack.
@@ -12,11 +13,7 @@ val libs = the<LibrariesForLibs>()
 Constants.finalizeInit(libs)
 
 group = Constants.GROUP
-version = "${Constants.VERSION}+${Constants.mcVersionTag()}"
-
-loom {
-	runtimeOnlyLog4j = true
-}
+version = "${Constants.VERSION}+${McVersionLookup.getVersionTag(Constants.mcVersion())}"
 
 repositories {
 	mavenCentral()
