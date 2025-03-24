@@ -49,7 +49,7 @@ public interface GuardianEntityLightSource {
 			if (lightSource.lambdynlights$getDynamicLightBeam() == null) {
 				beam = new LineLightBehavior(
 						new Vector3d(guardian.getX(), guardian.getY(), guardian.getZ()),
-						new Vector3d(target.getX(), target.getY() + target.getBbHeight() * 0.5, target.getZ()),
+						new Vector3d(target.getX(), target.getY() + target.getBoundingHeight() * 0.5, target.getZ()),
 						7
 				) {
 					@Override
@@ -62,7 +62,7 @@ public interface GuardianEntityLightSource {
 			} else {
 				beam = lightSource.lambdynlights$getDynamicLightBeam();
 				beam.setStartPoint(guardian.getX(), guardian.getY(), guardian.getZ());
-				beam.setEndPoint(target.getX(), target.getY() + target.getBbHeight() * 0.5, target.getZ());
+				beam.setEndPoint(target.getX(), target.getY() + target.getBoundingHeight() * 0.5, target.getZ());
 			}
 
 			int luminance = 7;

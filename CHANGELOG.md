@@ -313,6 +313,10 @@
 - Fixed a crash on start due to a bad mixin remap.
 - Fixed the throwable item projectiles entity dynamic light source JSON.
 
+### 4.2.2
+
+- Fixed French and French Canadian translations.
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Sodium]: https://modrinth.com/mod/sodium "Sodium Modrinth page"
