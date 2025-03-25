@@ -316,6 +316,8 @@
 ### 4.2.2
 
 - Fixed French and French Canadian translations.
+- Added Spanish translations ([#268](https://github.com/LambdAurora/LambDynamicLights/pull/268)).
+- Added missing Spanish Mexican translations from Spanish translations as a stop-gap.
 - Updated German translations (thanks zOnlyKroks).
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
