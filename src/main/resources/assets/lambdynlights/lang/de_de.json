@@ -21,6 +21,8 @@
 	"lambdynlights.option.light_sources.beam.tooltip": "Aktiviert die dynamische Beleuchtung von Leuchtstrahlen, z. B. Leuchtfeuer- oder Endportalstrahlen. Diese aktualisieren sich nur selten.",
 	"lambdynlights.option.light_sources.block_entities": "Block-Entitäten",
 	"lambdynlights.option.light_sources.entities": "Entitäten",
+	"lambdynlights.option.light_sources.firefly": "Glühwürmchen",
+	"lambdynlights.option.light_sources.firefly.tooltip": "Aktiviert die dynamische Beleuchtung der von Glühwürmchenbüschen abgegebenen Glühwürmchen-Partikel.",
 	"lambdynlights.option.light_sources.guardian_laser": "Wächter-Laser",
 	"lambdynlights.option.light_sources.guardian_laser.tooltip": "Aktiviert die dynamische Beleuchtung der von Wächtern abgefeuerten Laser.",
 	"lambdynlights.option.light_sources.self": "First-Person",

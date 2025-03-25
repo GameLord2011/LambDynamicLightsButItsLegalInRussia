@@ -316,6 +316,7 @@
 ### 4.2.2
 
 - Fixed French and French Canadian translations.
+- Updated German translations (thanks zOnlyKroks).
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
