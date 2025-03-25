@@ -9,7 +9,7 @@
 
 package dev.lambdaurora.lambdynlights;
 
-import dev.lambdaurora.lambdynlights.accessor.WorldRendererAccessor;
+import dev.lambdaurora.lambdynlights.mixin.LevelRendererAccessor;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsContext;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsInitializer;
 import dev.lambdaurora.lambdynlights.api.behavior.DynamicLightBehavior;
@@ -478,7 +478,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 	public static void scheduleChunkRebuild(@NotNull LevelRenderer renderer, int x, int y, int z) {
 		if (Minecraft.getInstance().level != null)
-			((WorldRendererAccessor) renderer).lambdynlights$scheduleChunkRebuild(x, y, z, false);
+			((LevelRendererAccessor) renderer).lambdynlights$scheduleChunkRebuild(x, y, z, false);
 	}
 
 	/**

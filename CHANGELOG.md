@@ -320,6 +320,10 @@
 - Added missing Spanish Mexican translations from Spanish translations as a stop-gap.
 - Updated German translations (thanks zOnlyKroks).
 
+### 4.2.3
+
+- Hotfix performance issues due to a wrong Mixin injection.
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Sodium]: https://modrinth.com/mod/sodium "Sodium Modrinth page"

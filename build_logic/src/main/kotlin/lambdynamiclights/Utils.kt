@@ -7,7 +7,7 @@ object Utils {
 	fun parseReadme(project: Project): String {
 		return ModUtils.parseReadme(
 			project,
-			"https://raw.githubusercontent.com/LambdAurora/LambDynamicLights/1.21.4/\$2"
+			"https://raw.githubusercontent.com/LambdAurora/LambDynamicLights/1.21.5/\$2"
 		)
 	}
 
