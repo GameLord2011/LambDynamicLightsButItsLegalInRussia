@@ -324,6 +324,11 @@
 
 - Hotfix performance issues due to a wrong Mixin injection.
 
+### 4.2.4
+
+- Updated Russian translations ([#269](https://github.com/LambdAurora/LambDynamicLights/pull/269)).
+- Updated Brazilian Portuguese translations ([#270](https://github.com/LambdAurora/LambDynamicLights/pull/270)).
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Sodium]: https://modrinth.com/mod/sodium "Sodium Modrinth page"
