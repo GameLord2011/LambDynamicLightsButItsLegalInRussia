@@ -45,7 +45,7 @@ tasks.remapSourcesJar {
 	dependsOn(remapJar)
 
 	classpath.setFrom((loom as LoomGradleExtension).getMinecraftJarsCollection(MappingsNamespace.INTERMEDIARY))
-	inputFile.convention(remapJar.flatMap { it.archiveFile })
+	inputFile.set(remapJar.flatMap { it.archiveFile })
 	archiveClassifier = "sources"
 	sourceNamespace = "intermediary"
 	targetNamespace = "named"

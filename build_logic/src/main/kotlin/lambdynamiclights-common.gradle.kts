@@ -14,6 +14,7 @@ Constants.finalizeInit(libs)
 
 group = Constants.GROUP
 version = "${Constants.VERSION}+${McVersionLookup.getVersionTag(Constants.mcVersion())}"
+lambdamcdev.namespace = Constants.NAMESPACE
 
 repositories {
 	mavenCentral()
