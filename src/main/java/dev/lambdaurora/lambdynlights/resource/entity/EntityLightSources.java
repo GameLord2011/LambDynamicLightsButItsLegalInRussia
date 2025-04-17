@@ -19,7 +19,8 @@ import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import dev.lambdaurora.lambdynlights.resource.LightSourceLoader;
 import dev.lambdaurora.lambdynlights.resource.LoadedLightSourceResource;
-import dev.lambdaurora.lambdynlights.resource.entity.luminance.*;
+import dev.lambdaurora.lambdynlights.resource.entity.luminance.CreeperLuminance;
+import dev.lambdaurora.lambdynlights.resource.entity.luminance.DisplayEntityLuminance;
 import dev.lambdaurora.lambdynlights.resource.item.ItemLightSources;
 import dev.yumi.commons.event.Event;
 import net.minecraft.core.RegistryAccess;
@@ -31,12 +32,13 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Represents an entity light source manager.
  *
  * @author LambdAurora
- * @version 4.1.0
+ * @version 4.2.5
  * @since 4.0.0
  */
 public final class EntityLightSources extends LightSourceLoader<EntityLightSource> implements EntityLightSourceManager {
@@ -86,8 +88,7 @@ public final class EntityLightSources extends LightSourceLoader<EntityLightSourc
 	}
 
 	@Override
-	public void apply(RegistryAccess registryAccess) {
-		super.apply(registryAccess);
+	protected void doApply(RegistryAccess registryAccess, List<EntityLightSource> lightSources) {
 		this.onRegisterEvent.invoker().onRegister(new RegisterContext() {
 			@Override
 			public @NotNull RegistryAccess registryAccess() {
@@ -96,13 +97,13 @@ public final class EntityLightSources extends LightSourceLoader<EntityLightSourc
 
 			@Override
 			public void register(@NotNull EntityLightSource entityLightSource) {
-				EntityLightSources.this.lightSources.add(entityLightSource);
+				lightSources.add(entityLightSource);
 			}
 		});
 	}
 
 	@Override
-	protected void apply(DynamicOps<JsonElement> ops, LoadedLightSourceResource loadedData) {
+	protected @NotNull Optional<EntityLightSource> apply(DynamicOps<JsonElement> ops, LoadedLightSourceResource loadedData) {
 		var loaded = EntityLightSource.CODEC.parse(ops, loadedData.data());
 
 		if (!loadedData.silenceError() || LambDynLightsConstants.FORCE_LOG_ERRORS) {
@@ -111,10 +112,13 @@ public final class EntityLightSources extends LightSourceLoader<EntityLightSourc
 			// Errors may be forced to be logged if the property "lambdynamiclights.resource.force_log_errors" is true
 			// or if the environment is a development environment.
 			loaded.ifError(error -> {
-				LambDynLights.warn(LOGGER, "Failed to load entity light source \"{}\" due to error: {}", loadedData.id(), error.message());
+				LambDynLights.warn(LOGGER, "Failed to load entity light source \"{}\" due to error: {}",
+						loadedData.id(), error.message()
+				);
 			});
 		}
-		loaded.ifSuccess(this.lightSources::add);
+
+		return loaded.result();
 	}
 
 	@Override

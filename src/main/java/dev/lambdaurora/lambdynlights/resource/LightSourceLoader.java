@@ -22,12 +22,14 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.io.Resource;
 import net.minecraft.resources.io.ResourceManager;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -36,7 +38,7 @@ import java.util.concurrent.Executor;
  *
  * @param <L> the type of light source to load
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.2.5
  * @since 4.0.0
  */
 public abstract class LightSourceLoader<L> implements IdentifiableResourceReloadListener {
@@ -45,7 +47,7 @@ public abstract class LightSourceLoader<L> implements IdentifiableResourceReload
 	private final Minecraft client = Minecraft.getInstance();
 
 	protected final List<LoadedLightSourceResource> loadedLightSources = new ArrayList<>();
-	protected final List<L> lightSources = new ArrayList<>();
+	protected List<L> lightSources = List.of();
 
 	/**
 	 * {@return this light source loader's logger}
@@ -92,11 +94,16 @@ public abstract class LightSourceLoader<L> implements IdentifiableResourceReload
 	 *
 	 * @param registryAccess the registry access
 	 */
-	public void apply(RegistryAccess registryAccess) {
+	public final void apply(RegistryAccess registryAccess) {
 		var ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
 
-		this.lightSources.clear();
-		this.loadedLightSources.forEach(data -> this.apply(ops, data));
+		var lightSources = new ArrayList<L>();
+		this.loadedLightSources.forEach(data -> this.apply(ops, data).ifPresent(lightSources::add));
+		this.doApply(registryAccess, lightSources);
+		this.lightSources = lightSources;
+	}
+
+	protected void doApply(RegistryAccess registryAccess, List<L> lightSources) {
 	}
 
 	protected void load(Identifier resourceId, Resource resource) {
@@ -128,5 +135,5 @@ public abstract class LightSourceLoader<L> implements IdentifiableResourceReload
 		}
 	}
 
-	protected abstract void apply(DynamicOps<JsonElement> ops, LoadedLightSourceResource loadedData);
+	protected abstract @NotNull Optional<L> apply(DynamicOps<JsonElement> ops, LoadedLightSourceResource loadedData);
 }
