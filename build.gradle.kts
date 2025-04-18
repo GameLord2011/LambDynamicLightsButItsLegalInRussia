@@ -85,15 +85,6 @@ dependencies {
 	modCompileOnly(libs.trinkets)
 	modCompileOnly(libs.accessories)
 
-	shadow(libs.yumi.commons.core) {
-		isTransitive = false
-	}
-	shadow(libs.yumi.commons.collections) {
-		isTransitive = false
-	}
-	shadow(libs.yumi.commons.event) {
-		isTransitive = false
-	}
 	shadow(libs.nightconfig.core)
 	shadow(libs.nightconfig.toml)
 }
@@ -113,6 +104,10 @@ tasks.shadowJar {
 	archiveClassifier.set("dev")
 
 	relocate("com.electronwill.nightconfig", "dev.lambdaurora.lambdynlights.shadow.nightconfig")
+
+	from(rootProject.file("LICENSE")) {
+		rename { "${it}_${Constants.NAME}" }
+	}
 }
 
 tasks.remapJar {

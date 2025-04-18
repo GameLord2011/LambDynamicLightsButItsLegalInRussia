@@ -332,9 +332,11 @@
 ### 4.2.5
 
 - Fixed `/reload` crash ([#275](https://github.com/LambdAurora/LambDynamicLights/issues/275)).
+- Updated [Yumi Commons] for better dependency resolution.
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
+[Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"
 [Sodium]: https://modrinth.com/mod/sodium "Sodium Modrinth page"
 [Canvas Renderer]: https://www.curseforge.com/minecraft/mc-mods/canvas-renderer "Canvas Renderer CurseForge page"
 [#115]: https://github.com/LambdAurora/LambDynamicLights/issues/115

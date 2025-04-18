@@ -8,6 +8,12 @@ val prettyName = "${Constants.PRETTY_NAME} (API)"
 
 base.archivesName.set(Constants.NAME + "-api")
 
+dependencies {
+	include(libs.yumi.commons.core)
+	include(libs.yumi.commons.collections)
+	include(libs.yumi.commons.event)
+}
+
 lambdamcdev {
 	namespace = Constants.NAMESPACE + "_api"
 
@@ -30,7 +36,15 @@ lambdamcdev {
 			withLoaderVersion("[2,)")
 			withDepend("minecraft", "[" + libs.versions.minecraft.get() + ",)")
 		}
+
+		fmj {
+			withDepend("yumi-commons-core", "^${libs.versions.yumi.commons.get()}")
+			withDepend("yumi-commons-collections", "^${libs.versions.yumi.commons.get()}")
+			withDepend("yumi-commons-event", "^${libs.versions.yumi.commons.get()}")
+		}
 	}
+
+	setupJarJarCompat()
 }
 
 val generateNmt = tasks.named("generateNmt")
