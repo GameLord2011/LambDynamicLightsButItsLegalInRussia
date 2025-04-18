@@ -11,6 +11,7 @@
 		"DevModeMixin",
 		"EntityRendererMixin",
 		"EntityTypeMixin",
+		"LevelRendererAccessor",
 		"MinecraftClientMixin",
 		"VideoSettingsScreenMixin",
 		"fabric.AoCalculatorMixin",

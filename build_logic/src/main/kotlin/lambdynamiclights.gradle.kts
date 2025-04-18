@@ -1,7 +1,4 @@
 import lambdynamiclights.Constants
-import lambdynamiclights.data.Fmj
-import lambdynamiclights.mappings.MojangMappingsSpec
-import lambdynamiclights.task.GenerateFmjTask
 import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
@@ -16,51 +13,39 @@ plugins {
 val libs = the<LibrariesForLibs>()
 Constants.finalizeInit(libs)
 
-val generateFmj = tasks.register("generateFmj", GenerateFmjTask::class) {
-	this.fmj.set(
-		Fmj(Constants.NAMESPACE, Constants.PRETTY_NAME, project.version.toString())
-			.withDescription(Constants.DESCRIPTION)
-			.withAuthors(Constants.AUTHORS)
-			.withContributors(Constants.CONTRIBUTORS)
-			.withContact {
-				it.withHomepage(Constants.PROJECT_LINK)
-					.withSources(Constants.SOURCES_LINK)
-					.withIssues("${Constants.SOURCES_LINK}/issues")
-			}
-			.withLicense(Constants.LICENSE)
-			.withIcon("assets/${Constants.NAMESPACE}/icon.png")
-			.withEnvironment("client")
-			.withDepend("fabricloader", ">=${libs.versions.fabric.loader.get()}")
-			.withDepend("minecraft", "~1.21 <1.21.2-")
-			.withDepend("java", ">=${Constants.JAVA_VERSION}")
-			.withModMenu {
-				it.withLink("modmenu.curseforge", "https://www.curseforge.com/minecraft/mc-mods/lambdynamiclights")
-					.withLink("modmenu.discord", "https://discord.lambdaurora.dev/")
-					.withLink("modmenu.github_releases", "${Constants.SOURCES_LINK}/releases")
-					.withLink("modmenu.modrinth", "https://modrinth.com/mod/lambdynamiclights")
-					.withLink("modmenu.bluesky", "https://bsky.app/profile/lambdaurora.dev")
-			}
-	)
-	outputDir.set(project.file("build/generated/generated_resources/"))
-}
-
-tasks.ideaSyncTask.configure {
-	dependsOn(generateFmj)
-}
-
-sourceSets {
-	main {
-		resources {
-			// This is needed so that people can use their IDE to compile the project (bypassing Gradle).
-			srcDir(generateFmj)
+lambdamcdev {
+	manifests {
+		fmj {
+			withName(Constants.PRETTY_NAME)
+				.withDescription(Constants.DESCRIPTION)
+				.withAuthors(Constants.AUTHORS)
+				.withContributors(Constants.CONTRIBUTORS)
+				.withContact {
+					it.withHomepage(Constants.PROJECT_LINK)
+						.withSources(Constants.SOURCES_LINK)
+						.withIssues("${Constants.SOURCES_LINK}/issues")
+				}
+				.withLicense(Constants.LICENSE)
+				.withIcon("assets/${Constants.NAMESPACE}/icon.png")
+				.withEnvironment("client")
+				.withDepend("fabricloader", ">=${libs.versions.fabric.loader.get()}")
+				.withDepend("minecraft", "~1.21 <1.21.2-")
+				.withDepend("java", ">=${Constants.JAVA_VERSION}")
+				.withModMenu {
+					it.withCurseForge("https://www.curseforge.com/minecraft/mc-mods/lambdynamiclights")
+						.withDiscord("https://discord.lambdaurora.dev/")
+						.withGitHubReleases("${Constants.SOURCES_LINK}/releases")
+						.withModrinth("https://modrinth.com/mod/lambdynamiclights")
+						.withLink("modmenu.bluesky", "https://bsky.app/profile/lambdaurora.dev")
+				}
 		}
 	}
 }
 
 dependencies {
 	@Suppress("UnstableApiUsage")
-	mappings(loom.layered {
-		addLayer(MojangMappingsSpec(false))
+	mappings(lambdamcdev.layered {
+		officialMojangMappings()
 		// Parchment is currently broken when used with the hacked mojmap layer due to remapping shenanigans.
 		//parchment("org.parchmentmc.data:parchment-${Constants.getMcVersionString()}:${libs.versions.mappings.parchment.get()}@zip")
 		mappings("dev.lambdaurora:yalmm:${Constants.mcVersion()}+build.${libs.versions.mappings.yalmm.get()}")
@@ -77,10 +62,6 @@ tasks.jar {
 	from(rootProject.file("LICENSE")) {
 		rename { "${it}_${Constants.NAME}" }
 	}
-}
-
-tasks.getByName("sourcesJar") {
-	dependsOn(generateFmj)
 }
 
 license {

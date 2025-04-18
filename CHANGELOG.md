@@ -297,12 +297,57 @@
 ## 4.1.0
 
 - Added datagen and helper methods to API ([#267](https://github.com/LambdAurora/LambDynamicLights/pull/267)).
-  - This should allow any modders who wishes to datagen LambDynamicLights item or entity light source JSON files to do so easily. 
+  - This should allow any modders who wishes to datagen LambDynamicLights item or entity light source JSON files to do so easily.
 - Moved `lambdynlights:glow_squid`, `lambdynlights:magma_cube`, `lambdynlights:water_sensitive`, and `lambdynlights:wet_sensitive` to the API artifact.
   - The water sensitivity setting doesn't affect entity luminance anymore (items are still affected), however this still can be tweaked through resource packs.
 
+### 4.1.1
+
+- Backports some changes from the v4.2.0 versions.
+- Fixed `/reload` crash ([#275](https://github.com/LambdAurora/LambDynamicLights/issues/275)).
+- Added Spanish translations ([#268](https://github.com/LambdAurora/LambDynamicLights/pull/268)).
+- Added missing Spanish Mexican translations from Spanish translations as a stop-gap.
+- Updated German translations (thanks zOnlyKroks).
+- Updated Russian translations ([#269](https://github.com/LambdAurora/LambDynamicLights/pull/269)).
+- Updated Brazilian Portuguese translations ([#270](https://github.com/LambdAurora/LambDynamicLights/pull/270)).
+- Updated [Yumi Commons] for better dependency resolution.
+
+## 4.2.0
+
+- Updated to Minecraft 1.21.5.
+- Added dynamic lighting to Firefly particles.
+- Added support for entity component predicates.
+- Updated [SpruceUI].
+
+### 4.2.1
+
+- Fixed a crash on start due to a bad mixin remap.
+- Fixed the throwable item projectiles entity dynamic light source JSON.
+
+### 4.2.2
+
+- Fixed French and French Canadian translations.
+- Added Spanish translations ([#268](https://github.com/LambdAurora/LambDynamicLights/pull/268)).
+- Added missing Spanish Mexican translations from Spanish translations as a stop-gap.
+- Updated German translations (thanks zOnlyKroks).
+
+### 4.2.3
+
+- Hotfix performance issues due to a wrong Mixin injection.
+
+### 4.2.4
+
+- Updated Russian translations ([#269](https://github.com/LambdAurora/LambDynamicLights/pull/269)).
+- Updated Brazilian Portuguese translations ([#270](https://github.com/LambdAurora/LambDynamicLights/pull/270)).
+
+### 4.2.5
+
+- Fixed `/reload` crash ([#275](https://github.com/LambdAurora/LambDynamicLights/issues/275)).
+- Updated [Yumi Commons] for better dependency resolution.
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
+[Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"
 [Sodium]: https://modrinth.com/mod/sodium "Sodium Modrinth page"
 [Canvas Renderer]: https://www.curseforge.com/minecraft/mc-mods/canvas-renderer "Canvas Renderer CurseForge page"
 [#115]: https://github.com/LambdAurora/LambDynamicLights/issues/115

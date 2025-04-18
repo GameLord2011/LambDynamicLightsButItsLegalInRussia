@@ -87,6 +87,12 @@ Wait... what? **Lasers?!** They do pack a punch...
 
 ![light levels](assets/guardian_laser.png)
 
+### Fireflies
+
+Fireflies particle will emit light as they fly!
+
+![Fireflies](assets/fireflies.png)
+
 ### Configuration GUI
 
 As of v4.0.0.

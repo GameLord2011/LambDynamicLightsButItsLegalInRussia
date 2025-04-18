@@ -2,11 +2,11 @@
 minecraft = "1.21.1"
 fabric-loader = "0.16.9"
 fabric-api = "0.105.0+1.21.1"
-mappings-yalmm = "3"
+mappings-yalmm = "5"
 mappings-parchment = "2024.07.28"
 
 # Dependencies
-yumi-commons = "1.0.0-alpha.5"
+yumi-commons = "1.0.0-alpha.6"
 spruceui = "6.2.1+1.21"
 pridelib = "1.2.1+1.21"
 modmenu = "11.0.3"
@@ -19,8 +19,7 @@ nightconfig = "3.8.1"
 # Gradle
 gradle-licenser = "2.1.+"
 gradle-loom = "1.10.+"
-mappingio = "0.7.1"
-gson = "2.11.0"
+gradle-lambdamcdev = "1.2.+"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
@@ -44,5 +43,4 @@ nightconfig-toml = { module = "com.electronwill.night-config:toml", version.ref 
 # Gradle
 gradle-licenser = { module = "dev.yumi:yumi-gradle-licenser", version.ref = "gradle-licenser" }
 gradle-loom = { module = "net.fabricmc:fabric-loom", version.ref = "gradle-loom" }
-mappingio = { module = "net.fabricmc:mapping-io", version.ref = "mappingio" }
-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+gradle-lambdamcdev = { module = "dev.lambdaurora.mcdev:dev.lambdaurora.mcdev.gradle.plugin", version.ref = "gradle-lambdamcdev" }
