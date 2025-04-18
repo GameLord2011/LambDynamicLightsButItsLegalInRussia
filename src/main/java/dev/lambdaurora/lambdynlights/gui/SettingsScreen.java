@@ -190,8 +190,7 @@ public class SettingsScreen extends SpruceScreen {
 		list.addSingleOptionEntry(this.waterSensitiveOption);
 		list.addSingleOptionEntry(new SpruceSeparatorOption(SPECIAL_DYNAMIC_LIGHT_SOURCES_KEY, true, null));
 		list.addOptionEntry(this.creeperLightingOption, this.tntLightingOption);
-		list.addOptionEntry(this.config.getBeamLighting().getOption(), this.config.getFireflyLighting().getOption());
-		list.addSmallSingleOptionEntry(this.config.getGuardianLaser().getOption());
+		list.addOptionEntry(this.config.getBeamLighting().getOption(), this.config.getGuardianLaser().getOption());
 		context.addInnerWidget(list);
 	}
 

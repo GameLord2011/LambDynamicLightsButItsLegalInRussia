@@ -38,7 +38,7 @@ import java.util.Optional;
  * Represents an entity light source manager.
  *
  * @author LambdAurora
- * @version 4.2.5
+ * @version 4.1.1
  * @since 4.0.0
  */
 public final class EntityLightSources extends LightSourceLoader<EntityLightSource> implements EntityLightSourceManager {

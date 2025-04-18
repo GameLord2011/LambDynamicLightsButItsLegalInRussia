@@ -38,7 +38,7 @@ import java.util.concurrent.Executor;
  *
  * @param <L> the type of light source to load
  * @author LambdAurora
- * @version 4.2.5
+ * @version 4.1.1
  * @since 4.0.0
  */
 public abstract class LightSourceLoader<L> implements IdentifiableResourceReloadListener {

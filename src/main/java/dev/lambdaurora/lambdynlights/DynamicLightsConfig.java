@@ -36,7 +36,7 @@ import java.util.Objects;
  * Represents the mod configuration.
  *
  * @author LambdAurora
- * @version 4.2.0
+ * @version 4.0.2
  * @since 1.0.0
  */
 public class DynamicLightsConfig {
@@ -61,7 +61,6 @@ public class DynamicLightsConfig {
 	private final BooleanSettingEntry selfLightSource;
 	private final BooleanSettingEntry waterSensitiveCheck;
 	private final BooleanSettingEntry beamLighting;
-	private final BooleanSettingEntry fireflyLighting;
 	private final BooleanSettingEntry guardianLaser;
 	private final BooleanSettingEntry debugActiveDynamicLightingCells;
 	private final BooleanSettingEntry debugDisplayDynamicLightingChunkRebuild;
@@ -99,10 +98,6 @@ public class DynamicLightsConfig {
 				"light_sources.beam", true, this.config,
 				Text.translatable("lambdynlights.option.light_sources.beam.tooltip")
 		);
-		this.fireflyLighting = new BooleanSettingEntry(
-				"light_sources.firefly", true, this.config,
-				Text.translatable("lambdynlights.option.light_sources.firefly.tooltip")
-		);
 		this.guardianLaser = new BooleanSettingEntry(
 				"light_sources.guardian_laser", true, this.config,
 				Text.translatable("lambdynlights.option.light_sources.guardian_laser.tooltip")
@@ -125,7 +120,6 @@ public class DynamicLightsConfig {
 				this.selfLightSource,
 				this.waterSensitiveCheck,
 				this.beamLighting,
-				this.fireflyLighting,
 				this.guardianLaser,
 				this.debugActiveDynamicLightingCells,
 				this.debugDisplayDynamicLightingChunkRebuild,
@@ -331,13 +325,6 @@ public class DynamicLightsConfig {
 	 */
 	public BooleanSettingEntry getBeamLighting() {
 		return this.beamLighting;
-	}
-
-	/**
-	 * {@return the firefly light source setting holder}
-	 */
-	public BooleanSettingEntry getFireflyLighting() {
-		return this.fireflyLighting;
 	}
 
 	/**

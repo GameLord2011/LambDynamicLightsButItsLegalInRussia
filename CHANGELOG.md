@@ -301,6 +301,17 @@
 - Moved `lambdynlights:glow_squid`, `lambdynlights:magma_cube`, `lambdynlights:water_sensitive`, and `lambdynlights:wet_sensitive` to the API artifact.
   - The water sensitivity setting doesn't affect entity luminance anymore (items are still affected), however this still can be tweaked through resource packs.
 
+### 4.1.1
+
+- Backports some changes from the v4.2.0 versions.
+- Fixed `/reload` crash ([#275](https://github.com/LambdAurora/LambDynamicLights/issues/275)).
+- Added Spanish translations ([#268](https://github.com/LambdAurora/LambDynamicLights/pull/268)).
+- Added missing Spanish Mexican translations from Spanish translations as a stop-gap.
+- Updated German translations (thanks zOnlyKroks).
+- Updated Russian translations ([#269](https://github.com/LambdAurora/LambDynamicLights/pull/269)).
+- Updated Brazilian Portuguese translations ([#270](https://github.com/LambdAurora/LambDynamicLights/pull/270)).
+- Updated [Yumi Commons] for better dependency resolution.
+
 ## 4.2.0
 
 - Updated to Minecraft 1.21.5.

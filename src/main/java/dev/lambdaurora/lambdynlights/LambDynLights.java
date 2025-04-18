@@ -69,7 +69,7 @@ import java.util.function.Predicate;
  * Represents the LambDynamicLights mod.
  *
  * @author LambdAurora
- * @version 4.2.0
+ * @version 4.1.1
  * @since 1.0.0
  */
 @ApiStatus.Internal

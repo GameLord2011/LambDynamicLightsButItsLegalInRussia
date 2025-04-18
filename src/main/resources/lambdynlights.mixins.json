@@ -4,8 +4,8 @@
 	"plugin": "dev.lambdaurora.lambdynlights.LambDynLightsMixinPlugin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-		"BrightnessGetterMixin",
 		"ClientLevelMixin",
+		"CommonLevelRendererMixin",
 		"DebugRendererMixin",
 		"DebugScreenOverlayMixin",
 		"DevModeMixin",

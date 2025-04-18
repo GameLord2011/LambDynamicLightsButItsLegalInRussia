@@ -26,7 +26,7 @@ import java.util.List;
  * @param dry the luminance values if the entity is dry
  * @param wet the luminance values if the entity is wet
  * @author LambdAurora
- * @version 4.2.0
+ * @version 4.1.0
  * @since 4.1.0
  */
 public record WetSensitiveEntityLuminance(
@@ -51,7 +51,7 @@ public record WetSensitiveEntityLuminance(
 
 	@Override
 	public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Entity entity) {
-		boolean submergedInWater = entity.isInWaterOrRain();
+		boolean submergedInWater = entity.isInWaterRainOrBubble();
 
 		if (submergedInWater) {
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.wet);

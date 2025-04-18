@@ -1,5 +1,5 @@
 /*
- * Copyright © 2025 LambdAurora <email@lambdaurora.dev>
+ * Copyright © 2020 LambdAurora <email@lambdaurora.dev>
  *
  * This file is part of LambDynamicLights.
  *
@@ -13,31 +13,20 @@ import dev.lambdaurora.lambdynlights.LambDynLights;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-/**
- * Injects the dynamic lighting into the default brightness getter.
- * <p>
- * Injecting into the default brightness getter allows to benefit from brightness caching in the Vanilla renderer.
- *
- * @author LambdAurora
- * @version 4.2.3
- * @since 4.2.3
- */
-@Mixin(value = LevelRenderer.BrightnessGetter.class, priority = 900)
-public interface BrightnessGetterMixin {
+@Mixin(value = LevelRenderer.class, priority = 900)
+public abstract class CommonLevelRendererMixin {
 	@Inject(
-			method = "method_68890",
+			method = "getLightColor(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)I",
 			at = @At("TAIL"),
 			cancellable = true
 	)
-	private static void onGetLightmapCoordinates(
-			BlockAndTintGetter level, BlockPos pos,
-			CallbackInfoReturnable<Integer> cir
-	) {
+	private static void onGetLightmapCoordinates(BlockAndTintGetter level, BlockState state, BlockPos pos, CallbackInfoReturnable<Integer> cir) {
 		if (!level.getBlockState(pos).isSolidRender() && LambDynLights.get().config.getDynamicLightsMode().isEnabled())
 			cir.setReturnValue(LambDynLights.get().getLightmapWithDynamicLight(level, pos, cir.getReturnValue()));
 	}

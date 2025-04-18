@@ -33,7 +33,7 @@ import java.util.Optional;
  * Represents an item light sources manager.
  *
  * @author LambdAurora
- * @version 4.2.5
+ * @version 4.1.1
  * @since 1.3.0
  */
 public final class ItemLightSources extends LightSourceLoader<ItemLightSource> implements ItemLightSourceManager {

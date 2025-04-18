@@ -7,7 +7,6 @@
 		"BeaconBlockEntityMixin",
 		"EntityMixin",
 		"FallingBlockEntityMixin",
-		"FireflyParticleMixin",
 		"GuardianEntityMixin",
 		"LivingEntityMixin",
 		"PlayerEntityMixin",
