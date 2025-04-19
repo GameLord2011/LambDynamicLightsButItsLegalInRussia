@@ -192,7 +192,6 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 		// Sinytra
 		// Under NeoForge there is no simple entrypoint system, so we end up just re-implementing Fabric-style entrypoints.
-		// @TODO: This might need tweaking depending on how it gets implemented on Sinytra's side.
 		FabricLoader.getInstance().getAllMods().stream()
 				.filter(mod -> mod.getMetadata().containsCustomValue(DynamicLightsInitializer.ENTRYPOINT_KEY))
 				.forEach(this::invokeInitializer);
