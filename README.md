@@ -6,6 +6,7 @@
 ![Environment: Client](https://img.shields.io/badge/environment-client-1976d2?style=flat-square)
 [![Mod loader: Fabric]][fabric] <!-- modrinth_exclude.start -->
 ![Version](https://img.shields.io/github/v/tag/LambdAurora/LambDynamicLights?label=version&style=flat-square)
+[![Modrinth](https://img.shields.io/modrinth/v/lambdynamiclights?logo=modrinth&label=Modrinth&color=00ae5d&style=flat-square)](https://modrinth.com/mod/lambdynamiclights)
 [![CurseForge](http://cf.way2muchnoise.eu/title/393442.svg)](https://www.curseforge.com/minecraft/mc-mods/lambdynamiclights)
 <!-- modrinth_exclude.end -->
 
