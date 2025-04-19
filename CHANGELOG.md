@@ -310,6 +310,7 @@
 - Updated German translations (thanks zOnlyKroks).
 - Updated Russian translations ([#269](https://github.com/LambdAurora/LambDynamicLights/pull/269)).
 - Updated Brazilian Portuguese translations ([#270](https://github.com/LambdAurora/LambDynamicLights/pull/270)).
+- Updated Vietnamese translations ([#276](https://github.com/LambdAurora/LambDynamicLights/pull/276)).
 - Updated [Yumi Commons] for better dependency resolution.
 
 ## 4.2.0
@@ -343,6 +344,7 @@
 ### 4.2.5
 
 - Fixed `/reload` crash ([#275](https://github.com/LambdAurora/LambDynamicLights/issues/275)).
+- Updated Vietnamese translations ([#276](https://github.com/LambdAurora/LambDynamicLights/pull/276)).
 - Updated [Yumi Commons] for better dependency resolution.
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
