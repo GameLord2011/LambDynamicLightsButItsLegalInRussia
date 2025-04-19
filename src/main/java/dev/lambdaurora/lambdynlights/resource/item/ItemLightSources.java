@@ -32,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -39,7 +40,7 @@ import java.util.function.Function;
  * Represents an item light sources manager.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.1.1
  * @since 1.3.0
  */
 public final class ItemLightSources extends LightSourceLoader<ItemLightSource> implements ItemLightSourceManager {
@@ -64,8 +65,7 @@ public final class ItemLightSources extends LightSourceLoader<ItemLightSource> i
 	}
 
 	@Override
-	public void apply(RegistryAccess registryAccess) {
-		super.apply(registryAccess);
+	protected void doApply(RegistryAccess registryAccess, List<ItemLightSource> lightSources) {
 		this.onRegisterEvent.invoker().onRegister(new RegisterContext() {
 			@Override
 			public @NotNull RegistryAccess registryAccess() {
@@ -74,14 +74,14 @@ public final class ItemLightSources extends LightSourceLoader<ItemLightSource> i
 
 			@Override
 			public void register(@NotNull ItemLightSource itemLightSource) {
-				ItemLightSources.this.lightSources.add(itemLightSource);
+				lightSources.add(itemLightSource);
 			}
 		});
 	}
 
 	@Override
-	protected void apply(DynamicOps<JsonElement> ops, LoadedLightSourceResource loadedData) {
-		this.attemptLoadLegacy(loadedData).fold(
+	protected @NotNull Optional<ItemLightSource> apply(DynamicOps<JsonElement> ops, LoadedLightSourceResource loadedData) {
+		return this.attemptLoadLegacy(loadedData).fold(
 				Function.identity(),
 				legacyError -> {
 					var loaded = ItemLightSource.CODEC.parse(ops, loadedData.data());
@@ -98,7 +98,7 @@ public final class ItemLightSources extends LightSourceLoader<ItemLightSource> i
 					}
 					return loaded.result();
 				}
-		).ifPresent(this.lightSources::add);
+		);
 	}
 
 	/**

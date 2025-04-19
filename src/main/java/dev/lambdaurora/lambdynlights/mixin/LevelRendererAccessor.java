@@ -7,16 +7,21 @@
  * see the LICENSE file.
  */
 
-package dev.lambdaurora.lambdynlights.accessor;
+package dev.lambdaurora.lambdynlights.mixin;
+
+import net.minecraft.client.renderer.LevelRenderer;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
 /**
  * Represents an accessor for WorldRenderer.
  *
  * @author LambdAurora
- * @version 1.0.0
+ * @version 4.2.3
  * @since 1.0.0
  */
-public interface WorldRendererAccessor {
+@Mixin(LevelRenderer.class)
+public interface LevelRendererAccessor {
 	/**
 	 * Schedules a chunk rebuild.
 	 *
@@ -25,5 +30,6 @@ public interface WorldRendererAccessor {
 	 * @param z Z coordinates of the chunk
 	 * @param important {@code true} if important, else {@code false}
 	 */
+	@Invoker("setSectionDirty")
 	void lambdynlights$scheduleChunkRebuild(int x, int y, int z, boolean important);
 }

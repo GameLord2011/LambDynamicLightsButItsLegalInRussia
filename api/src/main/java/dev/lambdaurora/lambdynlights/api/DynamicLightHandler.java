@@ -9,8 +9,6 @@
 
 package dev.lambdaurora.lambdynlights.api;
 
-import dev.lambdaurora.lambdynlights.LambDynLights;
-import dev.lambdaurora.lambdynlights.resource.entity.luminance.CreeperLuminance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Creeper;
@@ -86,10 +84,7 @@ public interface DynamicLightHandler<T> {
 	 * @return The completed handler.
 	 */
 	static <T extends LivingEntity> @NotNull DynamicLightHandler<T> makeLivingEntityHandler(@NotNull DynamicLightHandler<T> handler) {
-		return entity -> {
-			int luminance = LambDynLights.getLivingEntityLuminanceFromItems(entity);
-			return Math.max(luminance, handler.getLuminance(entity));
-		};
+		throw new UnsupportedOperationException("Missing runtime implementation.");
 	}
 
 	/**
@@ -100,13 +95,6 @@ public interface DynamicLightHandler<T> {
 	 * @return The completed handler.
 	 */
 	static <T extends Creeper> @NotNull DynamicLightHandler<T> makeCreeperEntityHandler(@Nullable DynamicLightHandler<T> handler) {
-		return entity -> {
-			int luminance = CreeperLuminance.INSTANCE.getLuminance(LambDynLights.get().itemLightSourceManager(), entity);
-
-			if (handler != null)
-				luminance = Math.max(luminance, handler.getLuminance(entity));
-
-			return luminance;
-		};
+		throw new UnsupportedOperationException("Missing runtime implementation.");
 	}
 }

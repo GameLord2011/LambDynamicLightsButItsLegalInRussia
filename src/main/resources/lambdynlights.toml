@@ -16,6 +16,8 @@ mode = "fancy"
 	tnt = "off"
 	# Enables dynamic lighting of beacon or end gateway beams.
 	beam = true
+	# Enables dynamic lighting of firefly particles from Firefly Bushes.
+	firefly = true
 	# Enables dynamic lighting of Guardian's lasers. This also can be toggled off by disabling Guardian dynamic lighting.
 	guardian_laser = true
 

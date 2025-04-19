@@ -1,6 +1,4 @@
 import lambdynamiclights.Constants
-import lambdynamiclights.data.Nmt
-import lambdynamiclights.task.GenerateNmtTask
 
 plugins {
 	id("lambdynamiclights")
@@ -10,40 +8,48 @@ val prettyName = "${Constants.PRETTY_NAME} (API)"
 
 base.archivesName.set(Constants.NAME + "-api")
 
-tasks.generateFmj.configure {
-	this.fmj.get()
-		.withNamespace(Constants.NAMESPACE + "_api")
-		.withName(prettyName)
-		.withDescription(Constants.API_DESCRIPTION)
-		.withModMenu {
-			it.withBadges("library")
-				.withParent(Constants.NAMESPACE, Constants.PRETTY_NAME) { parent ->
-					parent.withDescription(Constants.DESCRIPTION)
-						.withIcon("assets/${Constants.NAMESPACE}/icon.png")
+dependencies {
+	include(libs.yumi.commons.core)
+	include(libs.yumi.commons.collections)
+	include(libs.yumi.commons.event)
+}
+
+lambdamcdev {
+	namespace = Constants.NAMESPACE + "_api"
+
+	manifests {
+		val fmj = fmj {
+			withNamespace(Constants.NAMESPACE + "_api")
+				.withName(prettyName)
+				.withDescription(Constants.API_DESCRIPTION)
+				.withModMenu {
+					it.withBadges("library")
+						.withParent(Constants.NAMESPACE, Constants.PRETTY_NAME) { parent ->
+							parent.withDescription(Constants.DESCRIPTION)
+								.withIcon("assets/${Constants.NAMESPACE}/icon.png")
+						}
 				}
 		}
+
+		nmt {
+			fmj.copyTo(this)
+			withLoaderVersion("[2,)")
+			withDepend("minecraft", "[1.20,1.20.1]")
+		}
+
+		fmj {
+			withDepend("yumi-commons-core", "^${libs.versions.yumi.commons.get()}")
+			withDepend("yumi-commons-collections", "^${libs.versions.yumi.commons.get()}")
+			withDepend("yumi-commons-event", "^${libs.versions.yumi.commons.get()}")
+		}
+	}
+
+	setupJarJarCompat()
 }
 
-val generateNmt = tasks.register("generateNmt", GenerateNmtTask::class) {
-	this.nmt.set(tasks.generateFmj.flatMap {
-		it.fmj.map { fmj ->
-			fmj.derive(::Nmt)
-				.withLoaderVersion("[2,)")
-				.withDepend("minecraft", "[1.20,1.20.1]")
-		}
-	})
-	outputDir.set(project.file("build/generated/generated_resources/"))
-}
+val generateNmt = tasks.named("generateNmt")
 
 tasks.generateFmj.configure {
-	dependsOn(generateNmt)
-}
-
-tasks.ideaSyncTask.configure {
-	dependsOn(generateNmt)
-}
-
-tasks.getByName("sourcesJar") {
 	dependsOn(generateNmt)
 }
 
