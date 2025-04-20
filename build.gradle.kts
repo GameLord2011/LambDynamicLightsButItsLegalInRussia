@@ -37,6 +37,7 @@ tasks.generateFmj.configure {
 		.withBreak("optifabric", "*")
 		.withBreak("sodiumdynamiclights", "*")
 		.withBreak("ryoamiclights", "*")
+		.withBreak("sodium", "<0.6.0-")
 
 	fabricApiModules.forEach { module -> fmj.withDepend(module.name, ">=${module.version}") }
 }
