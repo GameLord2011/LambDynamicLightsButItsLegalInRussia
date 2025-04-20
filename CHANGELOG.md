@@ -313,6 +313,10 @@
 - Updated Vietnamese translations ([#276](https://github.com/LambdAurora/LambDynamicLights/pull/276)).
 - Updated [Yumi Commons] for better dependency resolution.
 
+### 4.1.2
+
+- Updated [Yumi Commons] to fix a crash on NeoForge with Sinytra Connector due to bad handling of JPMS.
+
 ## 4.2.0
 
 - Updated to Minecraft 1.21.5.
@@ -346,6 +350,10 @@
 - Fixed `/reload` crash ([#275](https://github.com/LambdAurora/LambDynamicLights/issues/275)).
 - Updated Vietnamese translations ([#276](https://github.com/LambdAurora/LambDynamicLights/pull/276)).
 - Updated [Yumi Commons] for better dependency resolution.
+
+### 4.2.6
+
+- Updated [Yumi Commons] to fix a crash on NeoForge with Sinytra Connector due to bad handling of JPMS.
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
