@@ -6,7 +6,7 @@ mappings-yalmm = "14"
 mappings-parchment = "2024.07.28"
 
 # Dependencies
-yumi-commons = "1.0.0-alpha.7"
+yumi-commons = "1.0.0-alpha.12"
 spruceui = "7.0.0+1.21.5"
 pridelib = "1.3.0+1.21.5"
 modmenu = "14.0.0-rc.2"
@@ -18,7 +18,7 @@ nightconfig = "3.8.1"
 
 # Gradle
 gradle-licenser = "2.1.+"
-gradle-loom = "1.10.+"
+gradle-loom = "1.11.0-alpha.26"
 gradle-lambdamcdev = "1.2.+"
 
 [libraries]
