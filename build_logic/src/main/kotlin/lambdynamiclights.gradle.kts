@@ -44,7 +44,7 @@ lambdamcdev {
 
 dependencies {
 	@Suppress("UnstableApiUsage")
-	mappings(lambdamcdev.layered {
+	mappings(loom.layered {
 		officialMojangMappings()
 		// Parchment is currently broken when used with the hacked mojmap layer due to remapping shenanigans.
 		//parchment("org.parchmentmc.data:parchment-${Constants.getMcVersionString()}:${libs.versions.mappings.parchment.get()}@zip")
