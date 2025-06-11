@@ -18,6 +18,7 @@ import dev.lambdaurora.lambdynlights.config.BooleanSettingEntry;
 import dev.lambdaurora.lambdynlights.config.SettingEntry;
 import dev.lambdaurora.spruceui.option.SpruceCyclingOption;
 import dev.lambdaurora.spruceui.option.SpruceOption;
+import dev.lambdaurora.spruceui.tooltip.TooltipData;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -74,50 +75,51 @@ public class DynamicLightsConfig {
 	public final SpruceOption dynamicLightsModeOption = new SpruceCyclingOption("lambdynlights.option.mode",
 			amount -> this.setDynamicLightsMode(this.dynamicLightsMode.next()),
 			option -> option.getDisplayText(this.dynamicLightsMode.getTranslatedText()),
-			Text.translatable("lambdynlights.tooltip.mode.1")
+			TooltipData.builder().text(Text.translatable("lambdynlights.tooltip.mode.1")
 					.append(Text.literal("\n"))
 					.append(Text.translatable("lambdynlights.tooltip.mode.2", DynamicLightsMode.FASTEST.getTranslatedText(), DynamicLightsMode.FAST.getTranslatedText()))
 					.append(Text.literal("\n"))
-					.append(Text.translatable("lambdynlights.tooltip.mode.3", DynamicLightsMode.FANCY.getTranslatedText())));
+					.append(Text.translatable("lambdynlights.tooltip.mode.3", DynamicLightsMode.FANCY.getTranslatedText()))).build());
 
 	public DynamicLightsConfig(@NotNull LambDynLights mod) {
 		this.mod = mod;
 		this.config = CommentedConfig.inMemory();
 
 		this.entitiesLightSource = new BooleanSettingEntry("light_sources.entities", DEFAULT_ENTITIES_LIGHT_SOURCE, this.config,
-				Text.translatable("lambdynlights.tooltip.entities"));
+				TooltipData.builder().text(Text.translatable("lambdynlights.tooltip.entities")).build());
 		this.selfLightSource = new BooleanSettingEntry("light_sources.self", DEFAULT_SELF_LIGHT_SOURCE, this.config,
-				Text.translatable("lambdynlights.tooltip.self_light_source"))
+				TooltipData.builder().text(Text.translatable("lambdynlights.tooltip.self_light_source")).build())
 				.withOnSet(value -> {
 					if (!value) this.mod.removeLightSources(source ->
 							source instanceof LocalPlayer player && player == Minecraft.getInstance().player
 					);
 				});
 		this.waterSensitiveCheck = new BooleanSettingEntry("light_sources.water_sensitive_check", DEFAULT_WATER_SENSITIVE_CHECK, this.config,
-				Text.translatable("lambdynlights.tooltip.water_sensitive"));
+				TooltipData.builder().text(Text.translatable("lambdynlights.tooltip.water_sensitive")).build()
+		);
 		this.beamLighting = new BooleanSettingEntry(
 				"light_sources.beam", true, this.config,
-				Text.translatable("lambdynlights.option.light_sources.beam.tooltip")
+				TooltipData.builder().text(Text.translatable("lambdynlights.option.light_sources.beam.tooltip")).build()
 		);
 		this.fireflyLighting = new BooleanSettingEntry(
 				"light_sources.firefly", true, this.config,
-				Text.translatable("lambdynlights.option.light_sources.firefly.tooltip")
+				TooltipData.builder().text(Text.translatable("lambdynlights.option.light_sources.firefly.tooltip")).build()
 		);
 		this.guardianLaser = new BooleanSettingEntry(
 				"light_sources.guardian_laser", true, this.config,
-				Text.translatable("lambdynlights.option.light_sources.guardian_laser.tooltip")
+				TooltipData.builder().text(Text.translatable("lambdynlights.option.light_sources.guardian_laser.tooltip")).build()
 		);
 		this.debugActiveDynamicLightingCells = new BooleanSettingEntry(
 				"debug.active_dynamic_lighting_cells", false, this.config,
-				Text.translatable("lambdynlights.option.debug.active_dynamic_lighting_cells.tooltip")
+				TooltipData.builder().text(Text.translatable("lambdynlights.option.debug.active_dynamic_lighting_cells.tooltip")).build()
 		);
 		this.debugDisplayDynamicLightingChunkRebuild = new BooleanSettingEntry(
 				"debug.display_dynamic_lighting_chunk_rebuild", false, this.config,
-				Text.translatable("lambdynlights.option.debug.display_dynamic_lighting_chunk_rebuild.tooltip")
+				TooltipData.builder().text(Text.translatable("lambdynlights.option.debug.display_dynamic_lighting_chunk_rebuild.tooltip")).build()
 		);
 		this.debugDisplayHandlerBoundingBox = new BooleanSettingEntry(
 				"debug.display_behavior_bounding_box", false, this.config,
-				Text.translatable("lambdynlights.option.debug.display_behavior_bounding_box.tooltip")
+				TooltipData.builder().text(Text.translatable("lambdynlights.option.debug.display_behavior_bounding_box.tooltip")).build()
 		);
 
 		this.settingEntries = List.of(

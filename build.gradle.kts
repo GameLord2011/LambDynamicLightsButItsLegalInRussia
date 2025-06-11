@@ -77,7 +77,7 @@ dependencies {
 	modImplementation(libs.pridelib)
 	include(libs.pridelib)
 
-	modImplementation(libs.modmenu) {
+	modCompileOnly(libs.modmenu) {
 		this.isTransitive = false
 	}
 

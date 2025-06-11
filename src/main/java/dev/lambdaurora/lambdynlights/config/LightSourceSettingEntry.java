@@ -13,7 +13,9 @@ import com.electronwill.nightconfig.core.Config;
 import dev.lambdaurora.spruceui.SpruceTexts;
 import dev.lambdaurora.spruceui.option.SpruceOption;
 import dev.lambdaurora.spruceui.option.SpruceToggleBooleanOption;
+import dev.lambdaurora.spruceui.tooltip.TooltipData;
 import net.minecraft.network.chat.Text;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -21,13 +23,13 @@ import java.util.function.Supplier;
 
 public final class LightSourceSettingEntry extends BooleanSettingEntry {
 	public LightSourceSettingEntry(
-			String key, String guiKey, boolean defaultValue, @Nullable Config config, @Nullable Text tooltip
+			String key, String guiKey, boolean defaultValue, @Nullable Config config, @NotNull TooltipData tooltip
 	) {
 		super("light_sources.settings.entities." + key, guiKey, defaultValue, config, tooltip);
 	}
 
 	@Override
-	protected SpruceOption buildOption(@Nullable Text tooltip) {
+	protected SpruceOption buildOption(@NotNull TooltipData tooltip) {
 		return new Option(
 				this.guiKey(),
 				this::get,
@@ -37,7 +39,7 @@ public final class LightSourceSettingEntry extends BooleanSettingEntry {
 	}
 
 	public static final class Option extends SpruceToggleBooleanOption {
-		public Option(String key, Supplier<Boolean> getter, Consumer<Boolean> setter, @Nullable Text tooltip) {
+		public Option(String key, Supplier<Boolean> getter, Consumer<Boolean> setter, @NotNull TooltipData tooltip) {
 			super(key, getter, setter, tooltip, false);
 		}
 

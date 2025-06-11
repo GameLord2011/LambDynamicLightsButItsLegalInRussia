@@ -11,7 +11,9 @@ package dev.lambdaurora.lambdynlights.config;
 
 import com.electronwill.nightconfig.core.Config;
 import dev.lambdaurora.spruceui.option.SpruceOption;
+import dev.lambdaurora.spruceui.tooltip.TooltipData;
 import net.minecraft.network.chat.Text;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -25,7 +27,7 @@ public abstract class SettingEntry<T> {
 	private T value;
 	protected @Nullable Consumer<T> onSet;
 
-	protected SettingEntry(String key, String guiKey, T defaultValue, @Nullable Config config, @Nullable Text tooltip) {
+	protected SettingEntry(String key, String guiKey, T defaultValue, @Nullable Config config, @NotNull TooltipData tooltip) {
 		this.key = key;
 		this.guiKey = guiKey;
 		this.defaultValue = defaultValue;
@@ -35,7 +37,7 @@ public abstract class SettingEntry<T> {
 	}
 
 	protected SettingEntry(String key, T defaultValue, @Nullable Config config) {
-		this(key, key, defaultValue, config, null);
+		this(key, key, defaultValue, config, TooltipData.EMPTY);
 	}
 
 	public String key() {
@@ -90,5 +92,5 @@ public abstract class SettingEntry<T> {
 		return "lambdynlights.option." + this.key();
 	}
 
-	protected abstract SpruceOption buildOption(@Nullable Text tooltip);
+	protected abstract SpruceOption buildOption(@NotNull TooltipData tooltip);
 }
