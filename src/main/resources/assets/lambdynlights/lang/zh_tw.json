@@ -1,4 +1,5 @@
 {
+	"lambdynlights": "LambDynamicLights",
 	"modmenu.descriptionTranslation.lambdynlights": "為Fabric提供功能最完整的動態光源模組。",
 
 	"lambdynlights.menu.canvas.1": "建議在使用 Canvas 時停用實體動態光源！",
@@ -6,11 +7,12 @@
 	"lambdynlights.menu.light_sources": "動態光源",
 	"lambdynlights.menu.light_sources.special": "特殊動態光源",
 	"lambdynlights.menu.search": "搜尋：",
+	"lambdynlights.menu.sodium.tab": "%s",
 	"lambdynlights.menu.tabs.advanced": "進階",
 	"lambdynlights.menu.tabs.debug": "除錯",
 	"lambdynlights.menu.tabs.debug.description": "供模組開發者使用，以應對棘手的錯誤。",
 	"lambdynlights.menu.tabs.general": "一般",
-	"lambdynlights.menu.title": "LambDynamicLights 設定",
+	"lambdynlights.menu.title": "%s 設定",
 	"lambdynlights.option.debug.active_dynamic_lighting_cells": "顯示動態光源的有效網格",
 	"lambdynlights.option.debug.active_dynamic_lighting_cells.tooltip": "在世界中顯示動態光源引擎中所有目前有效的網格。",
 	"lambdynlights.option.debug.cell_display_radius": "動態光源網格的顯示半徑",

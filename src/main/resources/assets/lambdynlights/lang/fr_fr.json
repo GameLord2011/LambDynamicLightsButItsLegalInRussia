@@ -1,14 +1,16 @@
 {
+	"lambdynlights": "LambDynamicLights",
 	"lambdynlights.menu.canvas.1": "La désactivation de l'éclairage dynamique provenant des entités est recommendée avec Canvas !",
 	"lambdynlights.menu.canvas.2": "L'éclairage dynamique avec Canvas est actuellement très demandant en ressources !",
 	"lambdynlights.menu.light_sources": "Sources de lumière dynamiques",
 	"lambdynlights.menu.light_sources.special": "Sources spéciales de lumière dynamiques",
 	"lambdynlights.menu.search": "Recherche:",
+	"lambdynlights.menu.sodium.tab": "%s",
 	"lambdynlights.menu.tabs.advanced": "Avancé",
 	"lambdynlights.menu.tabs.debug": "Debug",
 	"lambdynlights.menu.tabs.debug.description": "Pour les moddeurs, en cas de bugs bizarres.",
 	"lambdynlights.menu.tabs.general": "Général",
-	"lambdynlights.menu.title": "Paramètres de LambDynamicLights",
+	"lambdynlights.menu.title": "Paramètres de %s",
 	"lambdynlights.option.debug.active_dynamic_lighting_cells": "Affiche les cellules de lumières active",
 	"lambdynlights.option.debug.active_dynamic_lighting_cells.tooltip": "Affiche dans le monde toutes les cellules qui sont actives dans le moteur de lumière dynamique.",
 	"lambdynlights.option.debug.cell_display_radius": "Rayon d'affichage des cellules de lumière",
@@ -36,5 +38,6 @@
 	"lambdynlights.tooltip.mode.3": "%s donne un éclairage dynamique fluide.",
 	"lambdynlights.tooltip.self_light_source": "Active les lumières dynamiques provenant du personnage première-personne. Il est recommendé de désactiver cette option si des shaders qui ont leur propre lumières dynamiques sont utilisés.",
 	"lambdynlights.tooltip.tnt_lighting": "Détermine le mode d'éclairage dynamique de la TNT.\n- %s: désactive la lumière dynamique pour la TNT.\n- %s: ajoute un niveau de lumière constant.\n- %s: ajoute un niveau de lumière dynamique.",
-	"lambdynlights.tooltip.water_sensitive": "Active la vérification des sources de lumière sensibles à l'eau. C'est-à-dire que certains objets ne vont pas émettre de lumière lorsqu'ils sont dans l'eau."
+	"lambdynlights.tooltip.water_sensitive": "Active la vérification des sources de lumière sensibles à l'eau. C'est-à-dire que certains objets ne vont pas émettre de lumière lorsqu'ils sont dans l'eau.",
+	"modmenu.bluesky": "Bluesky"
 }

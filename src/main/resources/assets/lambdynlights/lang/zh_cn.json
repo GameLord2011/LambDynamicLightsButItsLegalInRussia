@@ -1,4 +1,5 @@
 {
+	"lambdynlights": "LambDynamicLights",
 	"modmenu.descriptionTranslation.lambdynlights": "为Fabric提供功能最完备的动态光源模组。",
 
 	"lambdynlights.menu.canvas.1": "建议在使用Canvas时禁用实体动态光源！",
@@ -6,6 +7,7 @@
 	"lambdynlights.menu.light_sources": "动态光源",
 	"lambdynlights.menu.light_sources.special": "特殊动态光源",
 	"lambdynlights.menu.search": "搜索:",
+	"lambdynlights.menu.sodium.tab": "%s",
 	"lambdynlights.menu.tabs.advanced": "高级",
 	"lambdynlights.menu.tabs.debug": "调试",
 	"lambdynlights.menu.tabs.debug.description": "对于模组开发者来说，用于解决棘手的错误。",

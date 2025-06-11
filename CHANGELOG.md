@@ -355,6 +355,12 @@
 
 - Updated [Yumi Commons] to fix a crash on NeoForge with Sinytra Connector due to bad handling of JPMS.
 
+### 4.2.7
+
+- Added Argentine Spanish translations ([#279](https://github.com/LambdAurora/LambDynamicLights/pull/279)).
+- Updated Chinese translations ([#281](https://github.com/LambdAurora/LambDynamicLights/pull/281)).
+- Made tab in Sodium GUI translatable ([#282](https://github.com/LambdAurora/LambDynamicLights/pull/282)).
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"
