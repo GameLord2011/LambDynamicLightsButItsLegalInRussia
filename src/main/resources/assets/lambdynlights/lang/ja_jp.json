@@ -1,9 +1,11 @@
 {
+	"lambdynlights": "LambDynamicLights",
 	"lambdynlights.menu.canvas.1": "Canvasを使用している場合はエンティティの臨場感ある光源をオフにすることを推奨します！",
 	"lambdynlights.menu.canvas.2": "現在はCanvasと臨場感ある光源の併用によってパフォーマンスが不安定になります！",
 	"lambdynlights.menu.light_sources": "臨場感ある光源",
+	"lambdynlights.menu.sodium.tab": "%s",
 	"lambdynlights.menu.tabs.general": "一般",
-	"lambdynlights.menu.title": "LambDynamicLights 設定",
+	"lambdynlights.menu.title": "%s 設定",
 	"lambdynlights.option.light_sources.block_entities": "ブロックエンティティ",
 	"lambdynlights.option.light_sources.entities": "エンティティ",
 	"lambdynlights.option.light_sources.self": "一人称視点",
