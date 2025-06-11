@@ -15,7 +15,6 @@ import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.accessor.DynamicLightHandlerHolder;
 import dev.lambdaurora.spruceui.Position;
 import dev.lambdaurora.spruceui.SpruceTexts;
-import dev.lambdaurora.spruceui.background.Background;
 import dev.lambdaurora.spruceui.option.*;
 import dev.lambdaurora.spruceui.screen.SpruceScreen;
 import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
@@ -41,14 +40,14 @@ import java.util.stream.Collectors;
  * Represents the settings screen of LambDynamicLights.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.2.7
  * @since 1.0.0
  */
 public class SettingsScreen extends SpruceScreen {
-	private static final Background INNER_BACKGROUND = new InnerBackground();
+	public static final Text MOD_NAME = Text.translatable("lambdynlights");
+	public static final Text TITLE = Text.translatable("lambdynlights.menu.title", MOD_NAME);
 	private static final String DYNAMIC_LIGHT_SOURCES_KEY = "lambdynlights.menu.light_sources";
 	private static final String SPECIAL_DYNAMIC_LIGHT_SOURCES_KEY = "lambdynlights.menu.light_sources.special";
-	private static final String ADVANCED_KEY = "lambdynlights.menu.advanced";
 	private final DynamicLightsConfig config;
 	private final Screen parent;
 	private final SpruceOption entitiesOption;
@@ -63,7 +62,7 @@ public class SettingsScreen extends SpruceScreen {
 	private SpruceTextFieldWidget searchInput;
 
 	public SettingsScreen(@Nullable Screen parent) {
-		super(Text.translatable("lambdynlights.menu.title"));
+		super(TITLE);
 		this.parent = parent;
 		this.config = LambDynLights.get().config;
 

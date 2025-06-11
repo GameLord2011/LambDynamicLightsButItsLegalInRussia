@@ -1,7 +1,9 @@
 {
+	"lambdynlights": "LambDynamicLights",
 	"lambdynlights.menu.canvas.1": "Canvase puhul on soovitatav olemite dünaamiline valgustus keelata!",
 	"lambdynlights.menu.canvas.2": "Dünaamiline valgustus nõuab hetkel Canvasega kasutades suurt jõudlust!",
 	"lambdynlights.menu.light_sources": "Dünaamilised valgusallikad",
+	"lambdynlights.menu.sodium.tab": "%s",
 	"lambdynlights.menu.tabs.general": "Üldine",
 	"lambdynlights.menu.title": "LambDynamicLightsi seaded",
 	"lambdynlights.option.light_sources.block_entities": "Plokiolemid",

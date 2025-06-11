@@ -32,7 +32,8 @@ public final class DynamicLightsOptionsOption {
 				(title, object) -> title,
 				new DummyValueSet(parent),
 				Unit.INSTANCE,
-				unit -> {});
+				unit -> {}
+		);
 	}
 
 	private record DummyValueSet(Screen parent) implements OptionInstance.ValueSet<Unit> {
@@ -40,7 +41,7 @@ public final class DynamicLightsOptionsOption {
 		public Function<OptionInstance<Unit>, AbstractWidget> createButton(
 				OptionInstance.TooltipSupplier<Unit> tooltipSupplier, Options options,
 				int x, int y, int width, Consumer<Unit> changeCallback) {
-			return option -> Button.builder(Text.translatable(KEY), button -> Minecraft.getInstance()
+			return option -> Button.builder(SettingsScreen.TITLE, button -> Minecraft.getInstance()
 					.setScreen(new SettingsScreen(this.parent))).bounds(x, y, width, 20).build();
 		}
 
