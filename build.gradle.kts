@@ -14,9 +14,6 @@ plugins {
 
 base.archivesName.set(Constants.NAME)
 
-if (!(System.getenv("CURSEFORGE_TOKEN") != null || System.getenv("MODRINTH_TOKEN") != null || System.getenv("LDL_MAVEN") != null)) {
-	version = (version as String) + "-local"
-}
 logger.lifecycle("Preparing version ${version}...")
 
 val fabricApiModules = listOf(

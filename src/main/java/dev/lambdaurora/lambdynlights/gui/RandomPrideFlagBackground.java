@@ -43,7 +43,7 @@ import java.util.Random;
  * @since 2.1.0
  */
 public class RandomPrideFlagBackground implements Background {
-	private static final Background SECOND_LAYER = new SimpleColorBackground(0xe0101010);
+	private static final Background SECOND_LAYER = new SimpleColorBackground(0xd0101010);
 	private static final HorizontalPrideFlagShape DEFAULT_RAINBOW = new HorizontalPrideFlagShape(IntList.of(
 			0xffff0018, 0xffffa52c, 0xffffff41, 0xff008018, 0xff0000f9, 0xff86007d
 	));

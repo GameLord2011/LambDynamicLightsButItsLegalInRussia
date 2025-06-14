@@ -17,7 +17,7 @@ import net.minecraft.resources.Identifier;
  * Contains constants about LambDynamicLights.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.3.0
  * @since 3.0.1
  */
 public final class LambDynLightsConstants {
@@ -25,6 +25,12 @@ public final class LambDynLightsConstants {
 	 * The namespace of this mod, whose value is {@value}.
 	 */
 	public static final String NAMESPACE = "lambdynlights";
+
+	/**
+	 * The currently running version of LambDynamicLights.
+	 */
+	public static final String VERSION = FabricLoader.getInstance().getModContainer(NAMESPACE)
+			.orElseThrow().getMetadata().getVersion().getFriendlyString();
 
 	/**
 	 * The unsupported development mode text.
@@ -41,9 +47,7 @@ public final class LambDynLightsConstants {
 	 * {@return {@code true} if this mod is in development mode, or {@code false} otherwise}
 	 */
 	public static boolean isDevMode() {
-		return FabricLoader.getInstance().getModContainer(NAMESPACE)
-				.map(modContainer -> modContainer.getMetadata().getVersion().getFriendlyString().endsWith("-local"))
-				.orElse(true);
+		return VERSION.endsWith("-local");
 	}
 
 	/**

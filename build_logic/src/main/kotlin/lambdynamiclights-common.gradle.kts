@@ -16,6 +16,13 @@ group = Constants.GROUP
 version = "${Constants.VERSION}+${McVersionLookup.getVersionTag(Constants.mcVersion())}"
 lambdamcdev.namespace = Constants.NAMESPACE
 
+if (!(System.getenv("CURSEFORGE_TOKEN") != null
+			|| System.getenv("MODRINTH_TOKEN") != null
+			|| System.getenv("LDL_MAVEN") != null)
+) {
+	version = (version as String) + "-local"
+}
+
 repositories {
 	mavenCentral()
 	maven {
