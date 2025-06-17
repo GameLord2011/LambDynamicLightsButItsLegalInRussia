@@ -1,15 +1,15 @@
 [versions]
-minecraft = "1.21.6-rc1"
+minecraft = "1.21.6"
 fabric-loader = "0.16.14"
-fabric-api = "0.126.1+1.21.6"
-mappings-yalmm = "12"
+fabric-api = "0.127.0+1.21.6"
+mappings-yalmm = "13"
 mappings-parchment = "2024.07.28"
 
 # Dependencies
 yumi-commons = "1.0.0-alpha.12"
-spruceui = "8.0.0-rc.3+1.21.6"
-pridelib = "1.4.0-rc.1+1.21.6"
-modmenu = "14.0.0-rc.2"
+spruceui = "8.0.0+1.21.6"
+pridelib = "1.4.0+1.21.6"
+modmenu = "15.0.0-beta.1"
 trinkets = "3.10.0"
 accessories = "1.2.18-beta+1.21.4"
 
@@ -18,7 +18,7 @@ nightconfig = "3.8.1"
 
 # Gradle
 gradle-licenser = "2.1.+"
-gradle-loom = "1.11.0-alpha.28"
+gradle-loom = "1.11.0-alpha.29"
 gradle-lambdamcdev = "1.2.+"
 
 [libraries]

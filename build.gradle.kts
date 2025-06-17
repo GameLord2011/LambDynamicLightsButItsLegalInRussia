@@ -77,6 +77,9 @@ dependencies {
 	modCompileOnly(libs.modmenu) {
 		this.isTransitive = false
 	}
+	modLocalRuntime(libs.modmenu) {
+		this.isTransitive = false
+	}
 
 	// Mod compatibility
 	modCompileOnly(libs.trinkets)
