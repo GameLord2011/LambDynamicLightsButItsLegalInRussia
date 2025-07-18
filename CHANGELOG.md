@@ -374,6 +374,12 @@
 - Updated [SpruceUI].
 - Updated [pridelib].
 
+### NEXT
+
+- Updated Turkish translations ([#285](https://github.com/LambdAurora/LambDynamicLights/pull/285)).
+- Updated Chinese translations ([#286](https://github.com/LambdAurora/LambDynamicLights/pull/286)).
+- Updated Italian translations ([#287](https://github.com/LambdAurora/LambDynamicLights/pull/287)).
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"
