@@ -19,9 +19,13 @@ object Constants {
 
 	@JvmField
 	val CONTRIBUTORS = listOf("Akarys")
+
 	const val PROJECT_LINK = "https://lambdaurora.dev/projects/lambdynamiclights"
 	const val SOURCES_LINK = "https://github.com/LambdAurora/LambDynamicLights"
 	const val LICENSE = "Lambda License"
+
+	@JvmField
+	val COMPATIBLE_MC_VERSIONS = listOf("1.21.7", "1.21.6")
 
 	private var minecraftVersion: String? = null
 

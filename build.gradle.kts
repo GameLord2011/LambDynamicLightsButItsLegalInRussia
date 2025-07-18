@@ -119,7 +119,7 @@ modrinth {
 	versionName = "${Constants.PRETTY_NAME} ${Constants.VERSION} (${McVersionLookup.getVersionTag(Constants.mcVersion())})"
 	uploadFile.set(tasks.remapJar.get())
 	loaders.set(listOf("fabric", "quilt"))
-	gameVersions.set(listOf(Constants.mcVersion()))
+	gameVersions.set(listOf(Constants.mcVersion()) + Constants.COMPATIBLE_MC_VERSIONS)
 	versionType.set(Constants.getVersionType())
 	syncBodyFrom.set(Utils.parseReadme(project))
 	dependencies.set(
@@ -166,6 +166,9 @@ tasks.register<TaskPublishCurseForge>("curseforge") {
 	val mainFile = upload(project.property("curseforge_id"), tasks.remapJar.get())
 	mainFile.releaseType = Constants.getVersionType()
 	mainFile.addGameVersion(McVersionLookup.getCurseForgeEquivalent(Constants.mcVersion()))
+	Constants.COMPATIBLE_MC_VERSIONS.stream()
+		.map { McVersionLookup.getCurseForgeEquivalent(it) }
+		.forEach { mainFile.addGameVersion(it) }
 	mainFile.addModLoader("Fabric", "Quilt")
 	mainFile.addJavaVersion("Java 21", "Java 22")
 	mainFile.addEnvironment("Client")
