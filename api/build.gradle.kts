@@ -57,30 +57,13 @@ tasks.generateFmj.configure {
 	dependsOn(generateNmt)
 }
 
-val mojmap by sourceSets.creating {}
-val mojangMappings by configurations.creating {}
-
-dependencies {
-	mojangMappings(loom.officialMojangMappings())
-}
-
-java {
-	registerFeature("mojmap") {
-		usingSourceSet(mojmap)
-		withSourcesJar()
-
-		afterEvaluate {
-			configurations["mojmapApiElements"].extendsFrom(configurations["apiElements"])
-			configurations["mojmapRuntimeElements"].extendsFrom(configurations["runtimeElements"])
-		}
-	}
-}
+val mojmap = lambdamcdev.setupMojmapRemapping()
 
 val remapMojmap by tasks.registering(RemapJarTask::class) {
 	dependsOn(tasks.remapJar)
 
 	inputFile.set(tasks.remapJar.flatMap { it.archiveFile })
-	customMappings.from(mojangMappings)
+	customMappings.from(mojmap.mappingsConfiguration())
 	sourceNamespace = "intermediary"
 	targetNamespace = "named"
 	archiveClassifier = "mojmap"
@@ -89,24 +72,13 @@ val remapMojmap by tasks.registering(RemapJarTask::class) {
 	addNestedDependencies = false // Jars have already been included in the remapJar task
 }
 
-configurations["mojmapApiElements"].artifacts.removeIf {
-	true
-}
-artifacts.add("mojmapApiElements", remapMojmap) {
-	classifier = "mojmap"
-}
-configurations["mojmapRuntimeElements"].artifacts.removeIf {
-	true
-}
-artifacts.add("mojmapRuntimeElements", remapMojmap) {
-	classifier = "mojmap"
-}
+mojmap.setJarArtifact(remapMojmap)
 
 val remapMojmapSources by tasks.registering(RemapSourcesJarTask::class) {
 	dependsOn(tasks.remapSourcesJar)
 
 	inputFile.set(tasks.remapSourcesJar.flatMap { it.archiveFile })
-	customMappings.from(mojangMappings)
+	customMappings.from(mojmap.mappingsConfiguration())
 	sourceNamespace = "intermediary"
 	targetNamespace = "named"
 	archiveClassifier = "mojmap-sources"
@@ -114,12 +86,7 @@ val remapMojmapSources by tasks.registering(RemapSourcesJarTask::class) {
 }
 
 // Add the remapped sources artifact
-configurations["mojmapSourcesElements"].artifacts.removeIf {
-	true
-}
-artifacts.add("mojmapSourcesElements", remapMojmapSources) {
-	classifier = "mojmap-sources"
-}
+mojmap.setSourcesArtifact(remapMojmapSources)
 
 // Configure the maven publication.
 publishing {

@@ -8,7 +8,7 @@ plugins {
 	id("dev.yumi.gradle.licenser")
 }
 
-// Seriously you should not worry about it, definitely not a hack.
+// Seriously, you should not worry about it, definitely not a hack.
 // https://github.com/gradle/gradle/issues/15383#issuecomment-779893192
 val libs = the<LibrariesForLibs>()
 Constants.finalizeInit(libs)

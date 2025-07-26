@@ -8,7 +8,7 @@ object Constants {
 	const val NAME = "lambdynamiclights"
 	const val NAMESPACE = "lambdynlights"
 	const val PRETTY_NAME = "LambDynamicLights"
-	const val VERSION = "4.1.3"
+	const val VERSION = "4.1.4"
 	const val JAVA_VERSION = 21
 
 	const val DESCRIPTION = "The most feature-complete dynamic lighting mod for Fabric."
@@ -19,9 +19,13 @@ object Constants {
 
 	@JvmField
 	val CONTRIBUTORS = listOf("Akarys")
+
 	const val PROJECT_LINK = "https://lambdaurora.dev/projects/lambdynamiclights"
 	const val SOURCES_LINK = "https://github.com/LambdAurora/LambDynamicLights"
 	const val LICENSE = "Lambda License"
+
+	@JvmField
+	val COMPATIBLE_MC_VERSIONS = listOf("1.21.7", "1.21.6")
 
 	private var minecraftVersion: String? = null
 

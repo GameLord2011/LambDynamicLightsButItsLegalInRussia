@@ -93,7 +93,8 @@ public class DynamicLightsConfig {
 					);
 				});
 		this.waterSensitiveCheck = new BooleanSettingEntry("light_sources.water_sensitive_check", DEFAULT_WATER_SENSITIVE_CHECK, this.config,
-				Text.translatable("lambdynlights.tooltip.water_sensitive"));
+				Text.translatable("lambdynlights.tooltip.water_sensitive")
+		);
 		this.beamLighting = new BooleanSettingEntry(
 				"light_sources.beam", true, this.config,
 				Text.translatable("lambdynlights.option.light_sources.beam.tooltip")
