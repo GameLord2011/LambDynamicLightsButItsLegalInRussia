@@ -327,6 +327,11 @@
 ### 4.1.4
 
 - Fixed Curios support on Forge when using Sinytra Connector ([#283](https://github.com/LambdAurora/LambDynamicLights/issues/283)).
+- Backports some changes from the v4.3.1:
+  - Updated Turkish translations ([#285](https://github.com/LambdAurora/LambDynamicLights/pull/285)).
+  - Updated Chinese translations ([#286](https://github.com/LambdAurora/LambDynamicLights/pull/286)).
+  - Updated Italian translations ([#287](https://github.com/LambdAurora/LambDynamicLights/pull/287)).
+  - Updated Polish translations ([#288](https://github.com/LambdAurora/LambDynamicLights/pull/288)).
 
 ## 4.2.0
 
