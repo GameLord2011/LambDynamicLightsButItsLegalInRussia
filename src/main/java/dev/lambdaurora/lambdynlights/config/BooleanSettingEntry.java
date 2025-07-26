@@ -10,22 +10,22 @@
 package dev.lambdaurora.lambdynlights.config;
 
 import com.electronwill.nightconfig.core.Config;
+import dev.lambdaurora.spruceui.option.SpruceBooleanOption;
 import dev.lambdaurora.spruceui.option.SpruceOption;
-import dev.lambdaurora.spruceui.tooltip.TooltipData;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.network.chat.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 
 public class BooleanSettingEntry extends SettingEntry<Boolean> {
 	public BooleanSettingEntry(
-			String key, String guiKey, boolean defaultValue, @Nullable Config config, @NotNull TooltipData tooltip
+			String key, String guiKey, boolean defaultValue, @Nullable Config config, @Nullable Text tooltip
 	) {
 		super(key, guiKey, defaultValue, config, tooltip);
 	}
 
 	public BooleanSettingEntry(
-			String key, boolean defaultValue, @Nullable Config config, @NotNull TooltipData tooltip
+			String key, boolean defaultValue, @Nullable Config config, @Nullable Text tooltip
 	) {
 		super(key, key, defaultValue, config, tooltip);
 	}
@@ -52,14 +52,13 @@ public class BooleanSettingEntry extends SettingEntry<Boolean> {
 	}
 
 	@Override
-	protected SpruceOption buildOption(@NotNull TooltipData tooltip) {
-		return SpruceOption.booleanBuilder(
-						this.getOptionKey(),
-						this::get,
-						this::set
-				)
-				.colored()
-				.tooltip(tooltip)
-				.build();
+	protected SpruceOption buildOption(@Nullable Text tooltip) {
+		return new SpruceBooleanOption(
+				this.getOptionKey(),
+				this::get,
+				this::set,
+				tooltip,
+				true
+		);
 	}
 }

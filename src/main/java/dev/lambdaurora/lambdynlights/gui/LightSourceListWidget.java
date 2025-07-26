@@ -17,7 +17,6 @@ import dev.lambdaurora.spruceui.background.EmptyBackground;
 import dev.lambdaurora.spruceui.background.SimpleColorBackground;
 import dev.lambdaurora.spruceui.navigation.NavigationDirection;
 import dev.lambdaurora.spruceui.navigation.NavigationUtils;
-import dev.lambdaurora.spruceui.render.SpruceGuiGraphics;
 import dev.lambdaurora.spruceui.widget.AbstractSpruceWidget;
 import dev.lambdaurora.spruceui.widget.SpruceLabelWidget;
 import dev.lambdaurora.spruceui.widget.SpruceWidget;
@@ -28,6 +27,7 @@ import dev.lambdaurora.spruceui.widget.text.SpruceTextFieldWidget;
 import dev.yumi.commons.TriState;
 import net.minecraft.TextFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -320,12 +320,12 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		/* Rendering */
 
 		@Override
-		protected void renderWidget(SpruceGuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 			this.forEach(widget -> widget.render(graphics, mouseX, mouseY, delta));
 		}
 
 		@Override
-		protected void renderBackground(SpruceGuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		protected void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 			this.background.render(graphics, this, 0, mouseX, mouseY, delta);
 		}
 

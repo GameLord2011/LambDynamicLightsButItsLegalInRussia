@@ -12,7 +12,6 @@ package dev.lambdaurora.lambdynlights.mixin;
 import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.accessor.DynamicLightHandlerHolder;
 import dev.lambdaurora.lambdynlights.config.LightSourceSettingEntry;
-import dev.lambdaurora.spruceui.tooltip.TooltipData;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Text;
 import net.minecraft.resources.Identifier;
@@ -44,7 +43,7 @@ public abstract class EntityTypeMixin<T extends Entity> implements DynamicLightH
 
 			String key = id.namespace() + "." + id.path();
 
-			this.lambdynlights$setting = new LightSourceSettingEntry(key, this.getDescriptionId(), true, null, TooltipData.EMPTY);
+			this.lambdynlights$setting = new LightSourceSettingEntry(key, this.getDescriptionId(), true, null, null);
 			LambDynLights.get().config.load(this.lambdynlights$setting);
 		}
 

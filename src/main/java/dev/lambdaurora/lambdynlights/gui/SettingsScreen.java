@@ -15,13 +15,9 @@ import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.LambDynLightsConstants;
 import dev.lambdaurora.lambdynlights.accessor.DynamicLightHandlerHolder;
 import dev.lambdaurora.spruceui.Position;
-import dev.lambdaurora.spruceui.SpruceTextAlignment;
 import dev.lambdaurora.spruceui.SpruceTexts;
-import dev.lambdaurora.spruceui.option.SpruceOption;
-import dev.lambdaurora.spruceui.option.SpruceSeparatorOption;
-import dev.lambdaurora.spruceui.option.SpruceSimpleActionOption;
+import dev.lambdaurora.spruceui.option.*;
 import dev.lambdaurora.spruceui.screen.SpruceScreen;
-import dev.lambdaurora.spruceui.tooltip.TooltipData;
 import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import dev.lambdaurora.spruceui.widget.SpruceLabelWidget;
 import dev.lambdaurora.spruceui.widget.SpruceWidget;
@@ -40,14 +36,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * Represents the settings screen of LambDynamicLights.
  *
  * @author LambdAurora
- * @version 4.3.0
+ * @version 4.2.8
  * @since 1.0.0
  */
 public class SettingsScreen extends SpruceScreen {
@@ -97,25 +92,21 @@ public class SettingsScreen extends SpruceScreen {
 		this.entitiesOption = this.config.getEntitiesLightSource().getOption();
 		this.selfOption = this.config.getSelfLightSource().getOption();
 		this.waterSensitiveOption = this.config.getWaterSensitiveCheck().getOption();
-		this.creeperLightingOption = SpruceOption.cyclingBuilder("entity.minecraft.creeper",
-						amount -> this.config.setCreeperLightingMode(this.config.getCreeperLightingMode().next()),
-						option -> option.getDisplayText(this.config.getCreeperLightingMode().getTranslatedText())
-				)
-				.tooltip(Text.translatable("lambdynlights.tooltip.creeper_lighting",
+		this.creeperLightingOption = new SpruceCyclingOption("entity.minecraft.creeper",
+				amount -> this.config.setCreeperLightingMode(this.config.getCreeperLightingMode().next()),
+				option -> option.getDisplayText(this.config.getCreeperLightingMode().getTranslatedText()),
+				Text.translatable("lambdynlights.tooltip.creeper_lighting",
 						ExplosiveLightingMode.OFF.getTranslatedText(),
 						ExplosiveLightingMode.SIMPLE.getTranslatedText(),
-						ExplosiveLightingMode.FANCY.getTranslatedText()
-				)).build();
-		this.tntLightingOption = SpruceOption.cyclingBuilder("block.minecraft.tnt",
-						amount -> this.config.setTntLightingMode(this.config.getTntLightingMode().next()),
-						option -> option.getDisplayText(this.config.getTntLightingMode().getTranslatedText())
-				)
-				.tooltip(Text.translatable("lambdynlights.tooltip.tnt_lighting",
+						ExplosiveLightingMode.FANCY.getTranslatedText()));
+		this.tntLightingOption = new SpruceCyclingOption("block.minecraft.tnt",
+				amount -> this.config.setTntLightingMode(this.config.getTntLightingMode().next()),
+				option -> option.getDisplayText(this.config.getTntLightingMode().getTranslatedText()),
+				Text.translatable("lambdynlights.tooltip.tnt_lighting",
 						ExplosiveLightingMode.OFF.getTranslatedText(),
 						ExplosiveLightingMode.SIMPLE.getTranslatedText(),
-						ExplosiveLightingMode.FANCY.getTranslatedText()
-				)).build();
-		this.debugCellDisplayRadiusOption = SpruceOption.doubleBuilder("lambdynlights.option.debug.cell_display_radius",
+						ExplosiveLightingMode.FANCY.getTranslatedText()));
+		this.debugCellDisplayRadiusOption = new SpruceDoubleOption("lambdynlights.option.debug.cell_display_radius",
 				0,
 				10,
 				1,
@@ -125,9 +116,10 @@ public class SettingsScreen extends SpruceScreen {
 						option.get() <= 0
 								? SpruceTexts.OPTIONS_OFF.copy().withStyle(TextFormatting.RED)
 								: Text.literal(String.format("%.0f", option.get()))
-				)
-		).build();
-		this.debugLightLevelRadiusOption = SpruceOption.doubleBuilder("lambdynlights.option.debug.light_level_radius",
+				),
+				null
+		);
+		this.debugLightLevelRadiusOption = new SpruceDoubleOption("lambdynlights.option.debug.light_level_radius",
 				0,
 				10,
 				1,
@@ -137,8 +129,9 @@ public class SettingsScreen extends SpruceScreen {
 						option.get() <= 0
 								? SpruceTexts.OPTIONS_OFF.copy().withStyle(TextFormatting.RED)
 								: Text.literal(String.format("%.0f", option.get()))
-				)
-		).build();
+				),
+				null
+		);
 		this.resetOption = SpruceSimpleActionOption.reset(btn -> {
 			this.config.reset();
 			var client = Minecraft.getInstance();
@@ -182,7 +175,7 @@ public class SettingsScreen extends SpruceScreen {
 				Text.translatable("lambdynlights.menu.tabs.debug.description").withStyle(TextFormatting.GRAY),
 				this.tabContainerBuilder(this::buildDebugTab)
 		);
-		this.addRenderableWidget(this.tabbedWidget);
+		this.addWidget(this.tabbedWidget);
 
 		if (tabIndex > 0 && this.tabbedWidget.getList().children().get(tabIndex) instanceof SpruceTabbedWidget.TabEntry tabEntry) {
 			this.tabbedWidget.getList().setSelected(tabEntry);
@@ -212,17 +205,20 @@ public class SettingsScreen extends SpruceScreen {
 	}
 
 	private void buildGeneralTab(TabContext context) {
+		var versionWidth = this.font.width(VERSION);
+		int versionX = context.width() - versionWidth - 4;
+
 		context.addWidget(new SpruceLabelWidget(
-				Position.of(0, 16), VERSION,
-				context.width() - 4, SpruceTextAlignment.RIGHT
+				Position.of(versionX, 16), VERSION,
+				versionWidth
 		));
 
 		var list = new SpruceOptionListWidget(Position.origin(), context.width(), context.height());
 		list.addSingleOptionEntry(this.config.dynamicLightsModeOption);
-		list.addSingleOptionEntry(new SpruceSeparatorOption(DYNAMIC_LIGHT_SOURCES_KEY, true, TooltipData.EMPTY));
+		list.addSingleOptionEntry(new SpruceSeparatorOption(DYNAMIC_LIGHT_SOURCES_KEY, true, null));
 		list.addOptionEntry(this.entitiesOption, this.selfOption);
 		list.addSingleOptionEntry(this.waterSensitiveOption);
-		list.addSingleOptionEntry(new SpruceSeparatorOption(SPECIAL_DYNAMIC_LIGHT_SOURCES_KEY, true, TooltipData.EMPTY));
+		list.addSingleOptionEntry(new SpruceSeparatorOption(SPECIAL_DYNAMIC_LIGHT_SOURCES_KEY, true, null));
 		list.addOptionEntry(this.creeperLightingOption, this.tntLightingOption);
 		list.addOptionEntry(this.config.getBeamLighting().getOption(), this.config.getFireflyLighting().getOption());
 		list.addSmallSingleOptionEntry(this.config.getGuardianLaser().getOption());
@@ -230,7 +226,7 @@ public class SettingsScreen extends SpruceScreen {
 	}
 
 	private void buildDebugTab(TabContext context) {
-		var list = new SpruceOptionListWidget(Position.origin(), context.width(), context.height());
+		var list = new SpruceOptionListWidget(Position.of(0, 0), context.width(), context.height());
 		list.addSingleOptionEntry(this.config.getDebugActiveDynamicLightingCells().getOption());
 		list.addSingleOptionEntry(this.debugCellDisplayRadiusOption);
 		list.addSingleOptionEntry(this.config.getDebugDisplayDynamicLightingChunkRebuilds().getOption());
@@ -240,17 +236,13 @@ public class SettingsScreen extends SpruceScreen {
 	}
 
 	private void buildEntitiesTab(TabContext context) {
-		this.buildLightSourcesTab(context,
-				BuiltInRegistries.ENTITY_TYPE.stream()
-						.map(DynamicLightHandlerHolder::cast)
-						.collect(Collectors.toList())
-		);
+		this.buildLightSourcesTab(context, BuiltInRegistries.ENTITY_TYPE.stream().map(DynamicLightHandlerHolder::cast).collect(Collectors.toList()));
 	}
 
 	private void buildLightSourcesTab(TabContext context, List<DynamicLightHandlerHolder<?>> entries) {
 		var oldSearch = this.searchInput != null ? this.searchInput.getText() : "";
 		this.searchInput = context.addSearchInput();
-		var list = new LightSourceListWidget(Position.origin(), context.width(), context.height(), this.searchInput);
+		var list = new LightSourceListWidget(Position.of(0, 0), context.width(), context.height(), this.searchInput);
 		list.addAll(entries);
 		context.addInnerWidget(list);
 		this.searchInput.setText(oldSearch);

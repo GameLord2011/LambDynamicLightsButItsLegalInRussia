@@ -9,7 +9,6 @@
 
 package dev.lambdaurora.lambdynlights;
 
-import dev.lambdaurora.lambdynlights.gui.DevModeGui;
 import dev.lambdaurora.lambdynlights.mixin.LevelRendererAccessor;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsContext;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsInitializer;
@@ -104,7 +103,6 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		log(LOGGER, "Initializing LambDynamicLights...");
 
 		this.config.load();
-		DevModeGui.init();
 
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this.itemLightSources);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this.entityLightSources);
