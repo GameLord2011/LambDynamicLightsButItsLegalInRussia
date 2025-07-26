@@ -324,6 +324,10 @@
   - Updated Chinese translations ([#281](https://github.com/LambdAurora/LambDynamicLights/pull/281)).
   - Made tab in Sodium GUI translatable ([#282](https://github.com/LambdAurora/LambDynamicLights/pull/282)).
 
+### 4.1.4
+
+- Fixed Curios support on Forge when using Sinytra Connector ([#283](https://github.com/LambdAurora/LambDynamicLights/issues/283)).
+
 ## 4.2.0
 
 - Updated to Minecraft 1.21.5.

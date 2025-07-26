@@ -26,7 +26,7 @@ import java.util.Optional;
  * Represents the Curios compatibility layer.
  *
  * @author LambdAurora
- * @version 4.0.2
+ * @version 4.1.4
  * @since 4.0.2
  */
 final class CuriosCompat implements CompatLayer {
@@ -41,6 +41,7 @@ final class CuriosCompat implements CompatLayer {
 	private final MethodHandle curios$ICurioStacksHandler$getStacks;
 	private final MethodHandle curios$IDynamicStackHandler$getSlots;
 	private final MethodHandle curios$IDynamicStackHandler$getStackInSlot;
+	private final MethodHandle forge$LazyOptional$resolve;
 	private boolean firstError = true;
 
 	CuriosCompat() {
@@ -48,10 +49,11 @@ final class CuriosCompat implements CompatLayer {
 		Class<?> class$ICuriosItemHandler = getCuriosClass("type.capability.ICuriosItemHandler");
 		Class<?> class$ICurioStacksHandler = getCuriosClass("type.inventory.ICurioStacksHandler");
 		Class<?> class$IDynamicStackHandler = getCuriosClass("type.inventory.IDynamicStackHandler");
+		Class<?> class$LazyOptional = getLazyOptionalClass();
 
 		try {
 			this.curios$getCuriosInventory = LOOKUP.findStatic(class$CuriosApi, "getCuriosInventory",
-					MethodType.methodType(Optional.class, LivingEntity.class)
+					MethodType.methodType(class$LazyOptional, LivingEntity.class)
 			);
 			this.curios$ICuriosItemHandler$getCurios = LOOKUP.findVirtual(class$ICuriosItemHandler, "getCurios",
 					MethodType.methodType(Map.class)
@@ -65,6 +67,9 @@ final class CuriosCompat implements CompatLayer {
 			this.curios$IDynamicStackHandler$getStackInSlot = LOOKUP.findVirtual(class$IDynamicStackHandler, "getStackInSlot",
 					MethodType.methodType(ItemStack.class, int.class)
 			);
+			this.forge$LazyOptional$resolve = LOOKUP.findVirtual(class$LazyOptional, "resolve",
+					MethodType.methodType(Optional.class)
+			);
 		} catch (NoSuchMethodException | IllegalAccessException e) {
 			throw new LinkageError("Cannot access Curios methods.", e);
 		}
@@ -77,7 +82,9 @@ final class CuriosCompat implements CompatLayer {
 		int luminance = 0;
 
 		try {
-			var component = (Optional<?>) this.curios$getCuriosInventory.invokeExact(entity);
+			var component = (Optional<?>) this.forge$LazyOptional$resolve.invoke(
+					this.curios$getCuriosInventory.invoke(entity)
+			);
 
 			if (component.isPresent()) {
 				for (var stacksHandler : ((Map<?, ?>) this.curios$ICuriosItemHandler$getCurios.invoke(component.get())).values()) {
@@ -114,6 +121,14 @@ final class CuriosCompat implements CompatLayer {
 			return Class.forName("top.theillusivec4.curios.api." + name);
 		} catch (ClassNotFoundException e) {
 			throw new LinkageError("Could not find curios class " + name + ".", e);
+		}
+	}
+
+	private static Class<?> getLazyOptionalClass() {
+		try {
+			return Class.forName("net.minecraftforge.common.util.LazyOptional");
+		} catch (ClassNotFoundException e) {
+			throw new LinkageError("Could not find Forge class net.minecraftforge.common.util.LazyOptional.", e);
 		}
 	}
 }
