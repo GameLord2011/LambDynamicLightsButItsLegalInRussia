@@ -25,7 +25,7 @@ object Constants {
 	const val LICENSE = "Lambda License"
 
 	@JvmField
-	val COMPATIBLE_MC_VERSIONS = listOf("1.21.7", "1.21.6")
+	val COMPATIBLE_MC_VERSIONS = listOf<String>()
 
 	private var minecraftVersion: String? = null
 

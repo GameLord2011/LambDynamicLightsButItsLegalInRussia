@@ -10,14 +10,14 @@
 package dev.lambdaurora.lambdynlights;
 
 import dev.yumi.commons.TriState;
-import net.fabricmc.loader.api.FabricLoader;
+import dev.yumi.mc.core.api.YumiMods;
 import net.minecraft.resources.Identifier;
 
 /**
  * Contains constants about LambDynamicLights.
  *
  * @author LambdAurora
- * @version 4.3.0
+ * @version 4.3.1
  * @since 3.0.1
  */
 public final class LambDynLightsConstants {
@@ -29,8 +29,8 @@ public final class LambDynLightsConstants {
 	/**
 	 * The currently running version of LambDynamicLights.
 	 */
-	public static final String VERSION = FabricLoader.getInstance().getModContainer(NAMESPACE)
-			.orElseThrow().getMetadata().getVersion().getFriendlyString();
+	public static final String VERSION = YumiMods.get().getMod(NAMESPACE)
+			.orElseThrow().getVersionString();
 
 	/**
 	 * The unsupported development mode text.
