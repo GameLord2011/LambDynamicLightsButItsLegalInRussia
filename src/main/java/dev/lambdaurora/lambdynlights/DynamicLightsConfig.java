@@ -19,7 +19,7 @@ import dev.lambdaurora.lambdynlights.config.SettingEntry;
 import dev.lambdaurora.spruceui.option.SpruceCyclingOption;
 import dev.lambdaurora.spruceui.option.SpruceOption;
 import dev.lambdaurora.spruceui.tooltip.TooltipData;
-import net.fabricmc.loader.api.FabricLoader;
+import dev.yumi.mc.core.api.YumiMods;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Text;
@@ -37,7 +37,7 @@ import java.util.Objects;
  * Represents the mod configuration.
  *
  * @author LambdAurora
- * @version 4.2.0
+ * @version 4.3.1
  * @since 1.0.0
  */
 public class DynamicLightsConfig {
@@ -51,7 +51,7 @@ public class DynamicLightsConfig {
 	private static final int DEFAULT_DEBUG_CELL_DISPLAY_RADIUS = 0;
 	private static final int DEFAULT_DEBUG_LIGHT_LEVEL_RADIUS = 0;
 
-	public static final Path CONFIG_FILE_PATH = FabricLoader.getInstance().getConfigDir()
+	public static final Path CONFIG_FILE_PATH = YumiMods.get().getConfigDirectory()
 			.resolve("lambdynlights.toml")
 			.normalize();
 	private final CommentedConfig config;

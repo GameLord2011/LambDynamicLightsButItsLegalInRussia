@@ -11,7 +11,7 @@ package dev.lambdaurora.lambdynlights.compat;
 
 import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
-import net.fabricmc.loader.api.FabricLoader;
+import dev.yumi.mc.core.api.YumiMods;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Range;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ import java.util.List;
  * Represents a compatibility layer with another mod.
  *
  * @author LambdAurora
- * @version 4.0.2
+ * @version 4.3.1
  * @since 3.1.4
  */
 public interface CompatLayer {
@@ -50,11 +50,11 @@ public interface CompatLayer {
 		var layers = new ArrayList<CompatLayer>();
 
 		try {
-			if (FabricLoader.getInstance().isModLoaded("accessories")) {
+			if (YumiMods.get().getMod("accessories").isPresent()) {
 				layers.add(new AccessoriesCompat());
-			} else if (FabricLoader.getInstance().isModLoaded("trinkets")) {
+			} else if (YumiMods.get().getMod("trinkets").isPresent()) {
 				layers.add(new TrinketsCompat());
-			} else if (FabricLoader.getInstance().isModLoaded("curios")) {
+			} else if (YumiMods.get().getMod("curios").isPresent()) {
 				layers.add(new CuriosCompat());
 			}
 		} catch (LinkageError e) {

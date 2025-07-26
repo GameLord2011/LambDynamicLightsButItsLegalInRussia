@@ -9,13 +9,13 @@
 
 package dev.lambdaurora.lambdynlights;
 
-import net.fabricmc.loader.api.FabricLoader;
+import dev.yumi.mc.core.api.YumiMods;
 
 /**
  * Represents a utility class for compatibility.
  *
  * @author LambdAurora
- * @version 3.1.0
+ * @version 4.3.1
  * @since 1.0.0
  */
 public final class LambDynLightsCompat {
@@ -25,13 +25,13 @@ public final class LambDynLightsCompat {
 	 * @return {@code true} if Canvas is installed, else {@code false}
 	 */
 	public static boolean isCanvasInstalled() {
-		return FabricLoader.getInstance().isModLoaded("canvas");
+		return YumiMods.get().getMod("canvas").isPresent();
 	}
 
 	/**
 	 * {@return {@code true} if Sodium is installed, or {@code false} otherwise}
 	 */
 	public static boolean isSodiumInstalled() {
-		return FabricLoader.getInstance().isModLoaded("sodium");
+		return YumiMods.get().getMod("sodium").isPresent();
 	}
 }

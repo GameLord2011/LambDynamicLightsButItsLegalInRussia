@@ -24,7 +24,7 @@ val fabricApiModules = listOf(
 
 tasks.generateFmj.configure {
 	val fmj = this.fmj.get()
-		.withEntrypoints("client", "dev.lambdaurora.lambdynlights.LambDynLights")
+		.withEntrypoints("yumi:client_init", "dev.lambdaurora.lambdynlights.LambDynLights")
 		.withEntrypoints("modmenu", "dev.lambdaurora.lambdynlights.LambDynLightsModMenu")
 		.withAccessWidener("lambdynlights.accesswidener")
 		.withMixins("lambdynlights.mixins.json", "lambdynlights.lightsource.mixins.json")
@@ -66,6 +66,8 @@ dependencies {
 	modImplementation(libs.fabric.loader)
 	fabricApiModules.forEach { modImplementation(it) }
 	//modRuntimeOnly(fabricApi.module("fabric-renderer-indigo", libs.versions.fabric.api.get()))
+	modImplementation(libs.yumi.mc.foundation)
+	include(libs.yumi.mc.foundation)
 
 	implementation(libs.nightconfig.core)
 	implementation(libs.nightconfig.toml)
