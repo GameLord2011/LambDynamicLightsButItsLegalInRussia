@@ -7,6 +7,7 @@ mappings-parchment = "2024.07.28"
 
 # Dependencies
 yumi-commons = "1.0.0-alpha.12"
+yumi-mc-foundation = "1.0.0-alpha.2+1.21.1"
 spruceui = "6.2.1+1.21"
 pridelib = "1.2.1+1.21"
 modmenu = "11.0.3"
@@ -30,6 +31,7 @@ fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fab
 yumi-commons-core = { module = "dev.yumi.commons:yumi-commons-core", version.ref = "yumi-commons" }
 yumi-commons-collections = { module = "dev.yumi.commons:yumi-commons-collections", version.ref = "yumi-commons" }
 yumi-commons-event = { module = "dev.yumi.commons:yumi-commons-event", version.ref = "yumi-commons" }
+yumi-mc-foundation = { module = "dev.yumi.mc.core:yumi-mc-foundation", version.ref = "yumi-mc-foundation" }
 spruceui = { module = "dev.lambdaurora:spruceui", version.ref = "spruceui" }
 pridelib = { module = "io.github.queerbric:pridelib", version.ref = "pridelib" }
 modmenu = { module = "com.terraformersmc:modmenu", version.ref = "modmenu" }

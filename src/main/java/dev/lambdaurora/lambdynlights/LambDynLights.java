@@ -29,24 +29,24 @@ import dev.lambdaurora.lambdynlights.resource.item.ItemLightSources;
 import dev.lambdaurora.lambdynlights.util.DynamicLightBehaviorDebugRenderer;
 import dev.lambdaurora.lambdynlights.util.DynamicLightDebugRenderer;
 import dev.lambdaurora.lambdynlights.util.DynamicLightLevelDebugRenderer;
-import dev.yumi.commons.event.EventManager;
-import net.fabricmc.api.ClientModInitializer;
+import dev.yumi.mc.core.api.CrashReportEvents;
+import dev.yumi.mc.core.api.ModContainer;
+import dev.yumi.mc.core.api.YumiMods;
+import dev.yumi.mc.core.api.entrypoint.EntrypointContainer;
+import dev.yumi.mc.core.api.entrypoint.client.ClientModInitializer;
+import dev.yumi.mc.core.api.metadata.ManifestCustomValue;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.LanguageAdapter;
 import net.fabricmc.loader.api.LanguageAdapterException;
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
-import net.fabricmc.loader.api.metadata.CustomValue;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.ChunkSectionPos;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.io.ResourceType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -69,13 +69,12 @@ import java.util.function.Predicate;
  * Represents the LambDynamicLights mod.
  *
  * @author LambdAurora
- * @version 4.1.1
+ * @version 4.1.4
  * @since 1.0.0
  */
 @ApiStatus.Internal
 public class LambDynLights implements ClientModInitializer, DynamicLightsContext {
 	private static final Logger LOGGER = LoggerFactory.getLogger("LambDynamicLights");
-	public static final EventManager<Identifier> EVENT_MANAGER = new EventManager<>(LambDynLightsConstants.id("default"), Identifier::parse);
 	private static LambDynLights INSTANCE;
 
 	public final DynamicLightsConfig config = new DynamicLightsConfig(this);
@@ -96,10 +95,11 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	private boolean shouldTick = false;
 	boolean shouldForceRefresh = false;
 	private int lastUpdateCount = 0;
+	private int dynamicLightSourcesCount = 0;
 
 	@SuppressWarnings("removal")
 	@Override
-	public void onInitializeClient() {
+	public void onInitializeClient(ModContainer mod) {
 		INSTANCE = this;
 		log(LOGGER, "Initializing LambDynamicLights...");
 
@@ -107,6 +107,16 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this.itemLightSources);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this.entityLightSources);
+
+		CrashReportEvents.CREATE.register((report) -> {
+			var category = report.addCategory("Dynamic Lighting");
+			category.setDetail("Mode", this.config.getDynamicLightsMode().getName());
+			category.setDetail("Dynamic Light Sources", this.dynamicLightSourcesCount);
+			category.setDetail(
+					"Spatial Hashing Occupancy",
+					"%d / %d".formatted(this.engine.getLastEntryCount(), DynamicLightingEngine.MAX_LIGHT_SOURCES)
+			);
+		});
 
 		CommonLifecycleEvents.TAGS_LOADED.register((registries, client) -> {
 			this.itemLightSources.apply(registries);
@@ -172,6 +182,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 				this.toAdd.clear();
 			}
+			this.dynamicLightSourcesCount = this.dynamicLightSources.size();
 
 			this.sectionRebuildDebugRenderer.tick();
 
@@ -192,8 +203,8 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 		// Sinytra
 		// Under NeoForge there is no simple entrypoint system, so we end up just re-implementing Fabric-style entrypoints.
-		FabricLoader.getInstance().getAllMods().stream()
-				.filter(mod -> mod.getMetadata().containsCustomValue(DynamicLightsInitializer.ENTRYPOINT_KEY))
+		YumiMods.get().getMods().stream()
+				.filter(mod -> mod.getCustomProperties().get(DynamicLightsInitializer.ENTRYPOINT_KEY) != null)
 				.forEach(this::invokeInitializer);
 	}
 
@@ -203,26 +214,32 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	 * @param entrypointKey the key of the entrypoints to invoke
 	 */
 	private void invokeInitializers(String entrypointKey) {
-		FabricLoader.getInstance().getEntrypointContainers(entrypointKey, DynamicLightsInitializer.class)
+		YumiMods.get().getEntrypoints(entrypointKey, DynamicLightsInitializer.class)
 				.stream()
-				.map(EntrypointContainer::getEntrypoint)
+				.map(EntrypointContainer::value)
 				.forEach(this::invokeInitializer);
 	}
 
 	private void invokeInitializer(ModContainer mod) {
-		String id = mod.getMetadata().getId();
-		var entrypointValue = mod.getMetadata().getCustomValue(DynamicLightsInitializer.ENTRYPOINT_KEY);
+		String id = mod.id();
+		var entrypointValue = mod.getCustomProperties().get(DynamicLightsInitializer.ENTRYPOINT_KEY);
 
-		if (entrypointValue.getType() != CustomValue.CvType.STRING) {
+		if (!(entrypointValue instanceof ManifestCustomValue.StringValue(String value))) {
 			error(LOGGER, "Ignoring {} entrypoint from mod {}: not a string", DynamicLightsInitializer.ENTRYPOINT_KEY, id);
 			return;
 		}
 
 		try {
-			var initializer = LanguageAdapter.getDefault().create(mod, entrypointValue.getAsString(), DynamicLightsInitializer.class);
-			this.invokeInitializer(initializer);
+			var fabricMod = FabricLoader.getInstance().getModContainer(id);
+
+			if (fabricMod.isPresent()) {
+				var initializer = LanguageAdapter.getDefault().create(fabricMod.get(), value, DynamicLightsInitializer.class);
+				this.invokeInitializer(initializer);
+			} else {
+				warn(LOGGER, "Failed to initialize {} entrypoint from mod {}: could not locate Fabric-specific mod.", DynamicLightsInitializer.ENTRYPOINT_KEY, id);
+			}
 		} catch (LanguageAdapterException e) {
-			error(LOGGER, "Failed to initializer {} entrypoint from mod {}: exception thrown", DynamicLightsInitializer.ENTRYPOINT_KEY, id, e);
+			error(LOGGER, "Failed to initialize {} entrypoint from mod {}: exception thrown", DynamicLightsInitializer.ENTRYPOINT_KEY, id, e);
 			throw new RuntimeException(e);
 		}
 	}
@@ -417,7 +434,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	 * @param msg the message to log
 	 */
 	public static void log(Logger logger, String msg) {
-		if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
+		if (!YumiMods.get().isDevelopmentEnvironment()) {
 			msg = "[LambDynLights] " + msg;
 		}
 
@@ -431,7 +448,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	 * @param msg the message to log
 	 */
 	public static void warn(Logger logger, String msg) {
-		if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
+		if (!YumiMods.get().isDevelopmentEnvironment()) {
 			msg = "[LambDynLights] " + msg;
 		}
 
@@ -445,7 +462,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	 * @param msg the message to log
 	 */
 	public static void warn(Logger logger, String msg, Object... args) {
-		if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
+		if (!YumiMods.get().isDevelopmentEnvironment()) {
 			msg = "[LambDynLights] " + msg;
 		}
 
@@ -459,7 +476,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	 * @param msg the message to log
 	 */
 	public static void error(Logger logger, String msg, Object... args) {
-		if (!FabricLoader.getInstance().isDevelopmentEnvironment()) {
+		if (!YumiMods.get().isDevelopmentEnvironment()) {
 			msg = "[LambDynLights] " + msg;
 		}
 
