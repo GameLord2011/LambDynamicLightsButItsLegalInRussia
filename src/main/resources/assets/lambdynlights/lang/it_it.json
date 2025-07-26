@@ -23,6 +23,8 @@
 	"lambdynlights.option.light_sources.beam.tooltip": "Attiva l'illuminazione dinamica dei fasci dei fari e dei varchi dell'End. Dovrebbero raramente essere aggiornati.",
 	"lambdynlights.option.light_sources.block_entities": "Blocchi Entità",
 	"lambdynlights.option.light_sources.entities": "Entità",
+	"lambdynlights.option.light_sources.firefly": "Lucciole",
+	"lambdynlights.option.light_sources.firefly.tooltip": "Attiva l'illuminazione dinamica delle particelle Lucciola emesse dai Cespugli di Lucciole.",
 	"lambdynlights.option.light_sources.guardian_laser": "Laser dei Guardiani",
 	"lambdynlights.option.light_sources.guardian_laser.tooltip": "Attiva l'illuminazione dinamica dei laser lanciati dai guardiani.",
 	"lambdynlights.option.light_sources.self": "In Prima Persona",

@@ -12,6 +12,7 @@ package dev.lambdaurora.lambdynlights.gui;
 import dev.lambdaurora.lambdynlights.DynamicLightsConfig;
 import dev.lambdaurora.lambdynlights.ExplosiveLightingMode;
 import dev.lambdaurora.lambdynlights.LambDynLights;
+import dev.lambdaurora.lambdynlights.LambDynLightsConstants;
 import dev.lambdaurora.lambdynlights.accessor.DynamicLightHandlerHolder;
 import dev.lambdaurora.spruceui.Position;
 import dev.lambdaurora.spruceui.SpruceTexts;
@@ -19,6 +20,7 @@ import dev.lambdaurora.spruceui.option.*;
 import dev.lambdaurora.spruceui.screen.SpruceScreen;
 import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import dev.lambdaurora.spruceui.widget.SpruceLabelWidget;
+import dev.lambdaurora.spruceui.widget.SpruceWidget;
 import dev.lambdaurora.spruceui.widget.container.SpruceContainerWidget;
 import dev.lambdaurora.spruceui.widget.container.SpruceOptionListWidget;
 import dev.lambdaurora.spruceui.widget.container.SpruceParentWidget;
@@ -40,12 +42,13 @@ import java.util.stream.Collectors;
  * Represents the settings screen of LambDynamicLights.
  *
  * @author LambdAurora
- * @version 4.2.7
+ * @version 4.2.8
  * @since 1.0.0
  */
 public class SettingsScreen extends SpruceScreen {
 	public static final Text MOD_NAME = Text.translatable("lambdynlights");
 	public static final Text TITLE = Text.translatable("lambdynlights.menu.title", MOD_NAME);
+	private static final Text VERSION;
 	private static final String DYNAMIC_LIGHT_SOURCES_KEY = "lambdynlights.menu.light_sources";
 	private static final String SPECIAL_DYNAMIC_LIGHT_SOURCES_KEY = "lambdynlights.menu.light_sources.special";
 	private final DynamicLightsConfig config;
@@ -60,6 +63,26 @@ public class SettingsScreen extends SpruceScreen {
 	private final SpruceOption resetOption;
 	private SpruceTabbedWidget tabbedWidget;
 	private SpruceTextFieldWidget searchInput;
+
+	static {
+		String rawVersion = LambDynLightsConstants.VERSION;
+
+		if (rawVersion.endsWith("-local")) {
+			rawVersion = rawVersion.substring(0, rawVersion.length() - "-local".length());
+		}
+
+		var version = Text.literal('v' + rawVersion).withStyle(TextFormatting.GRAY);
+
+		if (rawVersion.matches("^.+-rc\\.\\d+\\+.+$")) {
+			version = version.append(Text.literal(" (Release Candidate)").withStyle(TextFormatting.GOLD));
+		}
+
+		if (LambDynLightsConstants.isDevMode()) {
+			version = version.append(Text.literal(" (dev)").withStyle(TextFormatting.RED));
+		}
+
+		VERSION = version;
+	}
 
 	public SettingsScreen(@Nullable Screen parent) {
 		super(TITLE);
@@ -182,7 +205,15 @@ public class SettingsScreen extends SpruceScreen {
 	}
 
 	private void buildGeneralTab(TabContext context) {
-		var list = new SpruceOptionListWidget(Position.of(0, 0), context.width(), context.height());
+		var versionWidth = this.font.width(VERSION);
+		int versionX = context.width() - versionWidth - 4;
+
+		context.addWidget(new SpruceLabelWidget(
+				Position.of(versionX, 16), VERSION,
+				versionWidth
+		));
+
+		var list = new SpruceOptionListWidget(Position.origin(), context.width(), context.height());
 		list.addSingleOptionEntry(this.config.dynamicLightsModeOption);
 		list.addSingleOptionEntry(new SpruceSeparatorOption(DYNAMIC_LIGHT_SOURCES_KEY, true, null));
 		list.addOptionEntry(this.entitiesOption, this.selfOption);
@@ -232,13 +263,17 @@ public class SettingsScreen extends SpruceScreen {
 					.title(Text.literal("Search"))
 					.placeholder(EntityType.BLAZE.getDescription().copy().withStyle(TextFormatting.GRAY, TextFormatting.ITALIC))
 					.build();
-			this.container().addChild(searchInput);
-			return searchInput;
+			return this.addWidget(searchInput);
+		}
+
+		<T extends SpruceWidget> T addWidget(T widget) {
+			this.container().addChild(widget);
+			return widget;
 		}
 
 		void addInnerWidget(SpruceParentWidget<?> widget) {
 			widget.getPosition().setRelativeY(this.tabbedWidget.getList().getPosition().getRelativeY());
-			this.container().addChild(widget);
+			this.addWidget(widget);
 		}
 	}
 }

@@ -18,8 +18,8 @@ nightconfig = "3.8.1"
 
 # Gradle
 gradle-licenser = "2.1.+"
-gradle-loom = "1.11.0-alpha.26"
-gradle-lambdamcdev = "1.2.+"
+gradle-loom = "1.11.+"
+gradle-lambdamcdev = "1.3.+"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
