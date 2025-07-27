@@ -63,6 +63,12 @@ abstract class PackageModrinthTask @Inject constructor() : DefaultTask() {
 		loaders.add("quilt")
 		json.add("loaders", loaders)
 
+		val dependencies = JsonArray()
+		dependencies.add(this.makeDependency("P7dR8mSH", "required"))
+		dependencies.add(this.makeDependency("reCfnRvJ", "incompatible"))
+		dependencies.add(this.makeDependency("PxQSWIcD", "incompatible"))
+		json.add("dependencies", dependencies)
+
 		val files = JsonArray()
 		jarPaths.forEach { jarPath ->
 			files.add(jarPath.fileName.toString())
@@ -80,6 +86,13 @@ abstract class PackageModrinthTask @Inject constructor() : DefaultTask() {
 				Files.copy(jarPath, fs.getPath(jarPath.fileName.toString()))
 			}
 		}
+	}
+
+	private fun makeDependency(id: String, type: String): JsonObject {
+		val json = JsonObject()
+		json.addProperty("type", type)
+		json.addProperty("project_id", id)
+		return json
 	}
 
 	companion object {
