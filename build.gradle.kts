@@ -2,6 +2,7 @@ import com.modrinth.minotaur.dependencies.ModDependency
 import dev.lambdaurora.mcdev.api.McVersionLookup
 import lambdynamiclights.Constants
 import lambdynamiclights.Utils
+import lambdynamiclights.task.PackageModrinthTask
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 
 plugins {
@@ -115,6 +116,11 @@ tasks.shadowJar {
 
 tasks.remapJar {
 	dependsOn(tasks.shadowJar)
+}
+
+val packageModrinth by tasks.registering(PackageModrinthTask::class) {
+	this.group = "publishing"
+	this.files.setFrom(tasks.remapJar.get())
 }
 
 modrinth {
