@@ -15,7 +15,7 @@ import dev.yumi.mc.core.api.YumiMods;
  * Represents a utility class for compatibility.
  *
  * @author LambdAurora
- * @version 4.3.1
+ * @version 4.3.2
  * @since 1.0.0
  */
 public final class LambDynLightsCompat {
@@ -25,13 +25,13 @@ public final class LambDynLightsCompat {
 	 * @return {@code true} if Canvas is installed, else {@code false}
 	 */
 	public static boolean isCanvasInstalled() {
-		return YumiMods.get().getMod("canvas").isPresent();
+		return YumiMods.get().isModLoaded("canvas");
 	}
 
 	/**
 	 * {@return {@code true} if Sodium is installed, or {@code false} otherwise}
 	 */
 	public static boolean isSodiumInstalled() {
-		return YumiMods.get().getMod("sodium").isPresent();
+		return YumiMods.get().isModLoaded("sodium");
 	}
 }

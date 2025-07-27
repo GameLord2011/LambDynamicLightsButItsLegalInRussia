@@ -23,6 +23,7 @@ import dev.lambdaurora.lambdynlights.resource.entity.luminance.CreeperLuminance;
 import dev.lambdaurora.lambdynlights.resource.entity.luminance.DisplayEntityLuminance;
 import dev.lambdaurora.lambdynlights.resource.item.ItemLightSources;
 import dev.yumi.commons.event.Event;
+import dev.yumi.mc.core.api.YumiEvents;
 import dev.yumi.mc.core.api.YumiMods;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
@@ -61,7 +62,7 @@ public final class EntityLightSources extends LightSourceLoader<EntityLightSourc
 			LambDynLightsConstants.id("display/item"), DisplayEntityLuminance.ItemDisplayLuminance.INSTANCE
 	);
 
-	private final Event<Identifier, OnRegister> onRegisterEvent = YumiMods.EVENTS.create(OnRegister.class);
+	private final Event<Identifier, OnRegister> onRegisterEvent = YumiEvents.EVENTS.create(OnRegister.class);
 	private final ItemLightSourceManager itemLightSourceManager;
 
 	public EntityLightSources(ItemLightSourceManager itemLightSourceManager) {
