@@ -45,7 +45,7 @@ jobs:
       - name: "Extract files"
         run: unzip dist/modrinth.zip
       - name: "Release on Modrinth"
-        uses: LambdAurora/modrinth_publish@v0.1.2
+        uses: LambdAurora/modrinth_publish@v0.1.3
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
           project: "yBW8D80W"
