@@ -7,8 +7,8 @@ mappings-parchment = "2024.07.28"
 
 # Dependencies
 yumi-commons = "1.0.0-alpha.12"
-yumi-mc-foundation = "1.0.0-alpha.2+1.21.1"
-spruceui = "8.0.0+1.21.6"
+yumi-mc-foundation = "1.0.0-alpha.5+1.21.1"
+spruceui = "8.0.1+1.21.8"
 pridelib = "1.4.0+1.21.6"
 modmenu = "15.0.0-beta.1"
 trinkets = "3.10.0"
