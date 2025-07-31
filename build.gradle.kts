@@ -31,6 +31,7 @@ tasks.generateFmj.configure {
 		.withMixins("lambdynlights.mixins.json", "lambdynlights.lightsource.mixins.json")
 		.withDepend("${Constants.NAMESPACE}_api", ">=${version}")
 		.withDepend("spruceui", ">=${libs.versions.spruceui.get()}")
+		.withDepend("yumi_mc_core", ">=${libs.versions.yumi.mc.foundation.get()}")
 		.withRecommend("modmenu", ">=${libs.versions.modmenu.get()}")
 		.withBreak("optifabric", "*")
 		.withBreak("sodiumdynamiclights", "*")
