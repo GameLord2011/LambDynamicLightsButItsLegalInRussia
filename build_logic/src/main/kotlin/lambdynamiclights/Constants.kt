@@ -1,10 +1,10 @@
 package lambdynamiclights
 
 import dev.lambdaurora.mcdev.api.ModUtils
+import dev.lambdaurora.mcdev.api.VersionType
 import org.gradle.accessors.dm.LibrariesForLibs
 
 object Constants {
-	const val GROUP = "dev.lambdaurora.lambdynamiclights"
 	const val NAME = "lambdynamiclights"
 	const val NAMESPACE = "lambdynlights"
 	const val PRETTY_NAME = "LambDynamicLights"
@@ -37,7 +37,7 @@ object Constants {
 		return this.minecraftVersion!!
 	}
 
-	fun getVersionType(): String {
-		return ModUtils.fetchVersionType(this.VERSION, this.mcVersion())
+	fun getVersionType(): VersionType {
+		return ModUtils.getVersionType(this.VERSION, this.mcVersion())
 	}
 }
