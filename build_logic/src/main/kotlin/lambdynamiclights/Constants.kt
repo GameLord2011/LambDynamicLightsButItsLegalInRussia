@@ -8,7 +8,7 @@ object Constants {
 	const val NAME = "lambdynamiclights"
 	const val NAMESPACE = "lambdynlights"
 	const val PRETTY_NAME = "LambDynamicLights"
-	const val VERSION = "4.3.2"
+	const val VERSION = "4.3.3"
 	const val JAVA_VERSION = 21
 
 	const val DESCRIPTION = "The most feature-complete dynamic lighting mod for Fabric."
