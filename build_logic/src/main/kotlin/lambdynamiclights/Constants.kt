@@ -7,15 +7,15 @@ import org.gradle.accessors.dm.LibrariesForLibs
 object Constants {
 	const val NAME = "lambdynamiclights"
 	const val NAMESPACE = "lambdynlights"
-	const val PRETTY_NAME = "LambDynamicLights"
+	const val PRETTY_NAME = "LambDynamicLightsLite"
 	const val VERSION = "4.3.3"
 	const val JAVA_VERSION = 21
 
-	const val DESCRIPTION = "The most feature-complete dynamic lighting mod for Fabric."
+	const val DESCRIPTION = "It's LambDynamicLights, Lite?"
 	const val API_DESCRIPTION = "Library to provide dynamic lighting to Minecraft through LambDynamicLights."
 
 	@JvmField
-	val AUTHORS = listOf("LambdAurora")
+	val AUTHORS = listOf("LambdAurora", "GameLord2011")
 
 	@JvmField
 	val CONTRIBUTORS = listOf("Akarys")
@@ -39,5 +39,6 @@ object Constants {
 
 	fun getVersionType(): VersionType {
 		return ModUtils.getVersionType(this.VERSION, this.mcVersion())
+		//return VersionType.RELEASE
 	}
 }
