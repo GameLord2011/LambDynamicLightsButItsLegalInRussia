@@ -1,4 +1,4 @@
-rootProject.name = "lambdynamiclightsbutwithouttheprideflags"
+rootProject.name = "lambdynamiclightslite"
 
 pluginManagement {
 	repositories {
