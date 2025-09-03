@@ -7,11 +7,11 @@ import org.gradle.accessors.dm.LibrariesForLibs
 object Constants {
 	const val NAME = "lambdynamiclights"
 	const val NAMESPACE = "lambdynlights"
-	const val PRETTY_NAME = "LambDynamicLightsButWithoutThePrideFlags"
-	const val VERSION = "4.3.2"
+	const val PRETTY_NAME = "LambDynamicLightsLite"
+	const val VERSION = "4.3.3"
 	const val JAVA_VERSION = 21
 
-	const val DESCRIPTION = "It's LambDynamicLights, but without the pride flags in the config screen."
+	const val DESCRIPTION = "It's LambDynamicLights, Lite?"
 	const val API_DESCRIPTION = "Library to provide dynamic lighting to Minecraft through LambDynamicLights."
 
 	@JvmField

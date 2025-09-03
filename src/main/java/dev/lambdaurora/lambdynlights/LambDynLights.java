@@ -29,6 +29,7 @@ import dev.lambdaurora.lambdynlights.resource.item.ItemLightSources;
 import dev.lambdaurora.lambdynlights.util.DynamicLightBehaviorDebugRenderer;
 import dev.lambdaurora.lambdynlights.util.DynamicLightDebugRenderer;
 import dev.lambdaurora.lambdynlights.util.DynamicLightLevelDebugRenderer;
+import dev.lambdaurora.lambdynlights.util.DynamicLightSectionDebugRenderer;
 import dev.yumi.mc.core.api.CrashReportEvents;
 import dev.yumi.mc.core.api.ModContainer;
 import dev.yumi.mc.core.api.YumiMods;
@@ -56,6 +57,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +72,7 @@ import java.util.function.Predicate;
  * Represents the LambDynamicLights mod.
  *
  * @author LambdAurora
- * @version 4.3.1
+ * @version 4.3.3
  * @since 1.0.0
  */
 @ApiStatus.Internal
@@ -88,9 +90,14 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	private final List<DynamicLightSource> toClear = new ArrayList<>();
 	private final ReentrantReadWriteLock lightSourcesLock = new ReentrantReadWriteLock();
 
-	public final DynamicLightDebugRenderer.SectionRebuild sectionRebuildDebugRenderer = new DynamicLightDebugRenderer.SectionRebuild(this);
-	public final DynamicLightLevelDebugRenderer dynamicLightLevelDebugRenderer = new DynamicLightLevelDebugRenderer(this);
-	public final DynamicLightBehaviorDebugRenderer dynamicLightBehaviorDebugRenderer = new DynamicLightBehaviorDebugRenderer(this, this.dynamicLightSources);
+	private final DynamicLightDebugRenderer.SectionRebuild sectionRebuildDebugRenderer
+			= new DynamicLightDebugRenderer.SectionRebuild(this);
+	public final @Unmodifiable List<DynamicLightDebugRenderer> debugRenderers = List.of(
+			sectionRebuildDebugRenderer,
+			new DynamicLightLevelDebugRenderer(this),
+			new DynamicLightBehaviorDebugRenderer(this, this.dynamicLightSources),
+			new DynamicLightSectionDebugRenderer(this)
+	);
 
 	private long lastUpdate = System.currentTimeMillis();
 	private boolean shouldTick = false;
