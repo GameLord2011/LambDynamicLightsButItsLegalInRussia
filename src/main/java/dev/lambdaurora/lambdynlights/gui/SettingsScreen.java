@@ -40,7 +40,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -226,6 +225,7 @@ public class SettingsScreen extends SpruceScreen {
 		list.addOptionEntry(this.creeperLightingOption, this.tntLightingOption);
 		list.addOptionEntry(this.config.getBeamLighting().getOption(), this.config.getFireflyLighting().getOption());
 		list.addOptionEntry(this.config.getGuardianLaser().getOption(), this.config.getSonicBoomLighting().getOption());
+		list.addSmallSingleOptionEntry(this.config.getGlowingEffectLighting().getOption());
 		context.addInnerWidget(list);
 	}
 

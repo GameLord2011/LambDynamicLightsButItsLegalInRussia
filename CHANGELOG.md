@@ -445,6 +445,7 @@
 ## 4.4.0
 
 - Added Warden Sonic Boom attack particles dynamic lighting ([#307](https://github.com/LambdAurora/LambDynamicLights/issues/307)).
+- Added option to control whether the Glowing effect gives dynamic lighting to entities ([#140](https://github.com/LambdAurora/LambDynamicLights/issues/140)).
 - Improved handling of capacity limit of the spatial lookup, making it resize dynamically ([#292](https://github.com/LambdAurora/LambDynamicLights/issues/292)).
   - If you had issues with too many light sources, this should at least fix the lack of light updates,
     however this still can affect performances.

@@ -7,7 +7,7 @@ mappings-parchment = "2024.07.28"
 
 # Dependencies
 yumi-commons = "1.0.0-beta.4"
-yumi-mc-foundation = "1.0.0-alpha.10+1.21.1"
+yumi-mc-foundation = "1.0.0-alpha.11+1.21.1"
 spruceui = "8.0.2+1.21.8"
 pridelib = "1.4.0+1.21.6"
 modmenu = "15.0.0-beta.1"
@@ -29,6 +29,8 @@ fabric-loader = { module = "net.fabricmc:fabric-loader", version.ref = "fabric-l
 fabric-api = { module = "net.fabricmc.fabric-api:fabric-api", version.ref = "fabric-api" }
 
 # Dependencies
+yumi-commons-core = { module = "dev.yumi.commons:yumi-commons-core", version.ref = "yumi-commons" }
+yumi-commons-collections = { module = "dev.yumi.commons:yumi-commons-collections", version.ref = "yumi-commons" }
 yumi-commons-event = { module = "dev.yumi.commons:yumi-commons-event", version.ref = "yumi-commons" }
 yumi-mc-foundation = { module = "dev.yumi.mc.core:yumi-mc-foundation", version.ref = "yumi-mc-foundation" }
 spruceui = { module = "dev.lambdaurora:spruceui", version.ref = "spruceui" }

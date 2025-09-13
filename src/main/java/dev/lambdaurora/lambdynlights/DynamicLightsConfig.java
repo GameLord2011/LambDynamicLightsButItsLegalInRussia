@@ -65,6 +65,7 @@ public class DynamicLightsConfig {
 	private final BooleanSettingEntry fireflyLighting;
 	private final BooleanSettingEntry guardianLaser;
 	private final BooleanSettingEntry sonicBoomLighting;
+	private final BooleanSettingEntry glowingEffectLighting;
 	private final BooleanSettingEntry debugActiveDynamicLightingCells;
 	private final BooleanSettingEntry debugDisplayDynamicLightingChunkRebuild;
 	private final BooleanSettingEntry debugDisplayHandlerBoundingBox;
@@ -113,6 +114,10 @@ public class DynamicLightsConfig {
 		this.sonicBoomLighting = new BooleanSettingEntry(
 				"light_sources.sonic_boom", true, this.config,
 				TooltipData.builder().text(Text.translatable("lambdynlights.option.light_sources.sonic_boom.tooltip")).build()
+		);
+		this.glowingEffectLighting = new BooleanSettingEntry(
+				"light_sources.glowing_effect", true, this.config,
+				TooltipData.builder().text(Text.translatable("lambdynlights.option.light_sources.glowing_effect.tooltip")).build()
 		);
 		this.debugActiveDynamicLightingCells = new BooleanSettingEntry(
 				"debug.active_dynamic_lighting_cells", false, this.config,
@@ -360,6 +365,13 @@ public class DynamicLightsConfig {
 	 */
 	public BooleanSettingEntry getSonicBoomLighting() {
 		return this.sonicBoomLighting;
+	}
+
+	/**
+	 * {@return the glowing effect lighting setting holder}
+	 */
+	public BooleanSettingEntry getGlowingEffectLighting() {
+		return this.glowingEffectLighting;
 	}
 
 	/**

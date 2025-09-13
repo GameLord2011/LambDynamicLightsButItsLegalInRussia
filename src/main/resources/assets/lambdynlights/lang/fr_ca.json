@@ -25,6 +25,8 @@
 	"lambdynlights.option.light_sources.entities": "Entités",
 	"lambdynlights.option.light_sources.firefly": "Mouches à feu",
 	"lambdynlights.option.light_sources.firefly.tooltip": "Active la lumière dynamique venant des particules de mouches à feu aux alentours des buissons de mouches à feu.",
+	"lambdynlights.option.light_sources.glowing_effect": "Effet de surbrillance",
+	"lambdynlights.option.light_sources.glowing_effect.tooltip": "Active la lumière dynamique venant des entités qui ont l'effet de surbrillance.",
 	"lambdynlights.option.light_sources.guardian_laser": "Laser de gardiens",
 	"lambdynlights.option.light_sources.guardian_laser.tooltip": "Active la lumière dynamique venant des lasers projetés par des gardiens.",
 	"lambdynlights.option.light_sources.self": "Première personne",
