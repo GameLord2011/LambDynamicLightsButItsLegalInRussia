@@ -10,11 +10,12 @@
 package dev.lambdaurora.lambdynlights.engine.source;
 
 import dev.lambdaurora.lambdynlights.LambDynLights;
-import dev.lambdaurora.lambdynlights.engine.DynamicLightingEngine;
+import dev.lambdaurora.lambdynlights.engine.CellHasher;
 import dev.lambdaurora.lambdynlights.engine.lookup.SpatialLookupEntityEntry;
 import dev.lambdaurora.lambdynlights.engine.lookup.SpatialLookupEntry;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.util.stream.Stream;
@@ -23,7 +24,7 @@ import java.util.stream.Stream;
  * Represents an entity-based dynamic light source.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.4.0
  * @since 1.0.0
  */
 public interface EntityDynamicLightSource extends DynamicLightSource {
@@ -69,12 +70,12 @@ public interface EntityDynamicLightSource extends DynamicLightSource {
 	void dynamicLightTick();
 
 	@Override
-	default Stream<SpatialLookupEntry> splitIntoDynamicLightEntries() {
+	default Stream<SpatialLookupEntry> splitIntoDynamicLightEntries(@NotNull CellHasher cellHasher) {
 		int x = MathHelper.floor(this.getDynamicLightX());
 		int y = MathHelper.floor(this.getDynamicLightY());
 		int z = MathHelper.floor(this.getDynamicLightZ());
 
-		int cellKey = DynamicLightingEngine.hashAt(x, y, z);
+		int cellKey = cellHasher.hashAt(x, y, z);
 		SpatialLookupEntry entry = new SpatialLookupEntityEntry(cellKey, this);
 
 		return Stream.of(entry);

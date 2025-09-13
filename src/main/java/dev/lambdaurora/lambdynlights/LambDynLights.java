@@ -72,7 +72,7 @@ import java.util.function.Predicate;
  * Represents the LambDynamicLights mod.
  *
  * @author LambdAurora
- * @version 4.3.3
+ * @version 4.4.0
  * @since 1.0.0
  */
 @ApiStatus.Internal
@@ -122,7 +122,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 			category.setDetail("Dynamic Light Sources", this.dynamicLightSourcesCount);
 			category.setDetail(
 					"Spatial Hash Occupancy",
-					"%d / %d".formatted(this.engine.getLastEntryCount(), DynamicLightingEngine.MAX_LIGHT_SOURCES)
+					"%d / %d".formatted(this.engine.getLastEntryCount(), DynamicLightingEngine.DEFAULT_LIGHT_SOURCES)
 			);
 		});
 
@@ -387,7 +387,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	/**
 	 * Clears light sources.
 	 */
-	public void clearLightSources() {
+	public void onChangeWorld() {
 		var chunkProviders = this.dynamicLightSources.iterator();
 		DynamicLightSource it;
 		while (chunkProviders.hasNext()) {
@@ -397,6 +397,8 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 				entityIt.resetDynamicLight();
 			this.toClear.add(it);
 		}
+
+		this.engine.resetSize();
 	}
 
 	/**
