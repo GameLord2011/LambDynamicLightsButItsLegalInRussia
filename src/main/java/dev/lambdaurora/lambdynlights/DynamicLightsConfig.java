@@ -37,7 +37,7 @@ import java.util.Objects;
  * Represents the mod configuration.
  *
  * @author LambdAurora
- * @version 4.3.1
+ * @version 4.4.0
  * @since 1.0.0
  */
 public class DynamicLightsConfig {
@@ -64,6 +64,7 @@ public class DynamicLightsConfig {
 	private final BooleanSettingEntry beamLighting;
 	private final BooleanSettingEntry fireflyLighting;
 	private final BooleanSettingEntry guardianLaser;
+	private final BooleanSettingEntry sonicBoomLighting;
 	private final BooleanSettingEntry debugActiveDynamicLightingCells;
 	private final BooleanSettingEntry debugDisplayDynamicLightingChunkRebuild;
 	private final BooleanSettingEntry debugDisplayHandlerBoundingBox;
@@ -109,6 +110,10 @@ public class DynamicLightsConfig {
 				"light_sources.guardian_laser", true, this.config,
 				TooltipData.builder().text(Text.translatable("lambdynlights.option.light_sources.guardian_laser.tooltip")).build()
 		);
+		this.sonicBoomLighting = new BooleanSettingEntry(
+				"light_sources.sonic_boom", true, this.config,
+				TooltipData.builder().text(Text.translatable("lambdynlights.option.light_sources.sonic_boom.tooltip")).build()
+		);
 		this.debugActiveDynamicLightingCells = new BooleanSettingEntry(
 				"debug.active_dynamic_lighting_cells", false, this.config,
 				TooltipData.builder().text(Text.translatable("lambdynlights.option.debug.active_dynamic_lighting_cells.tooltip")).build()
@@ -129,6 +134,7 @@ public class DynamicLightsConfig {
 				this.beamLighting,
 				this.fireflyLighting,
 				this.guardianLaser,
+				this.sonicBoomLighting,
 				this.debugActiveDynamicLightingCells,
 				this.debugDisplayDynamicLightingChunkRebuild,
 				this.debugDisplayHandlerBoundingBox
@@ -347,6 +353,13 @@ public class DynamicLightsConfig {
 	 */
 	public BooleanSettingEntry getGuardianLaser() {
 		return this.guardianLaser;
+	}
+
+	/**
+	 * {@return the sonic boom light source setting holder}
+	 */
+	public BooleanSettingEntry getSonicBoomLighting() {
+		return this.sonicBoomLighting;
 	}
 
 	/**

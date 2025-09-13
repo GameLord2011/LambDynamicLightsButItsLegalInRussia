@@ -12,6 +12,7 @@
 		"EntityTypeMixin",
 		"LevelRendererAccessor",
 		"MinecraftClientMixin",
+		"ParticleEngineMixin",
 		"VideoSettingsScreenMixin",
 		"fabric.AoCalculatorMixin",
 		"sodium.SodiumOptionsGuiMixin"

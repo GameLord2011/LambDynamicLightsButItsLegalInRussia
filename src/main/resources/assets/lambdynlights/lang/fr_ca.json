@@ -28,6 +28,8 @@
 	"lambdynlights.option.light_sources.guardian_laser": "Laser de gardiens",
 	"lambdynlights.option.light_sources.guardian_laser.tooltip": "Active la lumière dynamique venant des lasers projetés par des gardiens.",
 	"lambdynlights.option.light_sources.self": "Première personne",
+	"lambdynlights.option.light_sources.sonic_boom": "Hurlement sonique de Warden",
+	"lambdynlights.option.light_sources.sonic_boom.tooltip": "Active la lumière dynamique venant des particules de hurlement sonique de Warden.",
 	"lambdynlights.option.light_sources.water_sensitive_check": "Contrôle de la sensibilité à l'eau",
 	"lambdynlights.option.mode": "Lumières dynamiques",
 	"lambdynlights.tooltip.block_entities": "Active les lumières dynamiques provenant des entités de blocs.",

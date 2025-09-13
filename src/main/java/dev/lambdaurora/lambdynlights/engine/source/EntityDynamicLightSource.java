@@ -14,7 +14,6 @@ import dev.lambdaurora.lambdynlights.engine.CellHasher;
 import dev.lambdaurora.lambdynlights.engine.lookup.SpatialLookupEntityEntry;
 import dev.lambdaurora.lambdynlights.engine.lookup.SpatialLookupEntry;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
@@ -42,11 +41,6 @@ public interface EntityDynamicLightSource extends DynamicLightSource {
 	 * {@return the dynamic light source Z-coordinate}
 	 */
 	double getDynamicLightZ();
-
-	/**
-	 * {@return the dynamic light source world}
-	 */
-	Level dynamicLightWorld();
 
 	/**
 	 * {@return {@code true} if the dynamic light is enabled, or {@code false} otherwise}

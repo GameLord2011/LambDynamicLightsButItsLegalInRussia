@@ -226,8 +226,8 @@ public final class DynamicLightingEngine implements CellHasher {
 
 		if (spatialEntries.size() > this.spatialLookupEntries.length * .95f) {
 			int newLength = this.spatialLookupEntries.length * 2;
-			LambDynLights.warn(LOGGER,
-					"Spatial lookup too small! Resizing from {} to {}.",
+			LambDynLights.info(LOGGER,
+					"Resizing spatial lookup, capacity limit of {} reached. New capacity will be {}.",
 					this.spatialLookupEntries.length, newLength
 			);
 

@@ -44,6 +44,9 @@ import net.fabricmc.loader.api.LanguageAdapter;
 import net.fabricmc.loader.api.LanguageAdapterException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.FireflyParticle;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.SonicBoomParticle;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
@@ -53,7 +56,6 @@ import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -429,11 +431,13 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		return result;
 	}
 
-	/**
-	 * Removes entities light source from tracked light sources.
-	 */
-	public void removeEntitiesLightSource() {
-		this.removeLightSources(lightSource -> (lightSource instanceof Entity && !(lightSource instanceof Player)));
+	public boolean canLightParticle(Particle particle) {
+		if (particle instanceof FireflyParticle)
+			return this.config.getFireflyLighting().get();
+		else if (particle instanceof SonicBoomParticle)
+			return true;
+		else
+			return false;
 	}
 
 	/**
@@ -448,6 +452,20 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		}
 
 		logger.info(msg);
+	}
+
+	/**
+	 * Logs an informational message.
+	 *
+	 * @param logger the logger to use
+	 * @param msg the message to log
+	 */
+	public static void info(Logger logger, String msg, Object... args) {
+		if (!YumiMods.get().isDevelopmentEnvironment()) {
+			msg = "[LambDynLights] " + msg;
+		}
+
+		logger.info(msg, args);
 	}
 
 	/**

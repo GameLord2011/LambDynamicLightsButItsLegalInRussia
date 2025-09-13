@@ -442,6 +442,16 @@
 
 - Fixed some crashes related to debug renderers.
 
+## 4.4.0
+
+- Added Warden Sonic Boom attack particles dynamic lighting ([#307](https://github.com/LambdAurora/LambDynamicLights/issues/307)).
+- Improved handling of capacity limit of the spatial lookup, making it resize dynamically ([#292](https://github.com/LambdAurora/LambDynamicLights/issues/292)).
+  - If you had issues with too many light sources, this should at least fix the lack of light updates,
+    however this still can affect performances.
+- Fixed leak of the tracking of dynamic lighting of Firefly particles.
+- Updated Ukrainian translations ([#304](https://github.com/LambdAurora/LambDynamicLights/pull/304)).
+- Updated [Yumi Minecraft Libraries: Foundation].
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"

@@ -28,6 +28,8 @@
 	"lambdynlights.option.light_sources.guardian_laser": "Guardian Lasers",
 	"lambdynlights.option.light_sources.guardian_laser.tooltip": "Enables the dynamic lighting of the lasers shot by Guardians.",
 	"lambdynlights.option.light_sources.self": "First-Person",
+	"lambdynlights.option.light_sources.sonic_boom": "Warden Sonic Boom",
+	"lambdynlights.option.light_sources.sonic_boom.tooltip": "Enables the dynamic lighting of the Warden's sonic boom attack particles.",
 	"lambdynlights.option.light_sources.water_sensitive_check": "Water Sensitivity Check",
 	"lambdynlights.option.mode": "Dynamic Lights",
 	"lambdynlights.tooltip.block_entities": "Enables block entities dynamic lighting.",
