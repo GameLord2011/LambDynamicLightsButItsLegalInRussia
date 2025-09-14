@@ -20,8 +20,7 @@ logger.lifecycle("Preparing version ${version}...")
 
 val fabricApiModules = listOf(
 	fabricApi.module("fabric-lifecycle-events-v1", libs.versions.fabric.api.get())!!,
-	fabricApi.module("fabric-resource-loader-v0", libs.versions.fabric.api.get())!!,
-	fabricApi.module("fabric-rendering-v1", libs.versions.fabric.api.get())!!
+	fabricApi.module("fabric-resource-loader-v0", libs.versions.fabric.api.get())!!
 )
 
 tasks.generateFmj.configure {

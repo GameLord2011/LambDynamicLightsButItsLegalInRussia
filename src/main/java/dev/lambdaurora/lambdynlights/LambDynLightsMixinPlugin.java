@@ -22,13 +22,14 @@ import java.util.Set;
  * LambDynamicLights mixin plugin for conditional mixins.
  *
  * @author LambdAurora
- * @version 4.3.0
+ * @version 4.4.0
  * @since 1.0.0
  */
 public class LambDynLightsMixinPlugin implements IMixinConfigPlugin {
 	private final Object2BooleanMap<String> conditionalMixins = new Object2BooleanOpenHashMap<>();
 
 	public LambDynLightsMixinPlugin() {
+		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.GuiMixin", LambDynLightsConstants.isDevMode());
 		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.sodium.SodiumOptionsGuiMixin", LambDynLightsCompat.isSodiumInstalled());
 	}
 
