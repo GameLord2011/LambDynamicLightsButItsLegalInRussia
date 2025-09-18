@@ -32,6 +32,9 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Represents the mod configuration.
@@ -50,6 +53,8 @@ public class DynamicLightsConfig {
 	private static final ExplosiveLightingMode DEFAULT_TNT_LIGHTING_MODE = ExplosiveLightingMode.OFF;
 	private static final int DEFAULT_DEBUG_CELL_DISPLAY_RADIUS = 0;
 	private static final int DEFAULT_DEBUG_LIGHT_LEVEL_RADIUS = 0;
+
+	private static final Executor SAVE_EXECUTOR = Executors.newSingleThreadExecutor();
 
 	public static final Path CONFIG_FILE_PATH = YumiMods.get().getConfigDirectory()
 			.resolve("lambdynlights.toml")
@@ -73,6 +78,8 @@ public class DynamicLightsConfig {
 	private ExplosiveLightingMode tntLightingMode;
 	private int debugCellDisplayRadius;
 	private int debugLightLevelRadius;
+
+	private int lastHash;
 
 	public final SpruceOption dynamicLightsModeOption = new SpruceCyclingOption("lambdynlights.option.mode",
 			amount -> this.setDynamicLightsMode(this.dynamicLightsMode.next()),
@@ -167,6 +174,8 @@ public class DynamicLightsConfig {
 		this.debugCellDisplayRadius = this.config.getOrElse("debug.cell_display_radius", DEFAULT_DEBUG_CELL_DISPLAY_RADIUS);
 		this.debugLightLevelRadius = this.config.getOrElse("debug.light_level_radius", DEFAULT_DEBUG_LIGHT_LEVEL_RADIUS);
 
+		this.lastHash = this.serialize().hashCode();
+
 		LambDynLights.log(LOGGER, "Configuration loaded.");
 	}
 
@@ -227,16 +236,35 @@ public class DynamicLightsConfig {
 	}
 
 	/**
-	 * Saves the configuration.
+	 * Queues the saving of the configuration.
 	 */
 	public void save() {
-		var toml = new TomlWriter().writeToString(this.config);
+		this.maybeSerialize().ifPresent(data -> SAVE_EXECUTOR.execute(() -> this.doSave(data)));
+	}
 
+	private @NotNull String serialize() {
+		return new TomlWriter().writeToString(this.config);
+	}
+
+	private @NotNull Optional<String> maybeSerialize() {
+		var data = this.serialize();
+		int hash = data.hashCode();
+
+		if (this.lastHash != hash) {
+			this.lastHash = hash;
+			return Optional.of(data);
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	private void doSave(String data) {
 		try {
 			Files.createDirectories(CONFIG_FILE_PATH.getParent());
-			Files.writeString(CONFIG_FILE_PATH, toml,
-					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.DSYNC
-			);
+
+			var tmpPath = CONFIG_FILE_PATH.resolveSibling(CONFIG_FILE_PATH.getFileName().toString() + ".tmp");
+			Files.writeString(tmpPath, data);
+			Files.move(tmpPath, CONFIG_FILE_PATH, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			LambDynLights.error(LOGGER, "Failed to save configuration file.", e);
 			return;

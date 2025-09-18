@@ -13,6 +13,7 @@
 		"GuiMixin",
 		"LevelRendererAccessor",
 		"MinecraftClientMixin",
+		"OptionsMixin",
 		"ParticleEngineMixin",
 		"VideoSettingsScreenMixin",
 		"fabric.AoCalculatorMixin",

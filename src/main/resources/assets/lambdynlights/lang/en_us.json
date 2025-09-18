@@ -1,5 +1,7 @@
 {
 	"lambdynlights": "LambDynamicLights",
+	"lambdynlights.key.toggle_fps_dynamic_lighting": "Toggle First-Person Lighting",
+	"lambdynlights.key.toggle_fps_dynamic_lighting.info": "First-Person Dynamic Lighting: %s",
 	"lambdynlights.menu.canvas.1": "Disabling entities dynamic lighting is recommended with Canvas!",
 	"lambdynlights.menu.canvas.2": "Dynamic lighting with Canvas is currently performance heavy!",
 	"lambdynlights.menu.light_sources": "Dynamic Light Sources",

@@ -28,6 +28,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(Minecraft.class)
 public class MinecraftClientMixin {
+	@Inject(method = "tick", at = @At("RETURN"))
+	private void lambdynlights$onEndTick(CallbackInfo info) {
+		LambDynLights.get().onEndClientTick((Minecraft) (Object) this);
+	}
+
 	@Inject(method = "updateLevelInEngines", at = @At("HEAD"))
 	private void onUpdateLevelInEngines(ClientLevel level, CallbackInfo ci) {
 		LambDynLights.get().onChangeWorld();

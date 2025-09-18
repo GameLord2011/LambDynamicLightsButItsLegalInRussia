@@ -9,6 +9,7 @@
 
 package dev.lambdaurora.lambdynlights;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsContext;
 import dev.lambdaurora.lambdynlights.api.DynamicLightsInitializer;
 import dev.lambdaurora.lambdynlights.api.behavior.DynamicLightBehavior;
@@ -30,6 +31,7 @@ import dev.lambdaurora.lambdynlights.util.DynamicLightBehaviorDebugRenderer;
 import dev.lambdaurora.lambdynlights.util.DynamicLightDebugRenderer;
 import dev.lambdaurora.lambdynlights.util.DynamicLightLevelDebugRenderer;
 import dev.lambdaurora.lambdynlights.util.DynamicLightSectionDebugRenderer;
+import dev.lambdaurora.spruceui.SpruceTexts;
 import dev.yumi.mc.core.api.CrashReportEvents;
 import dev.yumi.mc.core.api.ModContainer;
 import dev.yumi.mc.core.api.YumiMods;
@@ -37,6 +39,8 @@ import dev.yumi.mc.core.api.entrypoint.EntrypointContainer;
 import dev.yumi.mc.core.api.entrypoint.client.ClientModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.TextFormatting;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.FireflyParticle;
@@ -47,6 +51,7 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.ChunkSectionPos;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.network.chat.Text;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.io.ResourceType;
 import net.minecraft.util.profiling.Profiler;
@@ -57,6 +62,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,6 +84,13 @@ import java.util.function.Predicate;
 public class LambDynLights implements ClientModInitializer, DynamicLightsContext {
 	private static final Logger LOGGER = LoggerFactory.getLogger("LambDynamicLights");
 	private static LambDynLights INSTANCE;
+
+	public static final KeyMapping TOGGLE_FPS_DYNAMIC_LIGHTING = new KeyMapping(
+			LambDynLightsConstants.NAMESPACE + ".key.toggle_fps_dynamic_lighting",
+			InputConstants.Type.KEYSYM,
+			GLFW.GLFW_KEY_UNKNOWN,
+			KeyMapping.CATEGORY_MISC
+	);
 
 	public final DynamicLightsConfig config = new DynamicLightsConfig(this);
 	private final ItemLightSources itemLightSources = new ItemLightSources();
@@ -257,6 +270,25 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		this.sectionRebuildDebugRenderer.tick();
 
 		this.shouldForceRefresh = false;
+	}
+
+	public void onEndClientTick(Minecraft client) {
+		if (TOGGLE_FPS_DYNAMIC_LIGHTING.consumeClick()) {
+			boolean newValue = !this.config.getSelfLightSource().get();
+			var toggleText = SpruceTexts.getToggleText(newValue);
+			this.config.getSelfLightSource().set(newValue);
+			this.config.save();
+
+			if (client.player != null) {
+				client.player.displayClientMessage(
+						Text.translatable(
+								LambDynLightsConstants.NAMESPACE + ".key.toggle_fps_dynamic_lighting.info",
+								toggleText.copy().withStyle(newValue ? TextFormatting.GREEN : TextFormatting.RED)
+						),
+						true
+				);
+			}
+		}
 	}
 
 	/**
