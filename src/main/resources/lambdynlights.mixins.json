@@ -15,6 +15,7 @@
 		"MinecraftClientMixin",
 		"OptionsMixin",
 		"ParticleEngineMixin",
+		"RegistryOpsAccessor",
 		"VideoSettingsScreenMixin",
 		"fabric.AoCalculatorMixin",
 		"sodium.SodiumOptionsGuiMixin"
