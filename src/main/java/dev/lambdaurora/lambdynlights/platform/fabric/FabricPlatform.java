@@ -71,7 +71,7 @@ public final class FabricPlatform implements Platform {
 			public void register(@NotNull Identifier phaseIdentifier, @NotNull Consumer<RegistryAccess> listener) {
 				CommonLifecycleEvents.TAGS_LOADED.register(
 						phaseIdentifier,
-						(registries, client) -> listener.accept(registries)
+						(registries, client) -> {if (client) listener.accept(registries);}
 				);
 			}
 

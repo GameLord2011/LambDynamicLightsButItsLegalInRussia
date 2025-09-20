@@ -26,7 +26,8 @@ val fabricApiModules = listOf(
 
 tasks.generateFmj.configure {
 	val fmj = this.fmj.get()
-		.withEntrypoints("yumi:client_init", "dev.lambdaurora.lambdynlights.LambDynLights")
+		.withEntrypoints("yumi:client_init", "dev.lambdaurora.lambdynlights.LambDynLights::INSTANCE")
+		.withEntrypoints("lambdynlights:platform_provider", "dev.lambdaurora.lambdynlights.platform.fabric.FabricPlatform")
 		.withEntrypoints("modmenu", "dev.lambdaurora.lambdynlights.LambDynLightsModMenu")
 		.withAccessWidener("lambdynlights.accesswidener")
 		.withMixins("lambdynlights.mixins.json", "lambdynlights.lightsource.mixins.json")

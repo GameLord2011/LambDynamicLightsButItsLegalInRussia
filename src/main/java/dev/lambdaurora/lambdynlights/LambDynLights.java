@@ -82,7 +82,7 @@ import java.util.function.Predicate;
 @ApiStatus.Internal
 public class LambDynLights implements ClientModInitializer, DynamicLightsContext {
 	private static final Logger LOGGER = LoggerFactory.getLogger("LambDynamicLights");
-	private static final LambDynLights INSTANCE = new LambDynLights();
+	public static final LambDynLights INSTANCE = new LambDynLights();
 
 	public static final KeyMapping TOGGLE_FPS_DYNAMIC_LIGHTING = new KeyMapping(
 			LambDynLightsConstants.NAMESPACE + ".key.toggle_fps_dynamic_lighting",
