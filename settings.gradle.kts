@@ -11,6 +11,7 @@ pluginManagement {
 			name = "Gegy"
 			url = uri("https://maven.gegy.dev/releases/")
 		}
+		mavenLocal()
 	}
 }
 

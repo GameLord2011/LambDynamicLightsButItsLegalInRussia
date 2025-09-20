@@ -25,7 +25,7 @@ import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSourceBehavior;
 import dev.lambdaurora.lambdynlights.gui.DevModeGui;
 import dev.lambdaurora.lambdynlights.mixin.LevelRendererAccessor;
-import dev.lambdaurora.lambdynlights.platform.Platform;
+import dev.lambdaurora.lambdynlights.platform.PlatformProvider;
 import dev.lambdaurora.lambdynlights.resource.LightSourceLoader;
 import dev.lambdaurora.lambdynlights.resource.entity.EntityLightSources;
 import dev.lambdaurora.lambdynlights.resource.item.ItemLightSources;
@@ -139,9 +139,10 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		});
 
 		var platform = YumiMods.get()
-				.getEntrypoints(LambDynLightsConstants.NAMESPACE + ":platform_provider", Platform.class)
+				.getEntrypoints(LambDynLightsConstants.NAMESPACE + ":platform_provider", PlatformProvider.class)
 				.getFirst()
-				.value();
+				.value()
+				.getPlatform(mod);
 
 		this.lightSourceApplicationPredicate.set(platform.getLightSourceLoaderApplicationPredicate());
 		platform.registerReloader(this.itemLightSources);

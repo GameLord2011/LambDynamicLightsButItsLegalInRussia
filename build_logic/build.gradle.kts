@@ -9,6 +9,7 @@ val javaVersion = 21
 
 repositories {
 	gradlePluginPortal()
+	mavenLocal()
 	maven {
 		name = "Fabric"
 		url = uri("https://maven.fabricmc.net/")

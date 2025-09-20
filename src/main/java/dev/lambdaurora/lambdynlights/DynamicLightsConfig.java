@@ -29,9 +29,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -212,18 +214,18 @@ public class DynamicLightsConfig {
 	private void copyDefaultFile() throws IOException {
 		Files.createDirectories(CONFIG_FILE_PATH.getParent());
 
-		try (var defaultStream = DynamicLightsConfig.class.getResourceAsStream("/lambdynlights.toml")) {
-			Files.copy(
-					Objects.requireNonNull(
-							defaultStream,
-							"This distribution of LambDynamicLights is broken: "
-									+ "cannot find the default configuration file inside of the mod's JAR."
-					),
-					CONFIG_FILE_PATH,
-					StandardCopyOption.REPLACE_EXISTING
-			);
-			LambDynLights.log(LOGGER, "Copied default configuration file.");
-		}
+		var path = YumiMods.get().getMod(LambDynLightsConstants.NAMESPACE)
+				.orElseThrow()
+				.findPath("lambdynlights.toml")
+				.orElseThrow(() -> new IllegalStateException("This distribution of LambDynamicLights is broken: "
+						+ "cannot find the default configuration file inside of the mod's JAR."));
+
+		Files.copy(
+				path,
+				CONFIG_FILE_PATH,
+				StandardCopyOption.REPLACE_EXISTING
+		);
+		LambDynLights.log(LOGGER, "Copied default configuration file.");
 	}
 
 	/**

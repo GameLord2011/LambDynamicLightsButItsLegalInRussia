@@ -13,8 +13,10 @@ import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.LambDynLightsConstants;
 import dev.lambdaurora.lambdynlights.mixin.RegistryOpsAccessor;
 import dev.lambdaurora.lambdynlights.platform.Platform;
+import dev.lambdaurora.lambdynlights.platform.PlatformProvider;
 import dev.lambdaurora.lambdynlights.resource.LightSourceLoader;
 import dev.yumi.commons.event.ListenableEvent;
+import dev.yumi.mc.core.api.ModContainer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
@@ -32,7 +34,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
-public final class FabricPlatform implements Platform {
+public final class FabricPlatform implements Platform, PlatformProvider {
+	@Override
+	public Platform getPlatform(ModContainer mod) {
+		return this;
+	}
+
 	@Override
 	public void registerReloader(LightSourceLoader<?> reloader) {
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES)
