@@ -73,7 +73,7 @@ abstract class AssembleFinalJar @Inject constructor() : Jar() {
 					this.writeFmj(fabricJarFs, outFs, outFabricJar)
 					this.writeNmt(outFs)
 					this.handleJarJar(neoJarFs, outFs, outNeoForgeJar)
-					this.cleanupNeoJar(neoJarFs)
+					this.handleNeoJar(neoJarFs)
 				}
 			}
 		}
@@ -107,6 +107,15 @@ abstract class AssembleFinalJar @Inject constructor() : Jar() {
 			this.copy("lambdynlights.mixins.json", runtimeMojmapJarFs, neoJarFs)
 			this.copy("lambdynlights.lightsource.mixins.json", runtimeMojmapJarFs, neoJarFs)
 		}
+	}
+
+	private fun handleNeoJar(fs: FileSystem) {
+		this.cleanupNeoJar(fs)
+
+		val mixinsJson = JsonParser.parseString(Files.readString(fs.getPath("lambdynlights.mixins.json")))
+			.asJsonObject
+		mixinsJson.addProperty("refmap", "lambdynlights-refmap.json")
+		Files.writeString(fs.getPath("lambdynlights.mixins.json"), JsonUtils.GSON.toJson(mixinsJson))
 	}
 
 	private fun cleanupNeoJar(fs: FileSystem) {
