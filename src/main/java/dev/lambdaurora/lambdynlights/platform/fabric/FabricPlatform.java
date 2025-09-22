@@ -34,6 +34,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
+/**
+ * Provides the Fabric-specific platform operations.
+ *
+ * @author LambdAurora
+ * @version 4.5.0
+ * @since 4.5.0
+ */
 public final class FabricPlatform implements Platform, PlatformProvider {
 	@Override
 	public Platform getPlatform(ModContainer mod) {

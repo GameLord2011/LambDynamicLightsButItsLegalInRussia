@@ -11,6 +11,13 @@ package dev.lambdaurora.lambdynlights.platform;
 
 import dev.yumi.mc.core.api.ModContainer;
 
+/**
+ * Represents the platform provider given the loading mod.
+ *
+ * @author LambdAurora
+ * @version 4.5.0
+ * @since 4.5.0
+ */
 public interface PlatformProvider {
 	Platform getPlatform(ModContainer mod);
 }

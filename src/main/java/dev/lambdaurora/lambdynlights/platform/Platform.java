@@ -16,6 +16,13 @@ import net.minecraft.resources.Identifier;
 
 import java.util.function.Consumer;
 
+/**
+ * Represents platform-specific operations to implement on said platforms.
+ *
+ * @author LambdAurora
+ * @version 4.5.0
+ * @since 4.5.0
+ */
 public interface Platform {
 	void registerReloader(LightSourceLoader<?> reloader);
 

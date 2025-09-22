@@ -13,6 +13,13 @@ import dev.lambdaurora.lambdynlights.platform.Platform;
 import dev.lambdaurora.lambdynlights.platform.PlatformProvider;
 import dev.yumi.mc.core.api.ModContainer;
 
+/**
+ * Provides the NeoForge-specific platform operations implementation.
+ *
+ * @author LambdAurora
+ * @version 4.5.0
+ * @since 4.5.0
+ */
 public final class NeoForgePlatformProvider implements PlatformProvider {
 	@Override
 	public Platform getPlatform(ModContainer mod) {

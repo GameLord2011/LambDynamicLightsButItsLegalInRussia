@@ -17,7 +17,7 @@ import java.nio.file.*
 import java.nio.file.attribute.BasicFileAttributes
 import javax.inject.Inject
 
-abstract class AssembleFinalJar @Inject constructor() : Jar() {
+abstract class AssembleFinalJarTask @Inject constructor() : Jar() {
 	@get:Input
 	abstract val artifactGroup: Property<String>
 
@@ -129,6 +129,7 @@ abstract class AssembleFinalJar @Inject constructor() : Jar() {
 
 		json.addProperty("id", Constants.NAMESPACE + "_runtime")
 		json.addProperty("name", Constants.PRETTY_NAME + " (Runtime)")
+		json.addProperty("description", Constants.DESCRIPTION)
 
 		val modmenuObject = json.getAsJsonObject("custom").getAsJsonObject("modmenu")
 		val parent = JsonObject()
@@ -181,6 +182,7 @@ abstract class AssembleFinalJar @Inject constructor() : Jar() {
 		val parentNmt = this.nmt.get().derive(::Nmt)
 		parentNmt.withNamespace(Constants.NAMESPACE)
 		parentNmt.withName(Constants.PRETTY_NAME)
+		parentNmt.withDescription(Constants.DESCRIPTION)
 		parentNmt.withLoaderVersion(this.nmt.get().loaderVersion)
 		parentNmt.withBlurIcon(this.nmt.get().shouldBlurIcon())
 		parentNmt.withDepend(

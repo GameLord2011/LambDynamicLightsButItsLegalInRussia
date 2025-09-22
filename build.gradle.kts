@@ -6,7 +6,7 @@ import dev.lambdaurora.mcdev.task.GenerateNeoForgeJiJDataTask
 import dev.lambdaurora.mcdev.task.packaging.PackageModrinthTask
 import lambdynamiclights.Constants
 import lambdynamiclights.Utils
-import lambdynamiclights.task.AssembleFinalJar
+import lambdynamiclights.task.AssembleFinalJarTask
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
 import net.fabricmc.loom.LoomGradleExtension
 import net.fabricmc.loom.api.mappings.layered.MappingsNamespace
@@ -60,6 +60,7 @@ lambdamcdev.manifests {
 		fmj.copyTo(this)
 		withNamespace(lambdamcdev.namespace.get() + "_runtime")
 		withName(Constants.PRETTY_NAME + " (Runtime)")
+		withDescription(Constants.RUNTIME_DESCRIPTION)
 		withLoaderVersion("[2,)")
 		withYumiEntrypoints("yumi:client_init", "dev.lambdaurora.lambdynlights.LambDynLights::INSTANCE")
 		withYumiEntrypoints("lambdynlights:platform_provider", "dev.lambdaurora.lambdynlights.platform.neoforge.NeoForgePlatformProvider")
@@ -103,12 +104,15 @@ loom {
 	accessWidenerPath = file("src/main/resources/lambdynlights.accesswidener")
 }
 
+val mojmap = lambdamcdev.setupMojmapRemapping()
+
 afterEvaluate {
 	val shims: SourceSet by sourceSets.creating {
 		this.compileClasspath += configurations["minecraftNamedCompile"]
 	}
 
 	dependencies {
+		"shimsCompileOnly"(libs.fabric.loader) // Due to MC classes referring to EnvType.
 		"shimsCompileOnly"(libs.neoforge.loader)
 		"neoforgeCompileOnly"(shims.output)
 	}
@@ -150,6 +154,11 @@ dependencies {
 
 	"neoforgeCompileOnly"(libs.neoforge.loader)
 	"neoforgeImplementation"(sourceSets.main.get().output)
+
+	"mojmapCompileOnly"(libs.yumi.mc.foundation)
+	"mojmapCompileOnly"(libs.spruceui)
+	"mojmapCompileOnly"(libs.pridelib)
+
 	include(project(":api", configuration = "mojmapRuntimeElements"))
 	include(libs.yumi.mc.foundation) {
 		capabilities {
@@ -159,6 +168,11 @@ dependencies {
 	include(libs.spruceui) {
 		capabilities {
 			requireCapability("dev.lambdaurora:spruceui-mojmap")
+		}
+	}
+	include(libs.pridelib) {
+		capabilities {
+			requireCapability("io.github.queerbric:pridelib-mojmap")
 		}
 	}
 }
@@ -174,7 +188,7 @@ tasks.processResources {
 tasks.shadowJar {
 	dependsOn(tasks.jar)
 	configurations = listOf(project.configurations["shadow"])
-	destinationDirectory.set(file("${project.layout.buildDirectory.get()}/devlibs"))
+	destinationDirectory.set(project.layout.buildDirectory.dir("devlibs"))
 	archiveClassifier.set("dev")
 
 	relocate("com.electronwill.nightconfig", "dev.lambdaurora.lambdynlights.shadow.nightconfig")
@@ -188,7 +202,7 @@ tasks.remapJar {
 	this.dependsOn(tasks.shadowJar)
 
 	this.archiveClassifier = "intermediary"
-	this.destinationDirectory = project.file("build/devlibs")
+	this.destinationDirectory = project.layout.buildDirectory.dir("devlibs")
 
 	this.nestedJars.setFrom(this.nestedJars.files.stream().filter {
 		!it.name.endsWith("-mojmap.jar")
@@ -199,7 +213,7 @@ val neoforgeJar = tasks.register<Jar>("neoforgeJar") {
 	this.group = "build"
 	this.from(neoforge.output)
 	this.archiveClassifier = "neoforge-dev"
-	this.destinationDirectory = project.file("build/devlibs/neoforge")
+	this.destinationDirectory = project.layout.buildDirectory.dir("devlibs/neoforge")
 }
 
 val remapNeoforgeJar = tasks.register<RemapJarTask>("remapNeoforgeJarToIntermediary") {
@@ -208,15 +222,13 @@ val remapNeoforgeJar = tasks.register<RemapJarTask>("remapNeoforgeJarToIntermedi
 	this.inputFile.set(neoforgeJar.get().archiveFile)
 	this.classpath.from(neoforge.compileClasspath)
 	this.archiveClassifier = "neoforge-intermediary"
-	this.destinationDirectory = project.file("build/devlibs/neoforge")
+	this.destinationDirectory = project.layout.buildDirectory.dir("devlibs/neoforge")
 
 	addNestedDependencies = false // Jars will be included later.
 }
 tasks.build.get().dependsOn(remapNeoforgeJar)
 
 //region Mojmap
-val mojmap = lambdamcdev.setupMojmapRemapping()
-
 val remapMojmap by tasks.registering(RemapJarTask::class) {
 	this.group = "remapping"
 	this.dependsOn(tasks.remapJar)
@@ -226,10 +238,13 @@ val remapMojmap by tasks.registering(RemapJarTask::class) {
 	sourceNamespace = "intermediary"
 	targetNamespace = "named"
 	archiveClassifier = "mojmap"
-	classpath.setFrom((loom as LoomGradleExtension).getMinecraftJars(MappingsNamespace.INTERMEDIARY))
+	classpath.setFrom(
+		(loom as LoomGradleExtension).getMinecraftJars(MappingsNamespace.INTERMEDIARY),
+		mojmap.sourceSet().compileClasspath
+	)
 
 	this.archiveClassifier = "mojmap"
-	this.destinationDirectory = project.file("build/devlibs")
+	this.destinationDirectory = project.layout.buildDirectory.dir("devlibs")
 
 	addNestedDependencies = false // Jars will be included later.
 }
@@ -245,7 +260,7 @@ val remapNeoforgeJarToMojmap by tasks.registering(RemapJarTask::class) {
 	classpath.setFrom((loom as LoomGradleExtension).getMinecraftJars(MappingsNamespace.INTERMEDIARY))
 
 	this.archiveClassifier = "neoforge-mojmap"
-	this.destinationDirectory = project.file("build/devlibs/neoforge")
+	this.destinationDirectory = project.layout.buildDirectory.dir("devlibs/neoforge")
 
 	this.nestedJars.setFrom(this.nestedJars.files.stream().filter {
 		it.name.endsWith("-mojmap.jar")
@@ -266,7 +281,7 @@ val generateJarJarMetadata by tasks.registering(GenerateNeoForgeJiJDataTask::cla
 	)
 }
 
-val finalJar by tasks.registering(AssembleFinalJar::class) {
+val finalJar by tasks.registering(AssembleFinalJarTask::class) {
 	this.group = "build"
 	this.dependsOn(
 		tasks.remapJar,

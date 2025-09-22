@@ -9,6 +9,7 @@
 
 package dev.lambdaurora.lambdynlights.platform.neoforge;
 
+import dev.lambdaurora.lambdynlights.LambDynLightsConstants;
 import dev.lambdaurora.lambdynlights.platform.Platform;
 import dev.lambdaurora.lambdynlights.resource.LightSourceLoader;
 import dev.yumi.commons.event.ListenableEvent;
@@ -19,12 +20,20 @@ import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
+import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.TagsUpdatedEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
+/**
+ * Provides the NeoForge-specific platform operations.
+ *
+ * @author LambdAurora
+ * @version 4.5.0
+ * @since 4.5.0
+ */
 public final class NeoForgePlatform implements Platform {
 	private final ModContainer mod;
 	private final IEventBus eventBus;
@@ -32,12 +41,23 @@ public final class NeoForgePlatform implements Platform {
 	public NeoForgePlatform(ModContainer mod) {
 		this.mod = mod;
 
-		this.eventBus = ModList.get().getModContainerById(this.mod.id())
+		var nativeContainer = ModList.get().getModContainerById(this.mod.id())
 				.orElseThrow(() -> new IllegalStateException(
 						"Could not find NeoForge mod container despite mod being initialized as %s."
 								.formatted(this.mod.id())
-				))
-				.getEventBus();
+				));
+		this.eventBus = nativeContainer.getEventBus();
+
+		nativeContainer.registerExtensionPoint(IConfigScreenFactory.class, NeoForgeConfigScreenProvider.INSTANCE);
+
+		if (!mod.id().equals(LambDynLightsConstants.NAMESPACE)) {
+			ModList.get().getModContainerById(LambDynLightsConstants.NAMESPACE)
+					.orElseThrow(() -> new IllegalStateException(
+							"Could not find the outer %s NeoForge mod container."
+									.formatted(LambDynLightsConstants.NAMESPACE)
+					))
+					.registerExtensionPoint(IConfigScreenFactory.class, NeoForgeConfigScreenProvider.INSTANCE);
+		}
 	}
 
 	@Override
