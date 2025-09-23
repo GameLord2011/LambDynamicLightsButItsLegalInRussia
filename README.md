@@ -4,7 +4,7 @@
 ![Java 21](https://img.shields.io/badge/language-Java%2021-9115ff.svg?style=flat-square) <!-- modrinth_exclude.end -->
 [![GitHub license](https://img.shields.io/badge/license-Lambda%20License-c7136d?style=flat-square)](https://raw.githubusercontent.com/LambdAurora/LambDynamicLights/1.21.2/LICENSE)
 ![Environment: Client](https://img.shields.io/badge/environment-client-1976d2?style=flat-square)
-[![Mod loader: Fabric]][fabric][![Mod loader: NeoForge]][neoforge] <!-- modrinth_exclude.start -->
+[![Mod loader: Fabric]][fabric] [![Mod loader: NeoForge]][neoforge] <!-- modrinth_exclude.start -->
 ![Version](https://img.shields.io/github/v/tag/LambdAurora/LambDynamicLights?label=version&style=flat-square)
 [![Modrinth](https://img.shields.io/modrinth/v/lambdynamiclights?logo=modrinth&label=Modrinth&color=00ae5d&style=flat-square)](https://modrinth.com/mod/lambdynamiclights)
 [![CurseForge](http://cf.way2muchnoise.eu/title/393442.svg)](https://www.curseforge.com/minecraft/mc-mods/lambdynamiclights)
