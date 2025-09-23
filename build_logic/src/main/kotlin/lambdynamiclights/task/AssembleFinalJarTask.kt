@@ -1,8 +1,8 @@
 package lambdynamiclights.task
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import dev.lambdaurora.mcdev.api.AccessWidenerToTransformer
 import dev.lambdaurora.mcdev.api.manifest.Fmj
 import dev.lambdaurora.mcdev.api.manifest.Nmt
 import dev.lambdaurora.mcdev.util.JsonUtils
@@ -12,12 +12,13 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.TaskAction
-import org.gradle.jvm.tasks.Jar
-import java.nio.file.*
-import java.nio.file.attribute.BasicFileAttributes
+import java.nio.file.FileSystem
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
 import javax.inject.Inject
 
-abstract class AssembleFinalJarTask @Inject constructor() : Jar() {
+abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarTask() {
 	@get:Input
 	abstract val artifactGroup: Property<String>
 
@@ -34,10 +35,7 @@ abstract class AssembleFinalJarTask @Inject constructor() : Jar() {
 	abstract val runtimeIntermediaryJar: RegularFileProperty
 
 	@get:InputFile
-	abstract val runtimeMojmapJar: RegularFileProperty
-
-	@get:InputFile
-	abstract val neoforgeJar: RegularFileProperty
+	abstract val runtimeNeoForgeJar: RegularFileProperty
 
 	@get:InputFile
 	abstract val jarJarMetadata: RegularFileProperty
@@ -46,7 +44,7 @@ abstract class AssembleFinalJarTask @Inject constructor() : Jar() {
 	fun assemble() {
 		val outputJar = this.archiveFile.get().asFile.toPath()
 		val runtimeIntermediaryJarPath = this.runtimeIntermediaryJar.get().asFile.toPath()
-		val neoforgeJarPath = this.neoforgeJar.get().asFile.toPath()
+		val neoForgeJarPath = this.runtimeNeoForgeJar.get().asFile.toPath()
 
 		FileSystems.newFileSystem(outputJar).use { outFs ->
 			val outJarsDir = outFs.getPath("META-INF/jars")
@@ -54,7 +52,7 @@ abstract class AssembleFinalJarTask @Inject constructor() : Jar() {
 				runtimeIntermediaryJarPath.fileName.toString().replace("-intermediary", "-fabric")
 			)
 			val outNeoForgeJar = outJarsDir.resolve(
-				neoforgeJarPath.fileName.toString().replace("-mojmap", "")
+				neoForgeJarPath.fileName.toString().replace("-mojmap", "-neoforge")
 			)
 
 			Files.createDirectories(outJarsDir)
@@ -63,7 +61,7 @@ abstract class AssembleFinalJarTask @Inject constructor() : Jar() {
 				outFabricJar
 			)
 			Files.copy(
-				neoforgeJarPath,
+				neoForgeJarPath,
 				outNeoForgeJar
 			)
 
@@ -71,56 +69,29 @@ abstract class AssembleFinalJarTask @Inject constructor() : Jar() {
 				FileSystems.newFileSystem(outNeoForgeJar).use { neoJarFs ->
 					this.doAssemble(outFs, fabricJarFs, neoJarFs)
 					this.writeFmj(fabricJarFs, outFs, outFabricJar)
-					this.writeNmt(outFs)
+					this.writeNmt(neoJarFs, outFs)
 					this.handleJarJar(neoJarFs, outFs, outNeoForgeJar)
-					this.handleNeoJar(neoJarFs)
 				}
+
+				this.cleanupFabricJar(fabricJarFs)
 			}
 		}
 	}
 
 	private fun doAssemble(outFs: FileSystem, fabricJarFs: FileSystem, neoJarFs: FileSystem) {
 		Files.createDirectories(outFs.getPath("dev/lambdaurora/lambdynlights"))
-		this.move("dev/lambdaurora/lambdynlights/shadow", fabricJarFs, outFs)
-		this.move("META-INF/versions", fabricJarFs, outFs)
-		this.move("assets", fabricJarFs, outFs)
-		this.move("lambdynlights.toml", fabricJarFs, outFs)
-		this.move("META-INF/neoforge.mods.toml", fabricJarFs, neoJarFs)
+		this.biMove("dev/lambdaurora/lambdynlights/shadow", fabricJarFs, neoJarFs, outFs)
+		this.biMove("META-INF/versions", fabricJarFs, neoJarFs, outFs)
+		this.biMove("assets", fabricJarFs, neoJarFs, outFs)
+		this.biMove("lambdynlights.toml", fabricJarFs, neoJarFs, outFs)
 		this.copy("LICENSE_lambdynamiclights", fabricJarFs, outFs)
 
 		this.copy("assets/lambdynlights/icon.png", outFs, fabricJarFs)
 		this.copy("assets/lambdynlights/icon.png", outFs, neoJarFs)
-
-		this.openFs(this.runtimeMojmapJar).use { runtimeMojmapJarFs ->
-			this.recursivelyCopyMojmap(runtimeMojmapJarFs.getPath("dev"), neoJarFs.getPath("dev"))
-			AccessWidenerToTransformer.convert(
-				runtimeMojmapJarFs.getPath("lambdynlights.accesswidener"),
-				neoJarFs.getPath("META-INF/accesstransformer.cfg")
-			)
-			runtimeMojmapJarFs.rootDirectories.forEach {
-				Files.list(it)
-					.filter { path -> !path.fileName.toString().startsWith("fabric") && !path.fileName.toString().endsWith("accesswidener") }
-					.filter { path -> Files.isRegularFile(path) }
-					.forEach { path -> Files.copy(path, neoJarFs.getPath(path.toString())) }
-			}
-
-			this.copy("lambdynlights.mixins.json", runtimeMojmapJarFs, neoJarFs)
-			this.copy("lambdynlights.lightsource.mixins.json", runtimeMojmapJarFs, neoJarFs)
-		}
 	}
 
-	private fun handleNeoJar(fs: FileSystem) {
-		this.cleanupNeoJar(fs)
-
-		val mixinsJson = JsonParser.parseString(Files.readString(fs.getPath("lambdynlights.mixins.json")))
-			.asJsonObject
-		mixinsJson.addProperty("refmap", "lambdynlights-refmap.json")
-		Files.writeString(fs.getPath("lambdynlights.mixins.json"), JsonUtils.GSON.toJson(mixinsJson))
-	}
-
-	private fun cleanupNeoJar(fs: FileSystem) {
-		Files.deleteIfExists(fs.getPath("fabric.mod.json"))
-		this.recursivelyDelete(fs.getPath("dev/lambdaurora/lambdynlights/shadow"))
+	fun cleanupFabricJar(fs: FileSystem) {
+		Files.deleteIfExists(fs.getPath("META-INF/neoforge.mods.toml"))
 	}
 
 	private fun writeFmj(fabricFs: FileSystem, outFs: FileSystem, outFabricJar: Path) {
@@ -148,13 +119,12 @@ abstract class AssembleFinalJarTask @Inject constructor() : Jar() {
 	}
 
 	private fun handleJarJar(neoFs: FileSystem, outFs: FileSystem, neoJarPath: Path) {
-		this.move("META-INF/jars", neoFs, outFs)
 		Files.createDirectories(outFs.getPath("META-INF/jarjar"))
 
-		val jarJarMetadata = JsonParser.parseString(Files.readString(this.jarJarMetadata.get().asFile.toPath()))
-			.asJsonObject
+		val jarJarMetadata = JsonObject()
 
-		val jars = jarJarMetadata.get("jars").asJsonArray
+		val jars = JsonArray()
+		jarJarMetadata.add("jars", jars)
 		val neoForgeJarEntry = JsonObject()
 
 		val identifier = JsonObject()
@@ -178,9 +148,8 @@ abstract class AssembleFinalJarTask @Inject constructor() : Jar() {
 		)
 	}
 
-	private fun writeNmt(outFs: FileSystem) {
+	private fun writeNmt(neoFs: FileSystem, outFs: FileSystem) {
 		val parentNmt = this.nmt.get().derive(::Nmt)
-		parentNmt.withNamespace(Constants.NAMESPACE)
 		parentNmt.withName(Constants.PRETTY_NAME)
 		parentNmt.withDescription(Constants.DESCRIPTION)
 		parentNmt.withLoaderVersion(this.nmt.get().loaderVersion)
@@ -192,105 +161,16 @@ abstract class AssembleFinalJarTask @Inject constructor() : Jar() {
 		)
 
 		Files.writeString(outFs.getPath("META-INF/neoforge.mods.toml"), parentNmt.toToml())
+
+		val runtimeNmt = this.nmt.get().derive(::Nmt)
+		this.nmt.get().copyTo(runtimeNmt)
+		runtimeNmt.withNamespace(Constants.NAMESPACE + "_runtime")
+
+		Files.writeString(neoFs.getPath("META-INF/neoforge.mods.toml"), runtimeNmt.toToml())
 	}
 
-	private fun openFs(jar: RegularFileProperty): FileSystem {
-		return FileSystems.newFileSystem(jar.get().asFile.toPath())
-	}
-
-	private fun copy(source: Path, target: Path) {
-		if (target.parent != null) {
-			Files.createDirectories(target.parent)
-		}
-
-		if (Files.isRegularFile(source)) {
-			Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING)
-			return
-		}
-
-		Files.walkFileTree(source, object : SimpleFileVisitor<Path>() {
-			fun resolve(subSource: Path): Path {
-				val relative = source.relativize(subSource)
-				return target.resolve(relative)
-			}
-
-			override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
-				Files.createDirectories(this.resolve(dir))
-				return FileVisitResult.CONTINUE
-			}
-
-			override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
-				Files.copy(file, this.resolve(file), StandardCopyOption.REPLACE_EXISTING)
-				return FileVisitResult.CONTINUE
-			}
-		})
-	}
-
-	private fun copy(path: String, sourceFs: FileSystem, targetFs: FileSystem) {
-		this.copy(sourceFs.getPath(path), targetFs.getPath(path))
-	}
-
-	private fun recursivelyCopyMojmap(source: Path, target: Path) {
-		Files.walkFileTree(source, object : SimpleFileVisitor<Path>() {
-			fun resolve(subSource: Path): Path {
-				val relative = source.relativize(subSource)
-				return target.resolve(relative)
-			}
-
-			override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
-				if (dir.endsWith("fabric")) {
-					return FileVisitResult.SKIP_SUBTREE
-				}
-				Files.createDirectories(this.resolve(dir))
-				return FileVisitResult.CONTINUE
-			}
-
-			override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
-				Files.copy(file, this.resolve(file), StandardCopyOption.REPLACE_EXISTING)
-				return FileVisitResult.CONTINUE
-			}
-		})
-	}
-
-	private fun move(source: Path, target: Path) {
-		if (target.parent != null) {
-			Files.createDirectories(target.parent)
-		}
-
-		if (Files.isRegularFile(source)) {
-			Files.move(source, target)
-			return
-		}
-
-		Files.walkFileTree(source, object : SimpleFileVisitor<Path>() {
-			fun resolve(subSource: Path): Path {
-				val relative = source.relativize(subSource)
-				return target.resolve(relative)
-			}
-
-			override fun preVisitDirectory(dir: Path, attrs: BasicFileAttributes): FileVisitResult {
-				Files.createDirectories(this.resolve(dir))
-				return FileVisitResult.CONTINUE
-			}
-
-			override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
-				Files.move(file, this.resolve(file))
-				return FileVisitResult.CONTINUE
-			}
-		})
-		this.recursivelyDelete(source)
-	}
-
-	private fun move(path: String, sourceFs: FileSystem, targetFs: FileSystem) {
-		this.move(sourceFs.getPath(path), targetFs.getPath(path))
-	}
-
-	private fun recursivelyDelete(path: Path) {
-		Files.walk(path).use { walk ->
-			walk.sorted(Comparator.reverseOrder())
-				.forEach {
-					Files.delete(it)
-				}
-		}
+	private fun biMove(path: String, sourceFs: FileSystem, dupedSourceFs: FileSystem, targetFs: FileSystem) {
+		this.move(path, sourceFs, targetFs)
+		this.recursivelyDelete(dupedSourceFs.getPath(path))
 	}
 }

@@ -214,8 +214,7 @@ public class DynamicLightsConfig {
 	private void copyDefaultFile() throws IOException {
 		Files.createDirectories(CONFIG_FILE_PATH.getParent());
 
-		var path = YumiMods.get().getMod(LambDynLightsConstants.NAMESPACE)
-				.orElseThrow()
+		var path = LambDynLightsConstants.MOD_CONTAINER
 				.findPath("lambdynlights.toml")
 				.orElseThrow(() -> new IllegalStateException("This distribution of LambDynamicLights is broken: "
 						+ "cannot find the default configuration file inside of the mod's JAR."));
