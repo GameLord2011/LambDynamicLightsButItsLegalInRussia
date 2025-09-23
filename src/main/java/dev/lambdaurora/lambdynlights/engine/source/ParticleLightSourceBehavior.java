@@ -14,6 +14,8 @@ import dev.yumi.mc.core.api.YumiMods;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
 
+import java.util.function.Consumer;
+
 /**
  * Represents the ticking behavior of particle light sources.
  *
@@ -22,14 +24,10 @@ import net.minecraft.client.particle.Particle;
  * @since 4.4.2
  */
 public final class ParticleLightSourceBehavior {
-	private static final boolean HAS_ASYNC_PARTICLES = YumiMods.get().isModLoaded("asyncparticles");
+	private static final Consumer<Particle> DO_TICK_PARTICLE;
 
 	public static void tickParticle(Particle particle) {
-		if (HAS_ASYNC_PARTICLES) {
-			Minecraft.getInstance().execute(() -> doTickParticle(particle));
-		} else {
-			doTickParticle(particle);
-		}
+		DO_TICK_PARTICLE.accept(particle);
 	}
 
 	private static void doTickParticle(Particle particle) {
@@ -44,6 +42,14 @@ public final class ParticleLightSourceBehavior {
 				lightSource.setLuminance(0);
 			}
 			LambDynLights.updateTracking(lightSource);
+		}
+	}
+
+	static {
+		if (YumiMods.get().isModLoaded("asyncparticles")) {
+			DO_TICK_PARTICLE = particle -> Minecraft.getInstance().execute(() -> doTickParticle(particle));
+		} else {
+			DO_TICK_PARTICLE = ParticleLightSourceBehavior::doTickParticle;
 		}
 	}
 }
