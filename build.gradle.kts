@@ -15,7 +15,7 @@ import net.fabricmc.loom.task.RemapJarTask
 plugins {
 	id("lambdynamiclights")
 	`maven-publish`
-	id("com.gradleup.shadow").version("8.3.3")
+	id("com.gradleup.shadow").version("9.1.0")
 	id("com.modrinth.minotaur").version("2.+")
 	id("net.darkhax.curseforgegradle").version("1.1.+")
 }
@@ -174,14 +174,6 @@ dependencies {
 		capabilities {
 			requireCapability("io.github.queerbric:pridelib-mojmap")
 		}
-	}
-}
-
-tasks.processResources {
-	inputs.property("version", project.version)
-
-	filesMatching("fabric.mod.json") {
-		expand("version" to inputs.properties["version"])
 	}
 }
 
