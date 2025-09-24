@@ -10,7 +10,9 @@
 package dev.lambdaurora.lambdynlights.mixin;
 
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.culling.Frustum;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 /**
@@ -22,6 +24,9 @@ import org.spongepowered.asm.mixin.gen.Invoker;
  */
 @Mixin(LevelRenderer.class)
 public interface LevelRendererAccessor {
+	@Accessor
+	Frustum getCullingFrustum();
+
 	/**
 	 * Schedules a chunk rebuild.
 	 *

@@ -18,13 +18,13 @@ import dev.lambdaurora.lambdynlights.api.entity.EntityLightSourceManager;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import dev.lambdaurora.lambdynlights.compat.CompatLayer;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightBehaviorSources;
+import dev.lambdaurora.lambdynlights.engine.DynamicLightingChunkRebuildScheduler;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightingEngine;
 import dev.lambdaurora.lambdynlights.engine.source.DeferredDynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSourceBehavior;
 import dev.lambdaurora.lambdynlights.gui.DevModeGui;
-import dev.lambdaurora.lambdynlights.mixin.LevelRendererAccessor;
 import dev.lambdaurora.lambdynlights.platform.PlatformProvider;
 import dev.lambdaurora.lambdynlights.resource.LightSourceLoader;
 import dev.lambdaurora.lambdynlights.resource.entity.EntityLightSources;
@@ -46,10 +46,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.FireflyParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SonicBoomParticle;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.ChunkSectionPos;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Text;
 import net.minecraft.resources.Identifier;
@@ -113,10 +111,12 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 			new DynamicLightSectionDebugRenderer(this)
 	);
 
+	public final DynamicLightingChunkRebuildScheduler chunkRebuildScheduler
+			= new DynamicLightingChunkRebuildScheduler(this.sectionRebuildDebugRenderer);
+
 	private long lastUpdate = System.currentTimeMillis();
 	private boolean shouldTick = false;
 	boolean shouldForceRefresh = false;
-	private int lastUpdateCount = 0;
 	private int dynamicLightSourcesCount = 0;
 
 	private LambDynLights() {}
@@ -200,15 +200,6 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		return this.shouldTick;
 	}
 
-	/**
-	 * Returns the last number of dynamic light source updates.
-	 *
-	 * @return the last number of dynamic light source updates
-	 */
-	public int getLastUpdateCount() {
-		return this.lastUpdateCount;
-	}
-
 	public void onTagsLoaded(RegistryAccess registries) {
 		this.itemLightSources.apply(registries);
 		this.entityLightSources.apply(registries);
@@ -233,6 +224,8 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	public void onEndLevelTick() {
 		var renderer = Minecraft.getInstance().levelRenderer;
 
+		this.chunkRebuildScheduler.startTick();
+
 		this.lightSourcesLock.writeLock().lock();
 		if (this.config.getDynamicLightsMode().isEnabled()) {
 			Profiler.get().push("dynamic_lighting_compute_spatial_lookup");
@@ -240,12 +233,10 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 			Profiler.get().pop();
 		}
 		this.toClear.forEach(source -> {
-			source.getDynamicLightChunksToRebuild(true).forEach(chunk -> this.scheduleChunkRebuild(renderer, chunk));
+			this.chunkRebuildScheduler.accept(source, source.getDynamicLightChunksToRebuild(true));
 		});
 		this.toClear.clear();
 		this.lightSourcesLock.writeLock().unlock();
-
-		this.lastUpdateCount = 0;
 
 		if (this.shouldTick) {
 			var it = this.dynamicLightSources.iterator();
@@ -265,16 +256,14 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 				var chunks = lightSource.getDynamicLightChunksToRebuild(this.shouldForceRefresh || this.toAdd.contains(lightSource));
 
-				if (!chunks.isEmpty()) {
-					chunks.forEach(chunk -> this.scheduleChunkRebuild(renderer, chunk));
-					this.lastUpdateCount++;
-				}
+				this.chunkRebuildScheduler.accept(lightSource, chunks);
 			}
 
 			this.toAdd.clear();
 		}
 		this.dynamicLightSourcesCount = this.dynamicLightSources.size();
 
+		this.chunkRebuildScheduler.endTick();
 		this.sectionRebuildDebugRenderer.tick();
 
 		this.shouldForceRefresh = false;
@@ -412,6 +401,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		}
 
 		this.engine.resetSize();
+		this.chunkRebuildScheduler.clear();
 	}
 
 	/**
@@ -519,22 +509,6 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		}
 
 		logger.error(msg, args);
-	}
-
-	/**
-	 * Schedules a chunk rebuild at the specified chunk position.
-	 *
-	 * @param renderer the renderer
-	 * @param chunkPos the packed chunk position
-	 */
-	private void scheduleChunkRebuild(@NotNull LevelRenderer renderer, long chunkPos) {
-		scheduleChunkRebuild(renderer, ChunkSectionPos.x(chunkPos), ChunkSectionPos.y(chunkPos), ChunkSectionPos.z(chunkPos));
-		this.sectionRebuildDebugRenderer.scheduleChunkRebuild(chunkPos);
-	}
-
-	public static void scheduleChunkRebuild(@NotNull LevelRenderer renderer, int x, int y, int z) {
-		if (Minecraft.getInstance().level != null)
-			((LevelRendererAccessor) renderer).lambdynlights$scheduleChunkRebuild(x, y, z, false);
 	}
 
 	/**

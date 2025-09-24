@@ -42,6 +42,8 @@ public class DebugScreenOverlayMixin {
 
 		var list = cir.getReturnValue();
 		var ldl = LambDynLights.get();
+		var chunkRebuildScheduler = ldl.chunkRebuildScheduler;
+
 		var builder = new StringBuilder(prefix + "Dynamic Light Sources: ");
 		builder.append(ldl.getLightSourcesCount())
 				.append(" (Occupying ")
@@ -49,7 +51,7 @@ public class DebugScreenOverlayMixin {
 				.append('/')
 				.append(ldl.engine.getSize())
 				.append(" ; Updated: ")
-				.append(ldl.getLastUpdateCount());
+				.append(chunkRebuildScheduler.getLastUpdateCount());
 
 		if (!ldl.config.getDynamicLightsMode().isEnabled()) {
 			builder.append(" ; ");
@@ -61,11 +63,17 @@ public class DebugScreenOverlayMixin {
 		builder.append(')');
 		list.add(builder.toString());
 
+		list.add("%sScheduled Chunk Rebuilds: %d / %d"
+				.formatted(prefix, chunkRebuildScheduler.getLastQueuedCount(), chunkRebuildScheduler.getCurrentlyQueued())
+		);
+
 		list.add(prefix + "Compute Spatial Lookup Timing: %.3fms (avg. 40t)"
-				.formatted(ldl.engine.getComputeSpatialLookupTime() / 1_000_000.f));
+				.formatted(ldl.engine.getComputeSpatialLookupTime() / 1_000_000.f)
+		);
 
 		list.add(prefix + "Dynamic Light At Feet: %.3f"
-				.formatted(ldl.engine.getDynamicLightLevel(this.minecraft.player.getBlockPos())));
+				.formatted(ldl.engine.getDynamicLightLevel(this.minecraft.player.getBlockPos()))
+		);
 
 		if (LambDynLightsConstants.isDevMode()) {
 			list.add(TextFormatting.RED + LambDynLightsConstants.DEV_MODE_OVERLAY_TEXT);
