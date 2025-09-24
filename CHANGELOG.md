@@ -476,6 +476,7 @@
 
 - Fixed and improved the Maven publication metadata.
 - (NeoForge) Fixed crashes with Accessories due to bad remapping.
+- Updated [Yumi Minecraft Libraries: Foundation].
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
