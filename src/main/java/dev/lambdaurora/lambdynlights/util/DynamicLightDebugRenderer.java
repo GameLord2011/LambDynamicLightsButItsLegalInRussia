@@ -16,6 +16,8 @@ import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.spruceui.util.ColorUtil;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.longs.LongSet;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -139,14 +141,16 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 	}
 
 	public static class SectionRebuild extends DynamicLightDebugRenderer {
-		private static final int COLOR = 0x3f0099ff;
-		private final Long2IntMap chunks = new Long2IntOpenHashMap();
+		private static final int SCHEDULED_COLOR = 0x3f0099ff;
+		private static final int REQUESTED_COLOR = 0x3f9b00a6;
+		private final Long2IntMap scheduledChunks = new Long2IntOpenHashMap();
+		private long[] requestedChunks = {};
 
 		public SectionRebuild(LambDynLights mod) {
 			super(mod);
 		}
 
-		private boolean isEnabled() {
+		public boolean isEnabled() {
 			return this.config.getDebugDisplayDynamicLightingChunkRebuilds().get();
 		}
 
@@ -156,13 +160,19 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 
 			matrices.push();
 			matrices.translate(-x, -y, -z);
-			for (var entry : this.chunks.long2IntEntrySet()) {
-				var chunk = ChunkSectionPos.of(entry.getLongKey());
+			for (var entry : this.scheduledChunks.long2IntEntrySet()) {
+				this.renderBox(matrices, bufferSource, SCHEDULED_COLOR, entry.getIntValue() / 4.f, ChunkSectionPos.of(entry.getLongKey()));
+			}
+			for (var chunk : this.requestedChunks) {
+				this.renderBox(matrices, bufferSource, REQUESTED_COLOR, 1.f, ChunkSectionPos.of(chunk));
+			}
+			matrices.pop();
+		}
 
-				float red = ColorUtil.floatColor(ColorUtil.argbUnpackRed(COLOR));
-				float green = ColorUtil.floatColor(ColorUtil.argbUnpackGreen(COLOR));
-				float blue = ColorUtil.floatColor(ColorUtil.argbUnpackBlue(COLOR));
-				float alpha = entry.getIntValue() / 4.f;
+		private void renderBox(MatrixStack matrices, MultiBufferSource bufferSource, int color, float alpha, ChunkSectionPos chunk) {
+				float red = ColorUtil.floatColor(ColorUtil.argbUnpackRed(color));
+				float green = ColorUtil.floatColor(ColorUtil.argbUnpackGreen(color));
+				float blue = ColorUtil.floatColor(ColorUtil.argbUnpackBlue(color));
 
 				ShapeRenderer.renderLineBox(
 						matrices, bufferSource.getBuffer(RenderType.lines()),
@@ -170,20 +180,24 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 						ChunkSectionPos.sectionToBlockCoord(chunk.x(), 16), ChunkSectionPos.sectionToBlockCoord(chunk.y(), 16), ChunkSectionPos.sectionToBlockCoord(chunk.z(), 16),
 						red, green, blue, alpha
 				);
-			}
-			matrices.pop();
 		}
 
 		public void scheduleChunkRebuild(long chunkPos) {
 			if (!this.isEnabled()) return;
 
-			this.chunks.put(chunkPos, 4);
+			this.scheduledChunks.put(chunkPos, 4);
+		}
+
+		public void setRequestedChunks(long[] chunks) {
+			if (!this.isEnabled()) return;
+
+			this.requestedChunks = chunks;
 		}
 
 		public void tick() {
 			if (!this.isEnabled()) return;
 
-			var iterator = this.chunks.long2IntEntrySet().iterator();
+			var iterator = this.scheduledChunks.long2IntEntrySet().iterator();
 			while (iterator.hasNext()) {
 				var entry = iterator.next();
 

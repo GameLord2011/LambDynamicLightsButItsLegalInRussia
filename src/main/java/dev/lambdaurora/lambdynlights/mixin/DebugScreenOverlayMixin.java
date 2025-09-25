@@ -51,7 +51,7 @@ public class DebugScreenOverlayMixin {
 				.append('/')
 				.append(ldl.engine.getSize())
 				.append(" ; Updated: ")
-				.append(chunkRebuildScheduler.getLastUpdateCount());
+				.append(chunkRebuildScheduler.getSourceUpdatedLastTick());
 
 		if (!ldl.config.getDynamicLightsMode().isEnabled()) {
 			builder.append(" ; ");
@@ -63,9 +63,7 @@ public class DebugScreenOverlayMixin {
 		builder.append(')');
 		list.add(builder.toString());
 
-		list.add("%sScheduled Chunk Rebuilds: %d / %d"
-				.formatted(prefix, chunkRebuildScheduler.getLastQueuedCount(), chunkRebuildScheduler.getCurrentlyQueued())
-		);
+		chunkRebuildScheduler.appendF3Debug(line -> list.add(prefix + line));
 
 		list.add(prefix + "Compute Spatial Lookup Timing: %.3fms (avg. 40t)"
 				.formatted(ldl.engine.getComputeSpatialLookupTime() / 1_000_000.f)

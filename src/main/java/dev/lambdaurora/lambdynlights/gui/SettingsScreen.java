@@ -17,6 +17,7 @@ import dev.lambdaurora.lambdynlights.accessor.DynamicLightHandlerHolder;
 import dev.lambdaurora.spruceui.Position;
 import dev.lambdaurora.spruceui.SpruceTextAlignment;
 import dev.lambdaurora.spruceui.SpruceTexts;
+import dev.lambdaurora.spruceui.option.SpruceBooleanOption;
 import dev.lambdaurora.spruceui.option.SpruceOption;
 import dev.lambdaurora.spruceui.option.SpruceSeparatorOption;
 import dev.lambdaurora.spruceui.option.SpruceSimpleActionOption;
@@ -250,6 +251,18 @@ public class SettingsScreen extends SpruceScreen {
 		list.addSingleOptionEntry(this.config.getDebugDisplayDynamicLightingChunkRebuilds().getOption());
 		list.addSingleOptionEntry(this.debugLightLevelRadiusOption);
 		list.addSingleOptionEntry(this.config.getDebugDisplayHandlerBoundingBox().getOption());
+		// Future versions of Minecraft add this keybind natively. This won't be needed in 1.21.9.
+		list.addSingleOptionEntry(SpruceBooleanOption.booleanBuilder(
+				"Freeze View Frustum",
+				() -> Minecraft.getInstance().levelRenderer.getCapturedFrustum() != null,
+				(val) -> {
+					if (val) {
+						Minecraft.getInstance().levelRenderer.captureFrustum();
+					} else {
+						Minecraft.getInstance().levelRenderer.killFrustum();
+					}
+				}
+		).build());
 		context.addInnerWidget(list);
 	}
 

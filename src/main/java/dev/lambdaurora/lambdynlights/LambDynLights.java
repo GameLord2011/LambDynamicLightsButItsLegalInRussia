@@ -17,8 +17,9 @@ import dev.lambdaurora.lambdynlights.api.behavior.DynamicLightBehaviorManager;
 import dev.lambdaurora.lambdynlights.api.entity.EntityLightSourceManager;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import dev.lambdaurora.lambdynlights.compat.CompatLayer;
+import dev.lambdaurora.lambdynlights.engine.scheduler.ChunkRebuildScheduler;
+import dev.lambdaurora.lambdynlights.engine.scheduler.CullingChunkRebuildScheduler;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightBehaviorSources;
-import dev.lambdaurora.lambdynlights.engine.DynamicLightingChunkRebuildScheduler;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightingEngine;
 import dev.lambdaurora.lambdynlights.engine.source.DeferredDynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
@@ -111,8 +112,8 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 			new DynamicLightSectionDebugRenderer(this)
 	);
 
-	public final DynamicLightingChunkRebuildScheduler chunkRebuildScheduler
-			= new DynamicLightingChunkRebuildScheduler(this.sectionRebuildDebugRenderer);
+	public final ChunkRebuildScheduler chunkRebuildScheduler
+			= new CullingChunkRebuildScheduler(this.sectionRebuildDebugRenderer);
 
 	private long lastUpdate = System.currentTimeMillis();
 	private boolean shouldTick = false;
@@ -232,9 +233,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 			this.engine.computeSpatialLookup(this.dynamicLightSources);
 			Profiler.get().pop();
 		}
-		this.toClear.forEach(source -> {
-			this.chunkRebuildScheduler.accept(source, source.getDynamicLightChunksToRebuild(true));
-		});
+		this.toClear.forEach(this.chunkRebuildScheduler::remove);
 		this.toClear.clear();
 		this.lightSourcesLock.writeLock().unlock();
 
@@ -255,8 +254,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 				}
 
 				var chunks = lightSource.getDynamicLightChunksToRebuild(this.shouldForceRefresh || this.toAdd.contains(lightSource));
-
-				this.chunkRebuildScheduler.accept(lightSource, chunks);
+				this.chunkRebuildScheduler.update(lightSource, chunks);
 			}
 
 			this.toAdd.clear();
