@@ -12,7 +12,7 @@ package dev.lambdaurora.lambdynlights.api.entity;
 import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.yumi.commons.event.Event;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
@@ -28,11 +28,18 @@ import java.util.Optional;
  * which provides the ability to register light sources for entities, and to query their luminance.
  *
  * @author LambdAurora
- * @version 4.2.0
+ * @version 4.5.2
  * @see EntityLightSource
  * @since 4.0.0
  */
 public interface EntityLightSourceManager {
+	/**
+	 * Represents the resource reloader identifier of item light sources.
+	 *
+	 * @since 4.5.2
+	 */
+	Identifier RESOURCE_RELOADER_ID = Identifier.of("lambdynlights", "entity");
+
 	/**
 	 * {@return the registration event for entity light sources}
 	 */
@@ -64,9 +71,9 @@ public interface EntityLightSourceManager {
 	 */
 	interface RegisterContext {
 		/**
-		 * {@return the access to registries}
+		 * {@return the lookup to registries}
 		 */
-		@NotNull RegistryAccess registryAccess();
+		@NotNull HolderLookup.Provider registryLookup();
 
 		/**
 		 * Registers the given entity light source.
@@ -87,7 +94,7 @@ public interface EntityLightSourceManager {
 			this.register(new EntityLightSource(
 					new EntityLightSource.EntityPredicate(
 							Optional.of(EntityTypePredicate.of(
-									this.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE), entityType
+									this.registryLookup().lookupOrThrow(Registries.ENTITY_TYPE), entityType
 							)),
 							Optional.empty(),
 							Optional.empty(),
@@ -114,7 +121,7 @@ public interface EntityLightSourceManager {
 			this.register(new EntityLightSource(
 					new EntityLightSource.EntityPredicate(
 							Optional.of(EntityTypePredicate.of(
-									this.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE), entityType
+									this.registryLookup().lookupOrThrow(Registries.ENTITY_TYPE), entityType
 							)),
 							Optional.empty(),
 							Optional.empty(),

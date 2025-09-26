@@ -22,18 +22,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShapeRenderer;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.core.ChunkSectionPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 /**
  * Represents a debug renderer for dynamic lighting.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.5.2
  * @since 4.0.0
  */
 @Environment(EnvType.CLIENT)
@@ -100,7 +103,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 		float faceY = (float) (cellY * cellSize - y);
 		float faceZ = (float) (cellZ * cellSize - z);
 		ShapeRenderer.renderFace(
-				matrices, vertexConsumer, direction,
+				matrices.peek().model(), vertexConsumer, direction,
 				faceX, faceY, faceZ,
 				faceX + cellSize, faceY + cellSize, faceZ + cellSize,
 				ColorUtil.floatColor(ColorUtil.argbUnpackRed(color)),
@@ -151,7 +154,10 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 		}
 
 		@Override
-		public void render(MatrixStack matrices, MultiBufferSource bufferSource, double x, double y, double z) {
+		public void render(
+				@NotNull MatrixStack matrices, @NotNull MultiBufferSource bufferSource, double x, double y, double z,
+				@NotNull DebugValueAccess debugValueAccess, @NotNull Frustum frustum
+		) {
 			if (!this.isEnabled()) return;
 
 			matrices.push();
@@ -165,7 +171,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 				float alpha = entry.getIntValue() / 4.f;
 
 				ShapeRenderer.renderLineBox(
-						matrices, bufferSource.getBuffer(RenderType.lines()),
+						matrices.peek(), bufferSource.getBuffer(RenderType.lines()),
 						chunk.minBlockX(), chunk.minBlockY(), chunk.minBlockZ(),
 						ChunkSectionPos.sectionToBlockCoord(chunk.x(), 16), ChunkSectionPos.sectionToBlockCoord(chunk.y(), 16), ChunkSectionPos.sectionToBlockCoord(chunk.z(), 16),
 						red, green, blue, alpha

@@ -28,6 +28,7 @@ logger.lifecycle("Preparing version ${version}...")
 val fabricApiModules = listOf(
 	fabricApi.module("fabric-lifecycle-events-v1", libs.versions.fabric.api.get())!!,
 	fabricApi.module("fabric-resource-loader-v0", libs.versions.fabric.api.get())!!,
+	fabricApi.module("fabric-resource-loader-v1", libs.versions.fabric.api.get())!!,
 	fabricApi.module("fabric-resource-conditions-api-v1", libs.versions.fabric.api.get())!!
 )
 
@@ -141,9 +142,9 @@ dependencies {
 	modCompileOnly(libs.modmenu) {
 		this.isTransitive = false
 	}
-	modLocalRuntime(libs.modmenu) {
+	/*modLocalRuntime(libs.modmenu) {
 		this.isTransitive = false
-	}
+	}*/
 
 	// Mod compatibility
 	modCompileOnly(libs.trinkets)

@@ -15,6 +15,7 @@ import dev.lambdaurora.lambdynlights.resource.LightSourceLoader;
 import dev.yumi.commons.event.ListenableEvent;
 import dev.yumi.mc.core.api.ModContainer;
 import dev.yumi.mc.core.api.YumiEvents;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
@@ -72,7 +73,7 @@ public final class NeoForgePlatform implements Platform {
 	}
 
 	@Override
-	public ListenableEvent<Identifier, Consumer<RegistryAccess>> getTagLoadedEvent() {
+	public ListenableEvent<Identifier, Consumer<HolderLookup.Provider>> getTagLoadedEvent() {
 		return new ListenableEvent<>() {
 			@Override
 			public @NotNull Identifier defaultPhaseId() {
@@ -80,10 +81,10 @@ public final class NeoForgePlatform implements Platform {
 			}
 
 			@Override
-			public void register(@NotNull Identifier phaseIdentifier, @NotNull Consumer<RegistryAccess> listener) {
+			public void register(@NotNull Identifier phaseIdentifier, @NotNull Consumer<HolderLookup.Provider> listener) {
 				NeoForge.EVENT_BUS.addListener(TagsUpdatedEvent.class, event -> {
 					if (event.getUpdateCause() == TagsUpdatedEvent.UpdateCause.CLIENT_PACKET_RECEIVED) {
-						listener.accept((RegistryAccess) event.getLookupProvider());
+						listener.accept(event.getLookupProvider());
 					}
 				});
 			}

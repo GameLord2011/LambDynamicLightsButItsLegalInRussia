@@ -11,7 +11,7 @@ package dev.lambdaurora.lambdynlights.api.item;
 
 import dev.yumi.commons.event.Event;
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -24,11 +24,18 @@ import org.jetbrains.annotations.Range;
  * which provides the ability to register light sources for items, and to query their luminance.
  *
  * @author LambdAurora
- * @version 4.0.0
+ * @version 4.5.2
  * @see ItemLightSource
  * @since 3.0.0
  */
 public interface ItemLightSourceManager {
+	/**
+	 * Represents the resource reloader identifier of item light sources.
+	 *
+	 * @since 4.5.2
+	 */
+	Identifier RESOURCE_RELOADER_ID = Identifier.of("lambdynlights", "item");
+
 	/**
 	 * {@return the registration event for item light sources}
 	 */
@@ -70,9 +77,9 @@ public interface ItemLightSourceManager {
 	 */
 	interface RegisterContext {
 		/**
-		 * {@return the access to registries}
+		 * {@return the lookup to registries}
 		 */
-		@NotNull RegistryAccess registryAccess();
+		@NotNull HolderLookup.Provider registryLookup();
 
 		/**
 		 * Registers the given item light source.
@@ -92,7 +99,7 @@ public interface ItemLightSourceManager {
 		default void register(@NotNull ItemLike item, @Range(from = 0, to = 15) int luminance) {
 			this.register(new ItemLightSource(
 					ItemPredicate.Builder.item()
-							.of(this.registryAccess().lookupOrThrow(Registries.ITEM), item)
+							.of(this.registryLookup().lookupOrThrow(Registries.ITEM), item)
 							.build(),
 					luminance
 			));
@@ -109,7 +116,7 @@ public interface ItemLightSourceManager {
 		default void register(@NotNull ItemLike item, @NotNull ItemLuminance luminance) {
 			this.register(new ItemLightSource(
 					ItemPredicate.Builder.item()
-							.of(this.registryAccess().lookupOrThrow(Registries.ITEM), item)
+							.of(this.registryLookup().lookupOrThrow(Registries.ITEM), item)
 							.build(),
 					luminance
 			));

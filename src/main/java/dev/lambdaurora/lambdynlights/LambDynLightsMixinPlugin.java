@@ -30,6 +30,7 @@ public class LambDynLightsMixinPlugin implements IMixinConfigPlugin {
 
 	public LambDynLightsMixinPlugin() {
 		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.GuiMixin", LambDynLightsConstants.isDevMode());
+		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.DebugScreenOverlayMixin", LambDynLightsConstants.isDevMode());
 		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.sodium.SodiumOptionsGuiMixin", LambDynLightsCompat.isSodiumInstalled());
 	}
 

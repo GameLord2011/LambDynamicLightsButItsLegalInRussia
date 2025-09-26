@@ -17,11 +17,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape;
 import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
@@ -31,7 +34,7 @@ import java.time.Instant;
  * Represents a debug renderer for dynamic lighting.
  *
  * @author LambdAurora, Akarys
- * @version 4.4.0
+ * @version 4.5.2
  * @since 4.0.0
  */
 @Environment(EnvType.CLIENT)
@@ -53,7 +56,10 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 	}
 
 	@Override
-	public void render(MatrixStack matrices, MultiBufferSource bufferSource, double x, double y, double z) {
+	public void render(
+			@NotNull MatrixStack matrices, @NotNull MultiBufferSource bufferSource, double x, double y, double z,
+			@NotNull DebugValueAccess debugValueAccess, @NotNull Frustum frustum
+	) {
 		int cellDisplayRadius = this.config.getDebugCellDisplayRadius();
 
 		if (!this.config.getDebugActiveDynamicLightingCells().get() && cellDisplayRadius == 0) {
