@@ -54,12 +54,12 @@ public interface DynamicLightBehavior {
 	 * This must not include falloff light.
 	 *
 	 * <h3>Example - a single point emitting light</h3>
-	 * <pre><code>
+	 * {@snippet lang="java" :
 	 * public BoundingBox getBoundingBox() {
 	 * 	// Doesn't depend on the luminance of the source since falloff isn't included
 	 * 	return new BoundingBox(this.x, this.y, this.z, this.x + 1, this.y + 1, this.z + 1);
 	 * }
-	 * </code></pre>
+	 * }
 	 */
 	@NotNull
 	BoundingBox getBoundingBox();
