@@ -478,6 +478,18 @@
 - (NeoForge) Fixed crashes with Accessories due to bad remapping.
 - Updated [Yumi Minecraft Libraries: Foundation].
 
+## 4.6.0
+
+- API changes:
+  - Deprecated for removal `ItemLightSourceManager.RegisterContext::registryAccess`
+    and `EntityLightSourceManager.RegisterContext::registryAccess`
+    in favor of `ItemLightSourceManager.RegisterContext::registryLookup`
+    and `EntityLightSourceManager.RegisterContext::registryLookup` respectively.
+- Updated to Minecraft 1.21.9.
+  - F3 debug entries are now configurable.
+  - Made Copper Torch water-sensitive like the other torches.
+- Updated [SpruceUI].
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"

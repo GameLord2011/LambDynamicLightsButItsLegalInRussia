@@ -30,7 +30,7 @@ import java.util.Set;
  * Represents a debug renderer for the bounding boxes of {@link DynamicLightBehavior}.
  *
  * @author Akarys
- * @version 4.5.2
+ * @version 4.6.0
  * @since 4.0.0
  */
 @Environment(EnvType.CLIENT)

@@ -48,7 +48,7 @@ Searching other mods to replace OptiFine? [Check out this list!](https://optifin
   - Check out [the documentation][documentation] for more details!
 - And more!
 
-## Screenshots
+## 🖼️ Screenshots
 
 ### Items emit light
 
@@ -101,7 +101,7 @@ As of v4.0.0.
 ![Configuration GUI](assets/settings_main.png)
 ![Entities Configuration](assets/settings_entities.png)
 
-## 📖 Usage
+## ❓ Usage
 
 Using this mod is very simple!
 
@@ -112,22 +112,28 @@ It will work as-is. If you want, you can configure the mod through its settings 
 
 Need help? Come check out [my Discord server][LambdAurora Discord].
 
-## 📖 Is there an API? How to use it as a developer?
+## 🔥 Integrations and Compatibility
+
+- [Sodium] is recommended for better performances.
+- [Beltborne Lanterns] to equip a lantern on a belt and have a light source on yourself at all time!
+- [Illuminated] a flashlight mod using LambDynamicLights.
+
+## ❓ Is there an API? How to use it as a developer?
 
 [Check out this in-depth documentation][documentation].
 
-## 📖 How does it work internally?
+## ❓ How does it work internally?
 
 [Check out this document I've written on the fundamentals of it](https://github.com/LambdAurora/LambDynamicLights/blob/1.21/HOW_DOES_IT_WORK.md).
 
 <!-- modrinth_exclude.start -->
-### Build
+### 🔨 Build
 
 Just do `./gradlew build` and everything should build just fine!
 <!-- modrinth_exclude.end -->
 
 <!-- modrinth_exclude.long_start -->
-## Downloads
+## 📦 Downloads
 
 <div>
 <a href="https://modrinth.com/mod/lambdynamiclights" style="display: inline-flex; align-items: center;">
@@ -150,11 +156,6 @@ GitHub
 </div>
 <!-- modrinth_exclude.long_end -->
 
-## 📖 Compatibility
-
-- [Sodium] is recommended for better performances.
-- **OptiFabric is obviously incompatible.**
-
 [fabric]: https://fabricmc.net "Fabric home page"
 [Mod loader: Fabric]: https://img.shields.io/badge/modloader-Fabric-1976d2?style=flat-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAFHGlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS42LWMxNDIgNzkuMTYwOTI0LCAyMDE3LzA3LzEzLTAxOjA2OjM5ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1sbnM6cGhvdG9zaG9wPSJodHRwOi8vbnMuYWRvYmUuY29tL3Bob3Rvc2hvcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RFdnQ9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZUV2ZW50IyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgMjAxOCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDE4LTEyLTE2VDE2OjU0OjE3LTA4OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAxOS0wNy0yOFQyMToxNzo0OC0wNzowMCIgeG1wOk1ldGFkYXRhRGF0ZT0iMjAxOS0wNy0yOFQyMToxNzo0OC0wNzowMCIgZGM6Zm9ybWF0PSJpbWFnZS9wbmciIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIHBob3Rvc2hvcDpJQ0NQcm9maWxlPSJzUkdCIElFQzYxOTY2LTIuMSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDowZWRiMWMyYy1mZjhjLWU0NDEtOTMxZi00OTVkNGYxNGM3NjAiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MGVkYjFjMmMtZmY4Yy1lNDQxLTkzMWYtNDk1ZDRmMTRjNzYwIiB4bXBNTTpPcmlnaW5hbERvY3VtZW50SUQ9InhtcC5kaWQ6MGVkYjFjMmMtZmY4Yy1lNDQxLTkzMWYtNDk1ZDRmMTRjNzYwIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDowZWRiMWMyYy1mZjhjLWU0NDEtOTMxZi00OTVkNGYxNGM3NjAiIHN0RXZ0OndoZW49IjIwMTgtMTItMTZUMTY6NTQ6MTctMDg6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCBDQyAyMDE4IChXaW5kb3dzKSIvPiA8L3JkZjpTZXE+IDwveG1wTU06SGlzdG9yeT4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4/HiGMAAAAtUlEQVRYw+XXrQqAMBQF4D2P2eBL+QIG8RnEJFaNBjEum+0+zMQLtwwv+wV3ZzhhMDgfJ0wUSinxZUQWgKos1JP/AbD4OneIDyQPwCFniA+EJ4CaXm4TxAXCC0BNHgLhAdAnx9hC8PwGSRtAFVMQjF7cNTWED8B1cgwW20yfJgAvrssAsZ1cB3g/xckAxr6FmCDU5N6f488BrpCQ4rQBJkiMYh4ACmLzwOQF0CExinkCsvw7vgGikl+OotaKRwAAAABJRU5ErkJggg==
 [Fabric API]: https://modrinth.com/mod/fabric-api "Fabric API Modrinth page"
@@ -162,5 +163,7 @@ GitHub
 [Mod loader: NeoForge]: https://img.shields.io/badge/modloader-NeoForge-1976d2?style=flat-square&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAARCAYAAADQWvz5AAAACXBIWXMAAC4jAAAuIwF4pT92AAAB5klEQVQ4T6VUTSgEYRh+x1/bHvytMojiQHJRcqFQDsSJizihSElROPgnUWwclovCxUXKjXKRhAO5+YnSitaMn125bLIx9nm372t2hxw8NfO987zv+3zPvN80imEY5JxfNOgf6O3pVJTZuQWjpr6WZZKSky1yrz7fn1tsb25RjBA42N0nR2oK2e12blydGOK1ZWSS/H4/rTun+Lmhd0AKex9fuAeIwu3y/IIys7OYQBNE8rIyZIMQBycEkRQiUkhNU1kADShEQ1NHJwvdDLfzBYCLFIMrKaRrunRTFniiqzsP3R4/EOIMxydfiMEhh1hAuOIZRaIxXqP33UEqyg1QgmrjtKq/kx7kGuOJPN7osDnhwSKE3VVH4Cf9MP4rooKHLRC11MXFOWOHlNi2Jvm3oBsAHHKoQW1Y75MWGhbw1e4i3RvLcXldM69CxMyhxta9LD8VaEhHmL423c27+Txu8j5rLIQmIQ4OOdTgJO/dd9KE0tc3ZlTXV5E4xo+VyeCQQ6/yG06vbRTXGvpggZPDU+uwhQusJa49Ss/O5eIH9zUddVX8Km45NezkCboSODvYkbE4drMbkWQhvBbsFZcWMS8KN5oqwxxECph7pKOCwnyL7Z92NheZexT8j/r7x//1P5qZGVW+AVtL0JQsBbtXAAAAAElFTkSuQmCC
 [ModMenu]: https://modrinth.com/mod/modmenu "Mod Menu Modrinth page"
 [Sodium]: https://modrinth.com/mod/sodium "Sodium Modrinth page"
+[Beltborne Lanterns]: https://modrinth.com/mod/beltborne-lanterns "Beltborne Lanterns Modrinth page"
+[Illuminated]: https://modrinth.com/mod/illuminated "Illuminated Modrinth page"
 [documentation]: https://lambdaurora.dev/projects/lambdynamiclights/docs/v4/ "The documentation page of LambDynamicLights"
 [LambdAurora Discord]: https://discord.lambdaurora.dev

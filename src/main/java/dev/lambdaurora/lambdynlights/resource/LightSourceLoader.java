@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  *
  * @param <L> the type of light source to load
  * @author LambdAurora
- * @version 4.5.2
+ * @version 4.6.0
  * @since 4.0.0
  */
 public abstract class LightSourceLoader<L> implements ResourceReloader {

@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
  * Represents a debug renderer for dynamic light levels.
  *
  * @author Akarys
- * @version 4.5.2
+ * @version 4.6.0
  * @since 4.0.0
  */
 @Environment(EnvType.CLIENT)

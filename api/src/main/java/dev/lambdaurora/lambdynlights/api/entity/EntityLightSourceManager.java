@@ -13,6 +13,7 @@ import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.yumi.commons.event.Event;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
@@ -28,7 +29,7 @@ import java.util.Optional;
  * which provides the ability to register light sources for entities, and to query their luminance.
  *
  * @author LambdAurora
- * @version 4.5.2
+ * @version 4.6.0
  * @see EntityLightSource
  * @since 4.0.0
  */
@@ -36,7 +37,7 @@ public interface EntityLightSourceManager {
 	/**
 	 * Represents the resource reloader identifier of item light sources.
 	 *
-	 * @since 4.5.2
+	 * @since 4.6.0
 	 */
 	Identifier RESOURCE_RELOADER_ID = Identifier.of("lambdynlights", "entity");
 
@@ -72,8 +73,20 @@ public interface EntityLightSourceManager {
 	interface RegisterContext {
 		/**
 		 * {@return the lookup to registries}
+		 *
+		 * @since 4.6.0
 		 */
 		@NotNull HolderLookup.Provider registryLookup();
+
+		/**
+		 * {@return the access to registries}
+		 *
+		 * @deprecated Use {@link #registryLookup()} instead.
+		 */
+		@Deprecated(forRemoval = true, since = "4.6.0")
+		default @NotNull RegistryAccess registryAccess() {
+			return (RegistryAccess) this.registryLookup();
+		}
 
 		/**
 		 * Registers the given entity light source.

@@ -39,7 +39,7 @@ import java.util.Random;
  * If you have an issue with this, I don't care.
  *
  * @author LambdAurora
- * @version 4.5.2
+ * @version 4.6.0
  * @since 2.1.0
  */
 public class RandomPrideFlagBackground implements Background {

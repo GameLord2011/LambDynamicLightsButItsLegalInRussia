@@ -36,7 +36,7 @@ import org.joml.Matrix4f;
  * Represents a debug renderer for dynamic lighting.
  *
  * @author LambdAurora
- * @version 4.5.2
+ * @version 4.6.0
  * @since 4.0.0
  */
 @Environment(EnvType.CLIENT)

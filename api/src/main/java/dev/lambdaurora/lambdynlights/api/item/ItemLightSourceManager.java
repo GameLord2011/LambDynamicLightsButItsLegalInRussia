@@ -12,6 +12,7 @@ package dev.lambdaurora.lambdynlights.api.item;
 import dev.yumi.commons.event.Event;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.Range;
  * which provides the ability to register light sources for items, and to query their luminance.
  *
  * @author LambdAurora
- * @version 4.5.2
+ * @version 4.6.0
  * @see ItemLightSource
  * @since 3.0.0
  */
@@ -32,7 +33,7 @@ public interface ItemLightSourceManager {
 	/**
 	 * Represents the resource reloader identifier of item light sources.
 	 *
-	 * @since 4.5.2
+	 * @since 4.6.0
 	 */
 	Identifier RESOURCE_RELOADER_ID = Identifier.of("lambdynlights", "item");
 
@@ -78,8 +79,20 @@ public interface ItemLightSourceManager {
 	interface RegisterContext {
 		/**
 		 * {@return the lookup to registries}
+		 *
+		 * @since 4.6.0
 		 */
 		@NotNull HolderLookup.Provider registryLookup();
+
+		/**
+		 * {@return the access to registries}
+		 *
+		 * @deprecated Use {@link #registryLookup()} instead.
+		 */
+		@Deprecated(forRemoval = true, since = "4.6.0")
+		default @NotNull RegistryAccess registryAccess() {
+			return (RegistryAccess) this.registryLookup();
+		}
 
 		/**
 		 * Registers the given item light source.

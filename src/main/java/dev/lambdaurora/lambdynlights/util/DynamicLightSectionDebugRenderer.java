@@ -34,7 +34,7 @@ import java.time.Instant;
  * Represents a debug renderer for dynamic lighting.
  *
  * @author LambdAurora, Akarys
- * @version 4.5.2
+ * @version 4.6.0
  * @since 4.0.0
  */
 @Environment(EnvType.CLIENT)

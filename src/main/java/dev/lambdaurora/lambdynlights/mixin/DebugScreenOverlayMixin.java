@@ -27,7 +27,7 @@ import java.util.Map;
  * Adds a debug string for dynamic light sources tracking and updates.
  *
  * @author LambdAurora
- * @version 4.5.2
+ * @version 4.6.0
  * @since 1.3.2
  */
 @Mixin(DebugScreenOverlay.class)
