@@ -34,6 +34,29 @@ jobs:
           path: ./build/modrinth.zip
           retention-days: 1
 
+  github:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: "Download artifacts"
+        uses: actions/download-artifact@v4
+        with:
+          name: Modrinth
+          path: dist
+      - name: "Extract files"
+        run: unzip dist/modrinth.zip
+      - id: files
+        name: "Read which files to upload"
+        uses: actions/github-script@v8
+        with:
+          result-encoding: string
+          script: |
+            const { default: fs } = await import("node:fs/promises");
+            const json = JSON.parse(await fs.readFile("manifest.json", { encoding: "utf8" }));
+            return json.files.map(it => `"${it}"`).join(" ");
+      - name: "Upload artifacts to GitHub release"
+        run: gh release upload "${{ github.ref_name }}" ${{ steps.files.outputs.result }}
+
   modrinth:
     runs-on: ubuntu-latest
     needs: build
