@@ -56,6 +56,8 @@ jobs:
             return json.files.map(it => `"${it}"`).join(" ");
       - name: "Upload artifacts to GitHub release"
         run: gh release upload "${{ github.ref_name }}" ${{ steps.files.outputs.result }}
+        env:
+          GH_TOKEN: ${{ github.token }}
 
   modrinth:
     runs-on: ubuntu-latest
