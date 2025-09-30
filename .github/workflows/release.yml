@@ -53,9 +53,12 @@ jobs:
           script: |
             const { default: fs } = await import("node:fs/promises");
             const json = JSON.parse(await fs.readFile("manifest.json", { encoding: "utf8" }));
+            await fs.writeFile("CHANGELOG.md", "Changelog:\n\n" + json.changelog);
             return json.files.map(it => `"${it}"`).join(" ");
       - name: "Upload artifacts to GitHub release"
-        run: gh release upload "${{ github.ref_name }}" ${{ steps.files.outputs.result }} --repo "${{ github.repository }}"
+        run: |
+          gh release edit "${{ github.ref_name }}" --notes-file CHANGELOG.md --repo "${{ github.repository }}"
+          gh release upload "${{ github.ref_name }}" ${{ steps.files.outputs.result }} --repo "${{ github.repository }}"
         env:
           GH_TOKEN: ${{ github.token }}
 
