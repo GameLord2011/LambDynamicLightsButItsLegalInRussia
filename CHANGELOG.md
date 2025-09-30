@@ -498,6 +498,10 @@
 - Updated [SpruceUI].
 - Updated [Yumi Minecraft Libraries: Foundation].
 
+### 4.7.1
+
+- Improved reliability of mod initialization on NeoForge.
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"
