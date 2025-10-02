@@ -15,56 +15,79 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.yumi.commons.Unit;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.io.Resource;
 import net.minecraft.resources.io.ResourceManager;
+import net.minecraft.resources.io.ResourceReloader;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 /**
  * Represents a light source loader.
  *
  * @param <L> the type of light source to load
  * @author LambdAurora
- * @version 4.2.5
+ * @version 4.6.0
  * @since 4.0.0
  */
-public abstract class LightSourceLoader<L> implements IdentifiableResourceReloadListener {
+public abstract class LightSourceLoader<L> implements ResourceReloader {
 	protected static final String SILENCE_ERROR_KEY = "silence_error";
 
 	private final Minecraft client = Minecraft.getInstance();
+	private final ApplicationPredicate applicationPredicate;
 
 	protected final List<LoadedLightSourceResource> loadedLightSources = new ArrayList<>();
 	protected List<L> lightSources = List.of();
 
+	protected LightSourceLoader(ApplicationPredicate applicationPredicate) {
+		this.applicationPredicate = applicationPredicate;
+	}
+
+	/**
+	 * {@return the identifier of this resource reloader}
+	 */
+	public abstract @NotNull Identifier id();
+
+	/**
+	 * {@return the dependencies of this resource reloader}
+	 */
+	public abstract @Unmodifiable Collection<Identifier> dependencies();
+
 	/**
 	 * {@return this light source loader's logger}
 	 */
-	protected abstract Logger getLogger();
+	public abstract Logger getLogger();
 
 	/**
 	 * {@return the path to the light source resources}
 	 */
-	protected abstract String getResourcePath();
+	public abstract String getResourcePath();
+
+	@Override
+	public @NotNull String getName() {
+		return this.id().toString();
+	}
 
 	@Override
 	public CompletableFuture<Void> reload(
-			Synchronizer synchronizer, ResourceManager resourceManager, Executor prepareExecutor, Executor applyExecutor
+			SharedState sharedState, Executor prepareExecutor, Synchronizer synchronizer, Executor applyExecutor
 	) {
 		return CompletableFuture.supplyAsync(() -> {
-					this.load(resourceManager);
+					this.load(sharedState.resourceManager());
 					return Unit.INSTANCE;
 				}, prepareExecutor)
 				.thenCompose(synchronizer::whenPrepared)
@@ -92,18 +115,22 @@ public abstract class LightSourceLoader<L> implements IdentifiableResourceReload
 	 * <p>
 	 * The codecs cannot be fully loaded right on resource load as registry state is not known at this time.
 	 *
-	 * @param registryAccess the registry access
+	 * @param registryLookup the registry access
 	 */
-	public final void apply(RegistryAccess registryAccess) {
-		var ops = RegistryOps.create(JsonOps.INSTANCE, registryAccess);
+	public final void apply(HolderLookup.Provider registryLookup) {
+		var ops = RegistryOps.create(JsonOps.INSTANCE, registryLookup);
 
-		var lightSources = new ArrayList<L>();
-		this.loadedLightSources.forEach(data -> this.apply(ops, data).ifPresent(lightSources::add));
-		this.doApply(registryAccess, lightSources);
+		var lightSources = this.loadedLightSources.stream()
+				.filter(data -> this.canApply(ops, data))
+				.map(data -> this.apply(ops, data))
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toCollection(ArrayList::new));
+		this.doApply(registryLookup, lightSources);
 		this.lightSources = lightSources;
 	}
 
-	protected void doApply(RegistryAccess registryAccess, List<L> lightSources) {
+	protected void doApply(HolderLookup.Provider registryLookup, List<L> lightSources) {
 	}
 
 	protected void load(Identifier resourceId, Resource resource) {
@@ -136,4 +163,34 @@ public abstract class LightSourceLoader<L> implements IdentifiableResourceReload
 	}
 
 	protected abstract @NotNull Optional<L> apply(DynamicOps<JsonElement> ops, LoadedLightSourceResource loadedData);
+
+	protected boolean canApply(RegistryOps<JsonElement> ops, LoadedLightSourceResource loadedData) {
+		return this.applicationPredicate.canApply(this, ops, loadedData);
+	}
+
+	@FunctionalInterface
+	public interface ApplicationPredicate {
+		boolean canApply(
+				LightSourceLoader<?> loader,
+				RegistryOps<JsonElement> ops,
+				LoadedLightSourceResource loadedData
+		);
+
+		class Pending implements ApplicationPredicate {
+			private ApplicationPredicate wrapped;
+
+			public void set(ApplicationPredicate wrapped) {
+				this.wrapped = wrapped;
+			}
+
+			@Override
+			public boolean canApply(
+					LightSourceLoader<?> loader,
+					RegistryOps<JsonElement> ops,
+					LoadedLightSourceResource loadedData
+			) {
+				return this.wrapped == null || this.wrapped.canApply(loader, ops, loadedData);
+			}
+		}
+	}
 }

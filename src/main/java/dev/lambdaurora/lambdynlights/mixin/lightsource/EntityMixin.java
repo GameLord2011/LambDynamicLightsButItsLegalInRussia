@@ -52,8 +52,6 @@ public abstract class EntityMixin implements EntityDynamicLightSourceBehavior {
 	@Unique
 	private int lambdynlights$lastLuminance = 0;
 	@Unique
-	private long lambdynlights$lastUpdate = 0;
-	@Unique
 	private double lambdynlights$prevX;
 	@Unique
 	private double lambdynlights$prevY;
@@ -84,11 +82,6 @@ public abstract class EntityMixin implements EntityDynamicLightSourceBehavior {
 	}
 
 	@Override
-	public Level dynamicLightWorld() {
-		return this.level();
-	}
-
-	@Override
 	public double getDynamicLightPrevX() {
 		return this.lambdynlights$prevX;
 	}
@@ -113,22 +106,6 @@ public abstract class EntityMixin implements EntityDynamicLightSourceBehavior {
 	@Override
 	public void resetDynamicLight() {
 		this.lambdynlights$lastLuminance = 0;
-	}
-
-	@Override
-	public boolean shouldUpdateDynamicLight() {
-		var mode = LambDynLights.get().config.getDynamicLightsMode();
-		if (!mode.isEnabled())
-			return false;
-		if (mode.hasDelay()) {
-			long currentTime = System.currentTimeMillis();
-			if (currentTime < this.lambdynlights$lastUpdate + mode.getDelay()) {
-				return false;
-			}
-
-			this.lambdynlights$lastUpdate = currentTime;
-		}
-		return true;
 	}
 
 	@Override

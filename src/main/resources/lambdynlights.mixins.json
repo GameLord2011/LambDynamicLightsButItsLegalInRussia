@@ -10,10 +10,13 @@
 		"DebugScreenOverlayMixin",
 		"EntityRendererMixin",
 		"EntityTypeMixin",
+		"GuiMixin",
 		"LevelRendererAccessor",
 		"MinecraftClientMixin",
+		"OptionsMixin",
+		"ParticleGroupMixin",
+		"RegistryOpsAccessor",
 		"VideoSettingsScreenMixin",
-		"fabric.AoCalculatorMixin",
 		"sodium.SodiumOptionsGuiMixin"
 	],
 	"injectors": {

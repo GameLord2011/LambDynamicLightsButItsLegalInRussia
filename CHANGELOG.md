@@ -442,6 +442,72 @@
 
 - Fixed some crashes related to debug renderers.
 
+## 4.4.0
+
+- Added Warden Sonic Boom attack particles dynamic lighting ([#307](https://github.com/LambdAurora/LambDynamicLights/issues/307)).
+- Added option to control whether the Glowing effect gives dynamic lighting to entities ([#140](https://github.com/LambdAurora/LambDynamicLights/issues/140)).
+- Added a keybind to toggle ON/OFF first-person dynamic lighting.
+  - This may be useful to users who use shaders with first-person dynamic lighting included.
+    With the addition of an additional mod, or Vanilla in 1.21.9,
+    it is also possible to bind this to the same key which toggles shaders ([#248](https://github.com/LambdAurora/LambDynamicLights/issues/248)).
+- Added support for Fabric resource conditions in dynamic light source files.
+  - Fixed [#309](https://github.com/LambdAurora/LambDynamicLights/issues/309).
+- Improved handling of capacity limit of the spatial lookup, making it resize dynamically ([#292](https://github.com/LambdAurora/LambDynamicLights/issues/292)).
+  - If you had issues with too many light sources, this should at least fix the lack of light updates,
+    however this still can affect performances.
+- Fixed leak of the tracking of dynamic lighting of Firefly particles.
+- Updated Ukrainian translations ([#304](https://github.com/LambdAurora/LambDynamicLights/pull/304)).
+- Updated [Yumi Minecraft Libraries: Foundation].
+
+### 4.4.1
+
+- Updated [Yumi Minecraft Libraries: Foundation].
+  - This fixes a crash with some mods that specified `null` values in their custom properties.
+
+## 4.5.0
+
+- Added full support for NeoForge.
+  - The published JAR works on both Fabric and NeoForge.
+- Fixed crashes with AsyncParticles ([#312](https://github.com/LambdAurora/LambDynamicLights/issues/312)).
+- Updated Vietnamese translations ([#310](https://github.com/LambdAurora/LambDynamicLights/pull/310)).
+- Updated [Yumi Minecraft Libraries: Foundation].
+
+### 4.5.1
+
+- Fixed and improved the Maven publication metadata.
+- (NeoForge) Fixed crashes with Accessories due to bad remapping.
+- Updated [Yumi Minecraft Libraries: Foundation].
+
+## 4.6.0
+
+- API changes:
+  - Deprecated for removal `ItemLightSourceManager.RegisterContext::registryAccess`
+    and `EntityLightSourceManager.RegisterContext::registryAccess`
+    in favor of `ItemLightSourceManager.RegisterContext::registryLookup`
+    and `EntityLightSourceManager.RegisterContext::registryLookup` respectively.
+- Updated [Yumi Minecraft Libraries: Foundation].
+  - This may fix some synchronization issues on Fabric.
+
+## 4.7.0
+
+- Updated to Minecraft 1.21.9.
+  - F3 debug entries are now configurable.
+  - Made Copper Torch water-sensitive like the other torches.
+- Made settings accessible again from the "LambDynamicLights" mod in ModMenu.
+  - Since release 4.5.0 the settings were only accessible from the child mod "LambDynamicLights - Runtime".
+- Updated [SpruceUI].
+- Updated [Yumi Minecraft Libraries: Foundation].
+
+### 4.7.1
+
+- Improved reliability of mod initialization on NeoForge.
+
+### 4.7.2
+
+- Improved automatic deduction of dynamic lighting from block items by considering their components.
+  - The Light block item now lights up with the correct luminance level with dynamic lighting.
+- Fixed "Glowing Effect" option not being saved ([#316](https://github.com/LambdAurora/LambDynamicLights/issues/316)).
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"

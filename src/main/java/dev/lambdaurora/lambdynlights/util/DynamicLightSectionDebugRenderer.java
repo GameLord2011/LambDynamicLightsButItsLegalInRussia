@@ -17,11 +17,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape;
 import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
@@ -31,7 +34,7 @@ import java.time.Instant;
  * Represents a debug renderer for dynamic lighting.
  *
  * @author LambdAurora, Akarys
- * @version 4.3.3
+ * @version 4.6.0
  * @since 4.0.0
  */
 @Environment(EnvType.CLIENT)
@@ -53,7 +56,10 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 	}
 
 	@Override
-	public void render(MatrixStack matrices, MultiBufferSource bufferSource, double x, double y, double z) {
+	public void render(
+			@NotNull MatrixStack matrices, @NotNull MultiBufferSource bufferSource, double x, double y, double z,
+			@NotNull DebugValueAccess debugValueAccess, @NotNull Frustum frustum
+	) {
 		int cellDisplayRadius = this.config.getDebugCellDisplayRadius();
 
 		if (!this.config.getDebugActiveDynamicLightingCells().get() && cellDisplayRadius == 0) {
@@ -73,7 +79,7 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 		int playerCellY = DynamicLightingEngine.positionToCell(this.client.player.getBlockPos().getY());
 		int playerCellZ = DynamicLightingEngine.positionToCell(this.client.player.getBlockPos().getZ());
 
-		int playerHash = DynamicLightingEngine.hashCell(playerCellX, playerCellY, playerCellZ);
+		int playerHash = this.lightingEngine.hashCell(playerCellX, playerCellY, playerCellZ);
 
 		if (cellDisplayRadius > 0) {
 			for (int offsetX = 0; offsetX < cellDisplayRadius * 2 + 1; offsetX++) {
@@ -82,7 +88,7 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 						int cellX = playerCellX + offsetX - cellDisplayRadius;
 						int cellY = playerCellY + offsetY - cellDisplayRadius;
 						int cellZ = playerCellZ + offsetZ - cellDisplayRadius;
-						int currentHash = DynamicLightingEngine.hashCell(cellX, cellY, cellZ);
+						int currentHash = this.lightingEngine.hashCell(cellX, cellY, cellZ);
 
 						DebugRenderer.renderFloatingText(
 								matrices,
@@ -157,7 +163,7 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 			this.playerCellY = DynamicLightingEngine.positionToCell(playerPos.getY());
 			this.playerCellZ = DynamicLightingEngine.positionToCell(playerPos.getZ());
 
-			this.playerHash = DynamicLightingEngine.hashCell(this.playerCellX, this.playerCellY, this.playerCellZ);
+			this.playerHash = engine.hashCell(this.playerCellX, this.playerCellY, this.playerCellZ);
 
 			for (int offsetX = 0; offsetX < perimeter; offsetX++) {
 				for (int offsetY = 0; offsetY < perimeter; offsetY++) {
@@ -166,7 +172,7 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 						int currentCellY = playerCellY - radius + offsetY;
 						int currentCellZ = playerCellZ - radius + offsetZ;
 
-						if (DynamicLightingEngine.hashCell(currentCellX, currentCellY, currentCellZ) == this.playerHash
+						if (engine.hashCell(currentCellX, currentCellY, currentCellZ) == this.playerHash
 								&& ((offsetX != radius) || (offsetY != radius) || (offsetZ != radius))) {
 							this.matchShape.fill(offsetX, offsetY, offsetZ);
 						}

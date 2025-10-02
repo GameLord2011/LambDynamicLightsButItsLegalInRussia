@@ -31,6 +31,7 @@ import dev.lambdaurora.spruceui.widget.container.SpruceParentWidget;
 import dev.lambdaurora.spruceui.widget.container.tabbed.SpruceTabbedWidget;
 import dev.lambdaurora.spruceui.widget.text.SpruceTextFieldWidget;
 import net.minecraft.TextFormatting;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -40,14 +41,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
  * Represents the settings screen of LambDynamicLights.
  *
  * @author LambdAurora
- * @version 4.3.0
+ * @version 4.4.0
  * @since 1.0.0
  */
 public class SettingsScreen extends SpruceScreen {
@@ -183,6 +183,25 @@ public class SettingsScreen extends SpruceScreen {
 		);
 		this.addRenderableWidget(this.tabbedWidget);
 
+		int tabsWidth = this.tabbedWidget.getList().getWidth();
+		var resetButtonPos = Position.of(this, tabsWidth + (this.width - tabsWidth) / 2 - 155, this.height - 29);
+
+		var supportMeButton = new SpruceButtonWidget(
+				Position.of(this, 4, resetButtonPos.getRelativeY()),
+				tabsWidth - 8, 20, Text.translatable("lambdynlights.menu.support_me"),
+				btn -> Util.getPlatform().openUri("https://donate.lambdaurora.dev/")
+		);
+		supportMeButton.setTooltip(Text.translatable("lambdynlights.menu.support_me.tooltip"));
+		this.addRenderableWidget(supportMeButton);
+
+		this.addRenderableWidget(this.resetOption.createWidget(resetButtonPos, 150));
+		var doneButtonPos = resetButtonPos.copy();
+		doneButtonPos.setRelativeX(doneButtonPos.getRelativeX() + 160);
+		this.addRenderableWidget(new SpruceButtonWidget(doneButtonPos, 150, 20,
+				SpruceTexts.GUI_DONE,
+				btn -> this.client.setScreen(this.parent)
+		));
+
 		if (tabIndex > 0 && this.tabbedWidget.getList().children().get(tabIndex) instanceof SpruceTabbedWidget.TabEntry tabEntry) {
 			this.tabbedWidget.getList().setSelected(tabEntry);
 		}
@@ -198,13 +217,7 @@ public class SettingsScreen extends SpruceScreen {
 		tabConsumer.accept(new TabContext(
 				this.tabbedWidget,
 				container,
-				height - this.tabbedWidget.getList().getPosition().getRelativeY() - 40
-		));
-
-		container.addChild(this.resetOption.createWidget(Position.of(this, width / 2 - 155, height - 29), 150));
-		container.addChild(new SpruceButtonWidget(Position.of(this, width / 2 - 155 + 160, height - 29), 150, 20,
-				SpruceTexts.GUI_DONE,
-				btn -> this.client.setScreen(this.parent)
+				height - this.tabbedWidget.getList().getPosition().getRelativeY()
 		));
 
 		return container;
@@ -224,7 +237,8 @@ public class SettingsScreen extends SpruceScreen {
 		list.addSingleOptionEntry(new SpruceSeparatorOption(SPECIAL_DYNAMIC_LIGHT_SOURCES_KEY, true, TooltipData.EMPTY));
 		list.addOptionEntry(this.creeperLightingOption, this.tntLightingOption);
 		list.addOptionEntry(this.config.getBeamLighting().getOption(), this.config.getFireflyLighting().getOption());
-		list.addSmallSingleOptionEntry(this.config.getGuardianLaser().getOption());
+		list.addOptionEntry(this.config.getGuardianLaser().getOption(), this.config.getSonicBoomLighting().getOption());
+		list.addSmallSingleOptionEntry(this.config.getGlowingEffectLighting().getOption());
 		context.addInnerWidget(list);
 	}
 

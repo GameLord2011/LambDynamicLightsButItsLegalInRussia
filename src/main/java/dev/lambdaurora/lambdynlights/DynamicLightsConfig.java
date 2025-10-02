@@ -29,15 +29,20 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 /**
  * Represents the mod configuration.
  *
  * @author LambdAurora
- * @version 4.3.1
+ * @version 4.4.0
  * @since 1.0.0
  */
 public class DynamicLightsConfig {
@@ -50,6 +55,8 @@ public class DynamicLightsConfig {
 	private static final ExplosiveLightingMode DEFAULT_TNT_LIGHTING_MODE = ExplosiveLightingMode.OFF;
 	private static final int DEFAULT_DEBUG_CELL_DISPLAY_RADIUS = 0;
 	private static final int DEFAULT_DEBUG_LIGHT_LEVEL_RADIUS = 0;
+
+	private static final Executor SAVE_EXECUTOR = Executors.newSingleThreadExecutor();
 
 	public static final Path CONFIG_FILE_PATH = YumiMods.get().getConfigDirectory()
 			.resolve("lambdynlights.toml")
@@ -64,6 +71,8 @@ public class DynamicLightsConfig {
 	private final BooleanSettingEntry beamLighting;
 	private final BooleanSettingEntry fireflyLighting;
 	private final BooleanSettingEntry guardianLaser;
+	private final BooleanSettingEntry sonicBoomLighting;
+	private final BooleanSettingEntry glowingEffectLighting;
 	private final BooleanSettingEntry debugActiveDynamicLightingCells;
 	private final BooleanSettingEntry debugDisplayDynamicLightingChunkRebuild;
 	private final BooleanSettingEntry debugDisplayHandlerBoundingBox;
@@ -71,6 +80,8 @@ public class DynamicLightsConfig {
 	private ExplosiveLightingMode tntLightingMode;
 	private int debugCellDisplayRadius;
 	private int debugLightLevelRadius;
+
+	private int lastHash;
 
 	public final SpruceOption dynamicLightsModeOption = new SpruceCyclingOption("lambdynlights.option.mode",
 			amount -> this.setDynamicLightsMode(this.dynamicLightsMode.next()),
@@ -109,6 +120,14 @@ public class DynamicLightsConfig {
 				"light_sources.guardian_laser", true, this.config,
 				TooltipData.builder().text(Text.translatable("lambdynlights.option.light_sources.guardian_laser.tooltip")).build()
 		);
+		this.sonicBoomLighting = new BooleanSettingEntry(
+				"light_sources.sonic_boom", true, this.config,
+				TooltipData.builder().text(Text.translatable("lambdynlights.option.light_sources.sonic_boom.tooltip")).build()
+		);
+		this.glowingEffectLighting = new BooleanSettingEntry(
+				"light_sources.glowing_effect", true, this.config,
+				TooltipData.builder().text(Text.translatable("lambdynlights.option.light_sources.glowing_effect.tooltip")).build()
+		);
 		this.debugActiveDynamicLightingCells = new BooleanSettingEntry(
 				"debug.active_dynamic_lighting_cells", false, this.config,
 				TooltipData.builder().text(Text.translatable("lambdynlights.option.debug.active_dynamic_lighting_cells.tooltip")).build()
@@ -129,6 +148,8 @@ public class DynamicLightsConfig {
 				this.beamLighting,
 				this.fireflyLighting,
 				this.guardianLaser,
+				this.sonicBoomLighting,
+				this.glowingEffectLighting,
 				this.debugActiveDynamicLightingCells,
 				this.debugDisplayDynamicLightingChunkRebuild,
 				this.debugDisplayHandlerBoundingBox
@@ -155,6 +176,8 @@ public class DynamicLightsConfig {
 				.orElse(DEFAULT_TNT_LIGHTING_MODE);
 		this.debugCellDisplayRadius = this.config.getOrElse("debug.cell_display_radius", DEFAULT_DEBUG_CELL_DISPLAY_RADIUS);
 		this.debugLightLevelRadius = this.config.getOrElse("debug.light_level_radius", DEFAULT_DEBUG_LIGHT_LEVEL_RADIUS);
+
+		this.lastHash = this.serialize().hashCode();
 
 		LambDynLights.log(LOGGER, "Configuration loaded.");
 	}
@@ -192,18 +215,17 @@ public class DynamicLightsConfig {
 	private void copyDefaultFile() throws IOException {
 		Files.createDirectories(CONFIG_FILE_PATH.getParent());
 
-		try (var defaultStream = DynamicLightsConfig.class.getResourceAsStream("/lambdynlights.toml")) {
-			Files.copy(
-					Objects.requireNonNull(
-							defaultStream,
-							"This distribution of LambDynamicLights is broken: "
-									+ "cannot find the default configuration file inside of the mod's JAR."
-					),
-					CONFIG_FILE_PATH,
-					StandardCopyOption.REPLACE_EXISTING
-			);
-			LambDynLights.log(LOGGER, "Copied default configuration file.");
-		}
+		var path = LambDynLightsConstants.MOD_CONTAINER
+				.findPath("lambdynlights.toml")
+				.orElseThrow(() -> new IllegalStateException("This distribution of LambDynamicLights is broken: "
+						+ "cannot find the default configuration file inside of the mod's JAR."));
+
+		Files.copy(
+				path,
+				CONFIG_FILE_PATH,
+				StandardCopyOption.REPLACE_EXISTING
+		);
+		LambDynLights.log(LOGGER, "Copied default configuration file.");
 	}
 
 	/**
@@ -216,16 +238,35 @@ public class DynamicLightsConfig {
 	}
 
 	/**
-	 * Saves the configuration.
+	 * Queues the saving of the configuration.
 	 */
 	public void save() {
-		var toml = new TomlWriter().writeToString(this.config);
+		this.maybeSerialize().ifPresent(data -> SAVE_EXECUTOR.execute(() -> this.doSave(data)));
+	}
 
+	private @NotNull String serialize() {
+		return new TomlWriter().writeToString(this.config);
+	}
+
+	private @NotNull Optional<String> maybeSerialize() {
+		var data = this.serialize();
+		int hash = data.hashCode();
+
+		if (this.lastHash != hash) {
+			this.lastHash = hash;
+			return Optional.of(data);
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	private void doSave(String data) {
 		try {
 			Files.createDirectories(CONFIG_FILE_PATH.getParent());
-			Files.writeString(CONFIG_FILE_PATH, toml,
-					StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.DSYNC
-			);
+
+			var tmpPath = CONFIG_FILE_PATH.resolveSibling(CONFIG_FILE_PATH.getFileName().toString() + ".tmp");
+			Files.writeString(tmpPath, data);
+			Files.move(tmpPath, CONFIG_FILE_PATH, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			LambDynLights.error(LOGGER, "Failed to save configuration file.", e);
 			return;
@@ -347,6 +388,20 @@ public class DynamicLightsConfig {
 	 */
 	public BooleanSettingEntry getGuardianLaser() {
 		return this.guardianLaser;
+	}
+
+	/**
+	 * {@return the sonic boom light source setting holder}
+	 */
+	public BooleanSettingEntry getSonicBoomLighting() {
+		return this.sonicBoomLighting;
+	}
+
+	/**
+	 * {@return the glowing effect lighting setting holder}
+	 */
+	public BooleanSettingEntry getGlowingEffectLighting() {
+		return this.glowingEffectLighting;
 	}
 
 	/**

@@ -24,10 +24,11 @@ import dev.lambdaurora.lambdynlights.resource.entity.luminance.DisplayEntityLumi
 import dev.lambdaurora.lambdynlights.resource.item.ItemLightSources;
 import dev.yumi.commons.event.Event;
 import dev.yumi.mc.core.api.YumiEvents;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,61 +40,64 @@ import java.util.Optional;
  * Represents an entity light source manager.
  *
  * @author LambdAurora
- * @version 4.2.5
+ * @version 4.6.0
  * @since 4.0.0
  */
 public final class EntityLightSources extends LightSourceLoader<EntityLightSource> implements EntityLightSourceManager {
 	private static final Logger LOGGER = LoggerFactory.getLogger("LambDynamicLights|EntityLightSources");
-	private static final Identifier RESOURCE_RELOADER_ID = LambDynLightsConstants.id("entity_dynamic_lights");
 	private static final List<Identifier> RESOURCE_RELOADER_DEPENDENCIES = List.of(ItemLightSources.RESOURCE_RELOADER_ID);
 
 	public static final EntityLuminance.Type CREEPER = EntityLuminance.Type.registerSimple(
-			LambDynLightsConstants.id("creeper"), CreeperLuminance.INSTANCE
+			LambDynLights.id("creeper"), CreeperLuminance.INSTANCE
 	);
 
 	public static final EntityLuminance.Type DISPLAY = EntityLuminance.Type.register(
-			LambDynLightsConstants.id("display"), DisplayEntityLuminance.CODEC
+			LambDynLights.id("display"), DisplayEntityLuminance.CODEC
 	);
 	public static final EntityLuminance.Type BLOCK_DISPLAY = EntityLuminance.Type.registerSimple(
-			LambDynLightsConstants.id("display/block"), DisplayEntityLuminance.BlockDisplayLuminance.INSTANCE
+			LambDynLights.id("display/block"), DisplayEntityLuminance.BlockDisplayLuminance.INSTANCE
 	);
 	public static final EntityLuminance.Type ITEM_DISPLAY = EntityLuminance.Type.registerSimple(
-			LambDynLightsConstants.id("display/item"), DisplayEntityLuminance.ItemDisplayLuminance.INSTANCE
+			LambDynLights.id("display/item"), DisplayEntityLuminance.ItemDisplayLuminance.INSTANCE
 	);
 
 	private final Event<Identifier, OnRegister> onRegisterEvent = YumiEvents.EVENTS.create(OnRegister.class);
 	private final ItemLightSourceManager itemLightSourceManager;
 
-	public EntityLightSources(ItemLightSourceManager itemLightSourceManager) {
+	public EntityLightSources(
+			ItemLightSourceManager itemLightSourceManager,
+			ApplicationPredicate applicationPredicate
+	) {
+		super(applicationPredicate);
 		this.itemLightSourceManager = itemLightSourceManager;
 	}
 
 	@Override
-	protected Logger getLogger() {
-		return LOGGER;
-	}
-
-	@Override
-	public Identifier getFabricId() {
+	public @NotNull Identifier id() {
 		return RESOURCE_RELOADER_ID;
 	}
 
 	@Override
-	public Collection<Identifier> getFabricDependencies() {
+	public @Unmodifiable Collection<Identifier> dependencies() {
 		return RESOURCE_RELOADER_DEPENDENCIES;
 	}
 
 	@Override
-	protected String getResourcePath() {
+	public Logger getLogger() {
+		return LOGGER;
+	}
+
+	@Override
+	public String getResourcePath() {
 		return "entity";
 	}
 
 	@Override
-	protected void doApply(RegistryAccess registryAccess, List<EntityLightSource> lightSources) {
+	protected void doApply(HolderLookup.Provider registryLookup, List<EntityLightSource> lightSources) {
 		this.onRegisterEvent.invoker().onRegister(new RegisterContext() {
 			@Override
-			public @NotNull RegistryAccess registryAccess() {
-				return registryAccess;
+			public @NotNull HolderLookup.Provider registryLookup() {
+				return registryLookup;
 			}
 
 			@Override

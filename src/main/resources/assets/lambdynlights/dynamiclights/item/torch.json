@@ -3,7 +3,8 @@
 		"items": [
 			"minecraft:torch",
 			"minecraft:redstone_torch",
-			"minecraft:soul_torch"
+			"minecraft:soul_torch",
+			"minecraft:copper_torch"
 		]
 	},
 	"luminance": {

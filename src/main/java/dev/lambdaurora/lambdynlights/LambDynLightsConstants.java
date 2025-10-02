@@ -10,14 +10,14 @@
 package dev.lambdaurora.lambdynlights;
 
 import dev.yumi.commons.TriState;
+import dev.yumi.mc.core.api.ModContainer;
 import dev.yumi.mc.core.api.YumiMods;
-import net.minecraft.resources.Identifier;
 
 /**
  * Contains constants about LambDynamicLights.
  *
  * @author LambdAurora
- * @version 4.3.1
+ * @version 4.5.1
  * @since 3.0.1
  */
 public final class LambDynLightsConstants {
@@ -26,11 +26,14 @@ public final class LambDynLightsConstants {
 	 */
 	public static final String NAMESPACE = "lambdynlights";
 
+	static final ModContainer MOD_CONTAINER = YumiMods.get().getMod(NAMESPACE)
+			.or(() -> YumiMods.get().getMod(NAMESPACE + "_runtime"))
+			.orElseThrow();
+
 	/**
 	 * The currently running version of LambDynamicLights.
 	 */
-	public static final String VERSION = YumiMods.get().getMod(NAMESPACE)
-			.orElseThrow().getVersionString();
+	public static final String VERSION = MOD_CONTAINER.getVersionString();
 
 	/**
 	 * The unsupported development mode text.
@@ -48,14 +51,5 @@ public final class LambDynLightsConstants {
 	 */
 	public static boolean isDevMode() {
 		return VERSION.endsWith("-local");
-	}
-
-	/**
-	 * {@return a LambDynamicLights identifier}
-	 *
-	 * @param path the path
-	 */
-	public static Identifier id(String path) {
-		return Identifier.of(NAMESPACE, path);
 	}
 }
