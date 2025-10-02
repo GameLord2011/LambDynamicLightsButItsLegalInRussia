@@ -182,16 +182,6 @@ dependencies {
 			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
 		}
 	}
-	"mojmapImplementation"(libs.pridelib) {
-		attributes {
-			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
-		}
-	}
-	"mojmapInclude"(libs.pridelib) {
-		attributes {
-			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
-		}
-	}
 	//endregion
 }
 
