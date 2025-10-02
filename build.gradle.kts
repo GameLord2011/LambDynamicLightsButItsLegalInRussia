@@ -82,22 +82,31 @@ repositories {
 	maven {
 		name = "Terraformers"
 		url = uri("https://maven.terraformersmc.com/releases/")
-	}
-	maven {
-		name = "ParchmentMC"
-		url = uri("https://maven.parchmentmc.org")
+		content {
+			includeGroupAndSubgroups("com.terraformersmc")
+			includeGroup("dev.emi")
+		}
 	}
 	maven {
 		name = "Ladysnake Libs"
 		url = uri("https://maven.ladysnake.org/releases")
+		content {
+			includeGroup("org.ladysnake.cardinal-components-api")
+		}
 	}
-	maven { url = uri("https://maven.wispforest.io/releases") }
+	maven {
+		name = "Wispforest"
+		url = uri("https://maven.wispforest.io/releases")
+		content {
+			includeGroupAndSubgroups("io.wispforest")
+		}
+	}
 	maven {
 		name = "NeoForge"
 		url = uri("https://maven.neoforged.net/")
 		content {
-			includeGroupByRegex("net\\.neoforged.*")
-			includeGroupByRegex("cpw\\.mods.*")
+			includeGroupAndSubgroups("net.neoforged")
+			includeGroupAndSubgroups("cpw.mods")
 		}
 	}
 }
