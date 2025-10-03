@@ -16,6 +16,7 @@ import java.nio.file.FileSystem
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.attribute.BasicFileAttributeView
 import javax.inject.Inject
 
 abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarTask() {
@@ -46,7 +47,7 @@ abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarT
 		val runtimeIntermediaryJarPath = this.runtimeIntermediaryJar.get().asFile.toPath()
 		val neoForgeJarPath = this.runtimeNeoForgeJar.get().asFile.toPath()
 
-		FileSystems.newFileSystem(outputJar).use { outFs ->
+		this.openJar(outputJar).use { outFs ->
 			val outJarsDir = outFs.getPath("META-INF/jars")
 			val outFabricJar = outJarsDir.resolve(
 				runtimeIntermediaryJarPath.fileName.toString().replace("-intermediary", "-fabric")
@@ -55,7 +56,7 @@ abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarT
 				neoForgeJarPath.fileName.toString().replace("-mojmap", "-neoforge")
 			)
 
-			Files.createDirectories(outJarsDir)
+			this.createDirectories(outJarsDir)
 			Files.copy(
 				runtimeIntermediaryJarPath,
 				outFabricJar
@@ -65,8 +66,8 @@ abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarT
 				outNeoForgeJar
 			)
 
-			FileSystems.newFileSystem(outFabricJar).use { fabricJarFs ->
-				FileSystems.newFileSystem(outNeoForgeJar).use { neoJarFs ->
+			this.openJar(outFabricJar).use { fabricJarFs ->
+				this.openJar(outNeoForgeJar).use { neoJarFs ->
 					this.doAssemble(outFs, fabricJarFs, neoJarFs)
 					this.writeFmj(fabricJarFs, outFs, outFabricJar)
 					this.writeNmt(neoJarFs, outFs)
@@ -75,11 +76,16 @@ abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarT
 
 				this.cleanupFabricJar(fabricJarFs)
 			}
+
+			Files.getFileAttributeView(outFabricJar, BasicFileAttributeView::class.java)
+				.setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
+			Files.getFileAttributeView(outNeoForgeJar, BasicFileAttributeView::class.java)
+				.setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
 		}
 	}
 
 	private fun doAssemble(outFs: FileSystem, fabricJarFs: FileSystem, neoJarFs: FileSystem) {
-		Files.createDirectories(outFs.getPath("dev/lambdaurora/lambdynlights"))
+		this.createDirectories(outFs.getPath("dev/lambdaurora/lambdynlights"))
 		this.biMove("dev/lambdaurora/lambdynlights/shadow", fabricJarFs, neoJarFs, outFs)
 		this.biMove("META-INF/versions", fabricJarFs, neoJarFs, outFs)
 		this.biMove("assets", fabricJarFs, neoJarFs, outFs)
@@ -108,7 +114,7 @@ abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarT
 		parent.addProperty("id", Constants.NAMESPACE)
 		parent.addProperty("name", Constants.PRETTY_NAME)
 
-		Files.writeString(fmjPath, JsonUtils.GSON.toJson(json))
+		this.writeString(fmjPath, JsonUtils.GSON.toJson(json))
 
 		val parentFmj = this.fmj.get().derive(::Fmj)
 		parentFmj.withEntrypoints("modmenu", "dev.lambdaurora.lambdynlights.LambDynLightsModMenu")
@@ -116,11 +122,11 @@ abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarT
 		parentFmj.withEnvironment(this.fmj.get().environment)
 		parentFmj.withJar(outFabricJar.toString())
 		parentFmj.withModMenu(this.fmj.get().modMenu.copy())
-		Files.writeString(outFs.getPath("fabric.mod.json"), JsonUtils.GSON.toJson(parentFmj))
+		this.writeString(outFs.getPath("fabric.mod.json"), JsonUtils.GSON.toJson(parentFmj))
 	}
 
 	private fun handleJarJar(neoFs: FileSystem, outFs: FileSystem, neoJarPath: Path) {
-		Files.createDirectories(outFs.getPath("META-INF/jarjar"))
+		this.createDirectories(outFs.getPath("META-INF/jarjar"))
 
 		val jarJarMetadata = JsonObject()
 
@@ -143,7 +149,7 @@ abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarT
 
 		jars.add(neoForgeJarEntry)
 
-		Files.writeString(
+		this.writeString(
 			outFs.getPath("META-INF/jarjar/metadata.json"),
 			JsonUtils.GSON.toJson(jarJarMetadata)
 		)
@@ -162,13 +168,13 @@ abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarT
 			Nmt.DependencySide.CLIENT
 		)
 
-		Files.writeString(outFs.getPath("META-INF/neoforge.mods.toml"), parentNmt.toToml())
+		this.writeString(outFs.getPath("META-INF/neoforge.mods.toml"), parentNmt.toToml())
 
 		val runtimeNmt = this.nmt.get().derive(::Nmt)
 		this.nmt.get().copyTo(runtimeNmt)
 		runtimeNmt.withNamespace(Constants.NAMESPACE + "_runtime")
 
-		Files.writeString(neoFs.getPath("META-INF/neoforge.mods.toml"), runtimeNmt.toToml())
+		this.writeString(neoFs.getPath("META-INF/neoforge.mods.toml"), runtimeNmt.toToml())
 	}
 
 	private fun biMove(path: String, sourceFs: FileSystem, dupedSourceFs: FileSystem, targetFs: FileSystem) {
