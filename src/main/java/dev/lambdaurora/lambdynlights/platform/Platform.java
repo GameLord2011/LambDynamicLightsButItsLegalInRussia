@@ -11,6 +11,7 @@ package dev.lambdaurora.lambdynlights.platform;
 
 import dev.lambdaurora.lambdynlights.resource.LightSourceLoader;
 import dev.yumi.commons.event.ListenableEvent;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
 
@@ -26,7 +27,7 @@ import java.util.function.Consumer;
 public interface Platform {
 	void registerReloader(LightSourceLoader<?> reloader);
 
-	ListenableEvent<Identifier, Consumer<RegistryAccess>> getTagLoadedEvent();
+	ListenableEvent<Identifier, Consumer<HolderLookup.Provider>> getTagLoadedEvent();
 
 	LightSourceLoader.ApplicationPredicate getLightSourceLoaderApplicationPredicate();
 }

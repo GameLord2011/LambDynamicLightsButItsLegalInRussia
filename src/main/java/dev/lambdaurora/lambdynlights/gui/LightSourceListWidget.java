@@ -15,7 +15,7 @@ import dev.lambdaurora.spruceui.SpruceTexts;
 import dev.lambdaurora.spruceui.background.Background;
 import dev.lambdaurora.spruceui.background.EmptyBackground;
 import dev.lambdaurora.spruceui.background.SimpleColorBackground;
-import dev.lambdaurora.spruceui.navigation.NavigationDirection;
+import dev.lambdaurora.spruceui.navigation.NavigationEvent;
 import dev.lambdaurora.spruceui.navigation.NavigationUtils;
 import dev.lambdaurora.spruceui.render.SpruceGuiGraphics;
 import dev.lambdaurora.spruceui.widget.AbstractSpruceWidget;
@@ -30,6 +30,10 @@ import net.minecraft.TextFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.navigation.ScreenAxis;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Text;
@@ -271,7 +275,7 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		/* Input */
 
 		@Override
-		protected boolean onMouseClick(double mouseX, double mouseY, int button) {
+		protected boolean onMouseClick(@NotNull MouseButtonEvent event, boolean doubleClick) {
 			var it = this.iterator();
 
 			SpruceWidget element;
@@ -281,40 +285,40 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 				}
 
 				element = it.next();
-			} while (!element.mouseClicked(mouseX, mouseY, button));
+			} while (!element.mouseClicked(event, doubleClick));
 
 			this.setFocused(element);
-			if (button == GLFW.GLFW_MOUSE_BUTTON_1)
+			if (event.button() == GLFW.GLFW_MOUSE_BUTTON_1)
 				this.dragging = true;
 
 			return true;
 		}
 
 		@Override
-		protected boolean onMouseRelease(double mouseX, double mouseY, int button) {
+		protected boolean onMouseRelease(@NotNull MouseButtonEvent event) {
 			this.dragging = false;
-			return this.hoveredElement(mouseX, mouseY).filter(element -> element.mouseReleased(mouseX, mouseY, button)).isPresent();
+			return this.hoveredElement(event.x(), event.y()).filter(element -> element.mouseReleased(event)).isPresent();
 		}
 
 		@Override
-		protected boolean onMouseDrag(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-			return this.getFocused() != null && this.dragging && button == GLFW.GLFW_MOUSE_BUTTON_1
-					&& this.getFocused().mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		protected boolean onMouseDrag(@NotNull MouseButtonEvent event, double deltaX, double deltaY) {
+			return this.getFocused() != null && this.dragging && event.button() == GLFW.GLFW_MOUSE_BUTTON_1
+					&& this.getFocused().mouseDragged(event, deltaX, deltaY);
 		}
 
 		@Override
-		protected boolean onKeyPress(int keyCode, int scanCode, int modifiers) {
-			return this.focused != null && this.focused.keyPressed(keyCode, scanCode, modifiers);
+		protected boolean onKeyPress(@NotNull KeyEvent event) {
+			return this.focused != null && this.focused.keyPressed(event);
 		}
 
 		@Override
-		protected boolean onKeyRelease(int keyCode, int scanCode, int modifiers) {
-			return this.focused != null && this.focused.keyReleased(keyCode, scanCode, modifiers);
+		protected boolean onKeyRelease(@NotNull KeyEvent event) {
+			return this.focused != null && this.focused.keyReleased(event);
 		}
 
 		@Override
-		protected boolean onCharTyped(char chr, int keyCode) {
-			return this.focused != null && this.focused.charTyped(chr, keyCode);
+		protected boolean onCharTyped(@NotNull CharacterEvent event) {
+			return this.focused != null && this.focused.charTyped(event);
 		}
 
 		/* Rendering */
@@ -340,9 +344,9 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		/* Navigation */
 
 		@Override
-		public boolean onNavigation(NavigationDirection direction, boolean tab) {
+		public boolean onNavigation(@NotNull NavigationEvent event) {
 			if (this.requiresCursor()) return false;
-			if (!tab && direction.isVertical()) {
+			if (!event.tab() && event.direction().getAxis() == ScreenAxis.VERTICAL) {
 				if (this.isFocused()) {
 					this.setFocused(null);
 					return false;
@@ -350,16 +354,16 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 				int lastIndex = this.parent.lastIndex;
 				if (lastIndex >= this.children.size())
 					lastIndex = this.children.size() - 1;
-				if (!this.children.get(lastIndex).onNavigation(direction, tab))
+				if (!this.children.get(lastIndex).onNavigation(event))
 					return false;
 				this.setFocused(this.children.get(lastIndex));
 				return true;
 			}
 
-			boolean result = NavigationUtils.tryNavigate(direction, tab, this.children, this.focused, this::setFocused, true);
+			boolean result = NavigationUtils.tryNavigate(event, this.children, this.focused, this::setFocused, true);
 			if (result) {
 				this.setFocused(true);
-				if (direction.isHorizontal() && this.getFocused() != null) {
+				if (event.direction().getAxis() == ScreenAxis.HORIZONTAL && this.getFocused() != null) {
 					this.parent.lastIndex = this.children.indexOf(this.getFocused());
 				}
 			}

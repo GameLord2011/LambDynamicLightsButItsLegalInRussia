@@ -16,15 +16,18 @@ import dev.lambdaurora.spruceui.util.ColorUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a debug renderer for dynamic light levels.
  *
  * @author Akarys
- * @version 4.0.0
+ * @version 4.6.0
  * @since 4.0.0
  */
 @Environment(EnvType.CLIENT)
@@ -37,7 +40,10 @@ public class DynamicLightLevelDebugRenderer extends DynamicLightDebugRenderer {
 	}
 
 	@Override
-	public void render(MatrixStack matrices, MultiBufferSource bufferSource, double x, double y, double z) {
+	public void render(
+			@NotNull MatrixStack matrices, @NotNull MultiBufferSource bufferSource, double x, double y, double z,
+			@NotNull DebugValueAccess debugValueAccess, @NotNull Frustum frustum
+	) {
 		int lightDisplayRadius = this.config.getDebugLightLevelRadius();
 
 		if (lightDisplayRadius == 0) {

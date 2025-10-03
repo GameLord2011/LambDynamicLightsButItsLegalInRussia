@@ -14,7 +14,7 @@
 		"LevelRendererAccessor",
 		"MinecraftClientMixin",
 		"OptionsMixin",
-		"ParticleEngineMixin",
+		"ParticleGroupMixin",
 		"RegistryOpsAccessor",
 		"VideoSettingsScreenMixin",
 		"sodium.SodiumOptionsGuiMixin"

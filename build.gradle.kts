@@ -28,6 +28,7 @@ logger.lifecycle("Preparing version ${version}...")
 val fabricApiModules = listOf(
 	fabricApi.module("fabric-lifecycle-events-v1", libs.versions.fabric.api.get())!!,
 	fabricApi.module("fabric-resource-loader-v0", libs.versions.fabric.api.get())!!,
+	fabricApi.module("fabric-resource-loader-v1", libs.versions.fabric.api.get())!!,
 	fabricApi.module("fabric-resource-conditions-api-v1", libs.versions.fabric.api.get())!!
 )
 
@@ -59,11 +60,12 @@ lambdamcdev.manifests {
 
 	nmt {
 		fmj.copyTo(this)
+		withNamespace(Constants.NAMESPACE + "_runtime")
 		withName(Constants.PRETTY_NAME + " (Runtime)")
 		withDescription(Constants.RUNTIME_DESCRIPTION)
 		withLoaderVersion("[2,)")
 		withYumiEntrypoints("yumi:client_init", "dev.lambdaurora.lambdynlights.LambDynLights::INSTANCE")
-		withYumiEntrypoints("lambdynlights:platform_provider", "dev.lambdaurora.lambdynlights.platform.neoforge.NeoForgePlatformProvider")
+		withYumiEntrypoints("lambdynlights:platform_provider", "dev.lambdaurora.lambdynlights.platform.neoforge.NeoForgePlatform::INSTANCE")
 		withAccessTransformer("META-INF/accesstransformer.cfg")
 		withMixins("lambdynlights.mixins.json", "lambdynlights.lightsource.mixins.json")
 		withDepend(Constants.NAMESPACE + "_api", "[${version},)", Nmt.DependencySide.CLIENT)
@@ -80,22 +82,31 @@ repositories {
 	maven {
 		name = "Terraformers"
 		url = uri("https://maven.terraformersmc.com/releases/")
-	}
-	maven {
-		name = "ParchmentMC"
-		url = uri("https://maven.parchmentmc.org")
+		content {
+			includeGroupAndSubgroups("com.terraformersmc")
+			includeGroup("dev.emi")
+		}
 	}
 	maven {
 		name = "Ladysnake Libs"
 		url = uri("https://maven.ladysnake.org/releases")
+		content {
+			includeGroup("org.ladysnake.cardinal-components-api")
+		}
 	}
-	maven { url = uri("https://maven.wispforest.io/releases") }
+	maven {
+		name = "Wispforest"
+		url = uri("https://maven.wispforest.io/releases")
+		content {
+			includeGroupAndSubgroups("io.wispforest")
+		}
+	}
 	maven {
 		name = "NeoForge"
 		url = uri("https://maven.neoforged.net/")
 		content {
-			includeGroupByRegex("net\\.neoforged.*")
-			includeGroupByRegex("cpw\\.mods.*")
+			includeGroupAndSubgroups("net.neoforged")
+			includeGroupAndSubgroups("cpw.mods")
 		}
 	}
 }
@@ -141,9 +152,9 @@ dependencies {
 	modCompileOnly(libs.modmenu) {
 		this.isTransitive = false
 	}
-	modLocalRuntime(libs.modmenu) {
+	/*modLocalRuntime(libs.modmenu) {
 		this.isTransitive = false
-	}
+	}*/
 
 	// Mod compatibility
 	modCompileOnly(libs.trinkets)
@@ -335,16 +346,16 @@ val finalJar by tasks.registering(AssembleFinalJarTask::class) {
 	this.jarJarMetadata.set(generateJarJarMetadata.flatMap { it.outputFile })
 }
 
-tasks.build.get().dependsOn(finalJar, mergedNeoForgeSourcesJar)
+tasks.assemble.get().dependsOn(finalJar, mergedNeoForgeSourcesJar)
 mojmap.setJarArtifact(mergedNeoForgeJar)
 mojmap.setSourcesArtifact(mergedNeoForgeSourcesJar)
 //endregion
 
 val packageModrinth by tasks.registering(PackageModrinthTask::class) {
 	this.group = "publishing"
-	this.versionType.set(Constants.getVersionType())
-	this.versionName.set("${Constants.PRETTY_NAME} ${Constants.VERSION} (${McVersionLookup.getVersionTag(Constants.mcVersion())})")
-	this.gameVersions.set(listOf(Constants.mcVersion()) + Constants.COMPATIBLE_MC_VERSIONS)
+	this.versionType.set(ldl.versionType())
+	this.versionName.set("${Constants.PRETTY_NAME} ${ldl.version()} (${McVersionLookup.getVersionTag(ldl.mcVersion())})")
+	this.gameVersions.set(ldl.compatibleMcVersions())
 	this.loaders.set(listOf("fabric", "quilt", "neoforge"))
 	this.dependencies.set(
 		listOf(
@@ -360,11 +371,11 @@ val packageModrinth by tasks.registering(PackageModrinthTask::class) {
 
 modrinth {
 	projectId = project.property("modrinth_id") as String
-	versionName = "${Constants.PRETTY_NAME} ${Constants.VERSION} (${McVersionLookup.getVersionTag(Constants.mcVersion())})"
+	versionName = "${Constants.PRETTY_NAME} ${ldl.version()} (${McVersionLookup.getVersionTag(ldl.mcVersion())})"
 	uploadFile.set(finalJar)
 	loaders.set(listOf("fabric", "quilt", "neoforge"))
-	gameVersions.set(listOf(Constants.mcVersion()) + Constants.COMPATIBLE_MC_VERSIONS)
-	versionType.set(Constants.getVersionType().toString())
+	gameVersions.set(ldl.compatibleMcVersions())
+	versionType.set(ldl.versionType().toString())
 	syncBodyFrom.set(Utils.parseReadme(project))
 	dependencies.set(
 		listOf(
@@ -408,16 +419,15 @@ tasks.register<TaskPublishCurseForge>("curseforge") {
 	}
 
 	val mainFile = upload(project.property("curseforge_id"), finalJar)
-	mainFile.releaseType = Constants.getVersionType()
-	mainFile.addGameVersion(McVersionLookup.getCurseForgeEquivalent(Constants.mcVersion()))
-	Constants.COMPATIBLE_MC_VERSIONS.stream()
+	mainFile.releaseType = ldl.versionType()
+	ldl.compatibleMcVersions().stream()
 		.map { McVersionLookup.getCurseForgeEquivalent(it) }
 		.forEach { mainFile.addGameVersion(it) }
 	mainFile.addModLoader("Fabric", "Quilt", "NeoForge")
 	mainFile.addJavaVersion("Java 21", "Java 22")
 	mainFile.addEnvironment("Client")
 
-	mainFile.displayName = "${Constants.PRETTY_NAME} ${Constants.VERSION} (${McVersionLookup.getVersionTag(Constants.mcVersion())})"
+	mainFile.displayName = "${Constants.PRETTY_NAME} ${ldl.version()} (${McVersionLookup.getVersionTag(ldl.mcVersion())})"
 	mainFile.addRequirement("fabric-api")
 	mainFile.addOptional("modmenu")
 	mainFile.addIncompatibility("optifabric")

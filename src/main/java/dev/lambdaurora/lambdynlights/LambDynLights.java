@@ -17,10 +17,10 @@ import dev.lambdaurora.lambdynlights.api.behavior.DynamicLightBehaviorManager;
 import dev.lambdaurora.lambdynlights.api.entity.EntityLightSourceManager;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import dev.lambdaurora.lambdynlights.compat.CompatLayer;
-import dev.lambdaurora.lambdynlights.engine.scheduler.ChunkRebuildScheduler;
-import dev.lambdaurora.lambdynlights.engine.scheduler.CullingChunkRebuildScheduler;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightBehaviorSources;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightingEngine;
+import dev.lambdaurora.lambdynlights.engine.scheduler.ChunkRebuildScheduler;
+import dev.lambdaurora.lambdynlights.engine.scheduler.CullingChunkRebuildScheduler;
 import dev.lambdaurora.lambdynlights.engine.source.DeferredDynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSource;
@@ -43,13 +43,14 @@ import dev.yumi.mc.core.api.entrypoint.client.ClientModInitializer;
 import net.minecraft.TextFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.debug.DebugScreenEntries;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.FireflyParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SonicBoomParticle;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Text;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.profiling.Profiler;
@@ -75,7 +76,7 @@ import java.util.function.Predicate;
  * Represents the LambDynamicLights mod.
  *
  * @author LambdAurora
- * @version 4.4.0
+ * @version 4.6.0
  * @since 1.0.0
  */
 @ApiStatus.Internal
@@ -87,7 +88,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 			LambDynLightsConstants.NAMESPACE + ".key.toggle_fps_dynamic_lighting",
 			InputConstants.Type.KEYSYM,
 			GLFW.GLFW_KEY_UNKNOWN,
-			KeyMapping.CATEGORY_MISC
+			KeyMapping.Category.MISC
 	);
 
 	public final DynamicLightsConfig config = new DynamicLightsConfig(this);
@@ -105,10 +106,12 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 	private final DynamicLightDebugRenderer.SectionRebuild sectionRebuildDebugRenderer
 			= new DynamicLightDebugRenderer.SectionRebuild(this);
-	public final @Unmodifiable List<DynamicLightDebugRenderer> debugRenderers = List.of(
-			sectionRebuildDebugRenderer,
-			new DynamicLightLevelDebugRenderer(this),
+	public final @Unmodifiable List<DynamicLightDebugRenderer> opaqueDebugRenderers = List.of(
 			new DynamicLightBehaviorDebugRenderer(this, this.dynamicLightSources),
+			new DynamicLightLevelDebugRenderer(this)
+	);
+	public final @Unmodifiable List<DynamicLightDebugRenderer> transparentDebugRenderers = List.of(
+			sectionRebuildDebugRenderer,
 			new DynamicLightSectionDebugRenderer(this)
 	);
 
@@ -150,6 +153,8 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		platform.registerReloader(this.entityLightSources);
 
 		platform.getTagLoadedEvent().register(this::onTagsLoaded);
+
+		this.registerDebugEntries();
 
 		this.initializeApi();
 	}
@@ -201,7 +206,61 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		return this.shouldTick;
 	}
 
-	public void onTagsLoaded(RegistryAccess registries) {
+	private void registerDebugEntries() {
+		final var debugPrefix = TextFormatting.LIGHT_PURPLE + "[LDL] " + TextFormatting.RESET;
+		final var debugGroup = id("debug");
+
+		DebugScreenEntries.register(id("dynamic_light_sources"),
+				(displayer, level, clientChunk, serverChunk) -> {
+					var builder = new StringBuilder(debugPrefix + "Dynamic Light Sources: ");
+					builder.append(this.getLightSourcesCount())
+							.append(" (Occupying ")
+							.append(this.engine.getLastEntryCount())
+							.append('/')
+							.append(this.engine.getSize())
+							.append(" ; Updated: ")
+							.append(this.chunkRebuildScheduler.getSourceUpdatedLastTick());
+
+					if (!this.config.getDynamicLightsMode().isEnabled()) {
+						builder.append(" ; ");
+						builder.append(TextFormatting.RED);
+						builder.append("Disabled");
+						builder.append(TextFormatting.RESET);
+					}
+
+					builder.append(')');
+					displayer.addToGroup(debugGroup, builder.toString());
+				}
+		);
+		DebugScreenEntries.register(
+				id("spatial_lookup"),
+				(displayer, level, clientChunk, serverChunk) -> {
+					displayer.addToGroup(debugGroup, debugPrefix + "Compute Spatial Lookup Timing: %.3fms (avg. 40t)"
+							.formatted(this.engine.getComputeSpatialLookupTime() / 1_000_000.f));
+				}
+		);
+		DebugScreenEntries.register(
+				id("chunk_rebuild_scheduler"),
+				(displayer, level, clientChunk, serverChunk) -> {
+					this.chunkRebuildScheduler.appendF3Debug(line ->
+							displayer.addToGroup(debugGroup, debugPrefix + line)
+					);
+				}
+		);
+		DebugScreenEntries.register(
+				id("dynamic_light_at_feet"),
+				(displayer, level, clientChunk, serverChunk) -> {
+					var player = Minecraft.getInstance().player;
+
+					if (player != null) {
+						displayer.addToGroup(debugGroup, debugPrefix + "Dynamic Light At Feet: %.3f"
+								.formatted(this.engine.getDynamicLightLevel(player.getBlockPos())));
+					}
+				}
+		);
+	}
+
+	public void onTagsLoaded(HolderLookup.Provider registries) {
 		this.itemLightSources.apply(registries);
 		this.entityLightSources.apply(registries);
 	}
