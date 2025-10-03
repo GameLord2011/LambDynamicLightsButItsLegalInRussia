@@ -13,7 +13,6 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.TaskAction
 import java.nio.file.FileSystem
-import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.attribute.BasicFileAttributeView
@@ -78,9 +77,9 @@ abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarT
 			}
 
 			Files.getFileAttributeView(outFabricJar, BasicFileAttributeView::class.java)
-				.setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
+				.setTimes(ZIP_EPOCH_TIME, NO_DATA_TIME, NO_DATA_TIME)
 			Files.getFileAttributeView(outNeoForgeJar, BasicFileAttributeView::class.java)
-				.setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
+				.setTimes(ZIP_EPOCH_TIME, NO_DATA_TIME, NO_DATA_TIME)
 		}
 	}
 

@@ -67,7 +67,7 @@ abstract class AssembleNeoForgeJarTask @Inject constructor() : AbstractAssembleJ
 					Files.getFileAttributeView(
 						outFs.getPath("META-INF/accesstransformer.cfg"),
 						BasicFileAttributeView::class.java
-					).setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
+					).setTimes(ZIP_EPOCH_TIME, NO_DATA_TIME, NO_DATA_TIME)
 					this.handleNeoJar(outFs)
 				}
 			}
