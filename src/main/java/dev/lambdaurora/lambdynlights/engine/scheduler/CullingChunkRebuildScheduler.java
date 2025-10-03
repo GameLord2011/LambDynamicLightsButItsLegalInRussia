@@ -9,8 +9,8 @@
 
 package dev.lambdaurora.lambdynlights.engine.scheduler;
 
+import dev.lambdaurora.lambdynlights.accessor.FrustumStorage;
 import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
-import dev.lambdaurora.lambdynlights.mixin.LevelRendererAccessor;
 import dev.lambdaurora.lambdynlights.util.DynamicLightDebugRenderer;
 import it.unimi.dsi.fastutil.longs.Long2BooleanOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongCollection;
@@ -142,8 +142,6 @@ public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
 	}
 
 	private @NotNull Frustum getFrustum(LevelRenderer renderer) {
-		final var capturedFrustum = renderer.getCapturedFrustum();
-
-		return capturedFrustum != null ? capturedFrustum : ((LevelRendererAccessor) renderer).getCullingFrustum();
+		return ((FrustumStorage) renderer).lambdynlights$getFrustum();
 	}
 }

@@ -24,9 +24,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
  */
 @Mixin(LevelRenderer.class)
 public interface LevelRendererAccessor {
-	@Accessor
-	Frustum getCullingFrustum();
-
 	/**
 	 * Schedules a chunk rebuild.
 	 *
