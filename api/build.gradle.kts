@@ -1,8 +1,4 @@
 import lambdynamiclights.Constants
-import net.fabricmc.loom.LoomGradleExtension
-import net.fabricmc.loom.api.mappings.layered.MappingsNamespace
-import net.fabricmc.loom.task.RemapJarTask
-import net.fabricmc.loom.task.RemapSourcesJarTask
 
 plugins {
 	id("lambdynamiclights")
@@ -62,6 +58,10 @@ val remapMojmap = mojmap.registerRemap(tasks.remapJar) {}
 mojmap.setJarArtifact(remapMojmap)
 val remapMojmapSources = mojmap.registerSourcesRemap(tasks.remapSourcesJar) {}
 mojmap.setSourcesArtifact(remapMojmapSources)
+
+tasks.runClient {
+	this.enabled = false
+}
 
 // Configure the maven publication.
 publishing {

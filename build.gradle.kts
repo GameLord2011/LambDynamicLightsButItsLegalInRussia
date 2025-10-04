@@ -206,6 +206,11 @@ dependencies {
 	//endregion
 }
 
+loom.runs.getByName("client") {
+	this.vmArg("-DMC_DEBUG_ENABLED")
+	this.vmArg("-DMC_DEBUG_HOTKEYS")
+}
+
 tasks.shadowJar {
 	dependsOn(tasks.jar)
 	configurations = listOf(project.configurations["shadow"])
