@@ -3,15 +3,9 @@ package lambdynamiclights.task
 import dev.yumi.commons.function.YumiPredicates
 import org.gradle.jvm.tasks.Jar
 import java.nio.file.*
-import java.nio.file.attribute.BasicFileAttributeView
 import java.nio.file.attribute.BasicFileAttributes
-import java.nio.file.attribute.FileTime
-import java.nio.file.attribute.PosixFilePermissions
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import java.util.function.Predicate
 import javax.inject.Inject
-
 
 abstract class AbstractAssembleJarTask @Inject constructor() : Jar() {
 	protected fun openJar(path: Path): FileSystem {
@@ -24,24 +18,15 @@ abstract class AbstractAssembleJarTask @Inject constructor() : Jar() {
 		} else {
 			this.createDirectories(path.toAbsolutePath().parent)
 			Files.createDirectory(path)
-			Files.setPosixFilePermissions(path, DEFAULT_DIR_MODE)
-			Files.getFileAttributeView(path, BasicFileAttributeView::class.java)
-				.setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
 		}
 	}
 
 	protected fun writeString(path: Path, csq: CharSequence) {
 		Files.writeString(path, csq)
-		Files.setPosixFilePermissions(path, DEFAULT_FILE_MODE)
-		Files.getFileAttributeView(path, BasicFileAttributeView::class.java)
-			.setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
 	}
 
 	protected fun copy(source: Path, target: Path, vararg options: CopyOption) {
 		Files.copy(source, target, *options)
-		Files.setPosixFilePermissions(target, DEFAULT_FILE_MODE)
-		Files.getFileAttributeView(target, BasicFileAttributeView::class.java)
-			.setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
 	}
 
 	protected fun copy(source: Path, target: Path, predicate: Predicate<Path>) {
@@ -87,9 +72,6 @@ abstract class AbstractAssembleJarTask @Inject constructor() : Jar() {
 
 		if (Files.isRegularFile(source)) {
 			Files.move(source, target)
-			Files.setPosixFilePermissions(target, DEFAULT_FILE_MODE)
-			Files.getFileAttributeView(target, BasicFileAttributeView::class.java)
-				.setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
 			return
 		}
 
@@ -107,9 +89,6 @@ abstract class AbstractAssembleJarTask @Inject constructor() : Jar() {
 			override fun visitFile(file: Path, attrs: BasicFileAttributes): FileVisitResult {
 				val target = this.resolve(file)
 				Files.move(file, target)
-				Files.setPosixFilePermissions(target, DEFAULT_FILE_MODE)
-				Files.getFileAttributeView(target, BasicFileAttributeView::class.java)
-					.setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
 				return FileVisitResult.CONTINUE
 			}
 		})
@@ -127,17 +106,5 @@ abstract class AbstractAssembleJarTask @Inject constructor() : Jar() {
 					Files.delete(it)
 				}
 		}
-	}
-
-	companion object {
-		val DEFAULT_DIR_MODE = PosixFilePermissions.fromString("rwxr-xr-x")
-		val DEFAULT_FILE_MODE = PosixFilePermissions.fromString("rw-r--r--")
-		val ZIP_EPOCH: FileTime = FileTime.from(
-			OffsetDateTime.of(
-				1980, 2, 1,
-				0, 0, 0, 0,
-				ZoneOffset.ofHours(1)
-			).toInstant()
-		)
 	}
 }

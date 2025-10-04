@@ -3,13 +3,13 @@ package lambdynamiclights.task
 import com.google.gson.JsonParser
 import dev.lambdaurora.mcdev.api.AccessWidenerToTransformer
 import dev.lambdaurora.mcdev.util.JsonUtils
+import lambdynamiclights.ZipFix
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.TaskAction
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
 import java.nio.file.Files
-import java.nio.file.attribute.BasicFileAttributeView
 import javax.inject.Inject
 
 abstract class AssembleNeoForgeJarTask @Inject constructor() : AbstractAssembleJarTask() {
@@ -64,10 +64,6 @@ abstract class AssembleNeoForgeJarTask @Inject constructor() : AbstractAssembleJ
 						runtimeJarFs.getPath("lambdynlights.accesswidener"),
 						outFs.getPath("META-INF/accesstransformer.cfg")
 					)
-					Files.getFileAttributeView(
-						outFs.getPath("META-INF/accesstransformer.cfg"),
-						BasicFileAttributeView::class.java
-					).setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
 					this.handleNeoJar(outFs)
 				}
 			}
@@ -76,6 +72,8 @@ abstract class AssembleNeoForgeJarTask @Inject constructor() : AbstractAssembleJ
 			this.createDirectories(jarjarDirPath)
 			this.copy(this.jarJarMetadata.get().asFile.toPath(), jarjarDirPath.resolve("metadata.json"))
 		}
+
+		ZipFix.fixZip(outputJar)
 	}
 
 	private fun handleNeoJar(fs: FileSystem) {

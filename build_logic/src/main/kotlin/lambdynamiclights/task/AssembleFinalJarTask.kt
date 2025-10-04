@@ -7,16 +7,15 @@ import dev.lambdaurora.mcdev.api.manifest.Fmj
 import dev.lambdaurora.mcdev.api.manifest.Nmt
 import dev.lambdaurora.mcdev.util.JsonUtils
 import lambdynamiclights.Constants
+import lambdynamiclights.ZipFix
 import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.TaskAction
 import java.nio.file.FileSystem
-import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
-import java.nio.file.attribute.BasicFileAttributeView
 import javax.inject.Inject
 
 abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarTask() {
@@ -77,11 +76,11 @@ abstract class AssembleFinalJarTask @Inject constructor() : AbstractAssembleJarT
 				this.cleanupFabricJar(fabricJarFs)
 			}
 
-			Files.getFileAttributeView(outFabricJar, BasicFileAttributeView::class.java)
-				.setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
-			Files.getFileAttributeView(outNeoForgeJar, BasicFileAttributeView::class.java)
-				.setTimes(ZIP_EPOCH, ZIP_EPOCH, ZIP_EPOCH)
+			ZipFix.fixZip(outFabricJar)
+			ZipFix.fixZip(outNeoForgeJar)
 		}
+
+		ZipFix.fixZip(outputJar)
 	}
 
 	private fun doAssemble(outFs: FileSystem, fabricJarFs: FileSystem, neoJarFs: FileSystem) {
