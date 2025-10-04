@@ -39,5 +39,14 @@
 	"lambdynlights.tooltip.self_light_source": "Aktiviert die dynamische Beleuchtung aus der Ego-Perspektive. Es wird empfohlen, dies zu deaktivieren, wenn Shader mit eigener dynamischer Beleuchtung verwendet werden.",
 	"lambdynlights.tooltip.tnt_lighting": "Legt den Modus für die TNT-Beleuchtung fest:\n- %s deaktiviert die TNT-Beleuchtung.\n- %s sorgt für eine konstante Leuchtkraft.\n- %s sorgt für eine dynamische Leuchtkraft.",
 	"lambdynlights.tooltip.water_sensitive": "Aktiviert die Prüfung für wasserempfindliche Lichtquellen. Manche Gegenstände geben unter Wasser kein Licht ab.",
-	"modmenu.bluesky": "Bluesky"
+	"modmenu.bluesky": "Bluesky",
+
+	"lambdynlights.key.toggle_fps_dynamic_lighting": "Beleuchtung in der First-Person umschalten",
+	"lambdynlights.key.toggle_fps_dynamic_lighting.info": "Dynamische First-Person Beleuchtung: %s",
+	"lambdynlights.menu.support_me": "Unterstütze mich",
+	"lambdynlights.menu.support_me.tooltip": "Dir gefällt die Mod? Du kannst mich unterstützen, damit ich weiterhin hochwertige Mods entwickeln kann!",
+	"lambdynlights.option.light_sources.glowing_effect": "Leuchteffekt",
+	"lambdynlights.option.light_sources.glowing_effect.tooltip": "Aktiviert die dynamische Beleuchtung für Entitäten mit dem Leuchteffekt.",
+	"lambdynlights.option.light_sources.sonic_boom": "Wärter Schallgeladenes Kreischen",
+	"lambdynlights.option.light_sources.sonic_boom.tooltip": "Aktiviert die dynamische Beleuchtung der Partikel des Schallgeladenes Kreischen Angriffs des Wärters."
 }
