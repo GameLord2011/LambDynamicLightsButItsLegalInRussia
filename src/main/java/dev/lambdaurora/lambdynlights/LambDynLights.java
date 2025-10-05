@@ -19,6 +19,7 @@ import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import dev.lambdaurora.lambdynlights.compat.CompatLayer;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightBehaviorSources;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightingEngine;
+import dev.lambdaurora.lambdynlights.engine.TickMode;
 import dev.lambdaurora.lambdynlights.engine.scheduler.ChunkRebuildScheduler;
 import dev.lambdaurora.lambdynlights.engine.source.DeferredDynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
@@ -61,6 +62,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -117,8 +119,9 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 	private ChunkRebuildScheduler chunkRebuildScheduler;
 
-	private long lastUpdate = System.currentTimeMillis();
-	private boolean shouldTick = false;
+	private int tick = 0;
+	private TickMode minimumTickMode = TickMode.REAL_TIME;
+	private boolean disableTicking = false;
 	boolean shouldForceRefresh = false;
 	private int dynamicLightSourcesCount = 0;
 
@@ -200,9 +203,41 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 	/**
 	 * {@return {@code true} if dynamic lighting should tick, or {@code false} otherwise}
+	 *
+	 * @param entity the entity to tick
 	 */
-	public boolean shouldTick() {
-		return this.shouldTick;
+	public boolean shouldTick(Entity entity) {
+		if (this.disableTicking) return false;
+
+		var mode = TickMode.REAL_TIME;
+
+		// If the entity is far behind the camera, we greatly slow it down.
+		var camera = Minecraft.getInstance().gameRenderer.getMainCamera();
+		var delta = entity.position().subtract(camera.getPosition());
+		var playerToEntityVector = new Vector3f((float) delta.x, (float) delta.y, (float) delta.z);
+		var dot = camera.getLookVector().dot(playerToEntityVector);
+		if (dot < 0) {
+			mode = TickMode.BACKGROUND;
+		}
+		// If the entity is too far away, we slow it down.
+		else {
+			float dX = (float) (camera.position().x - entity.getX());
+			float dY = (float) (camera.position().y - entity.getY());
+			float dZ = (float) (camera.position().z - entity.getZ());
+			float squaredDist = dX * dX + dY * dY + dZ * dZ;
+			if (squaredDist > this.config.getSlowerTickingDistance()) {
+				mode = TickMode.SLOWER;
+			} else if (squaredDist > this.config.getSlowTickingDistance()) {
+				mode = TickMode.SLOW;
+			}
+		}
+
+		var effectiveMode = this.minimumTickMode.min(mode);
+
+		// Early return for performance reasons
+		if (effectiveMode == TickMode.REAL_TIME) return true;
+
+		return this.tick % effectiveMode.delay() == entity.getId() % effectiveMode.delay();
 	}
 
 	private void registerDebugEntries() {
@@ -274,18 +309,11 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 	public void onStartLevelTick() {
 		var mode = this.config.getDynamicLightsMode();
-		boolean shouldTick = mode.isEnabled();
 
-		if (shouldTick && mode.hasDelay()) {
-			long currentTime = System.currentTimeMillis();
-			if (currentTime < this.lastUpdate + mode.getDelay()) {
-				shouldTick = false;
-			} else {
-				this.lastUpdate = currentTime;
-			}
-		}
+		this.disableTicking = !mode.isEnabled();
+		this.minimumTickMode = mode.tickMode();
 
-		this.shouldTick = shouldTick || this.shouldForceRefresh;
+		this.tick += 1;
 	}
 
 	public void onEndLevelTick() {
@@ -303,7 +331,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		this.toClear.clear();
 		this.lightSourcesLock.writeLock().unlock();
 
-		if (this.shouldTick) {
+		if (!this.disableTicking || this.shouldForceRefresh) {
 			var it = this.dynamicLightSources.iterator();
 			while (it.hasNext()) {
 				var lightSource = it.next();
@@ -318,6 +346,8 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 						continue;
 					}
 				}
+
+				if (lightSource instanceof Entity entity && !this.shouldTick(entity)) continue;
 
 				var chunks = lightSource.getDynamicLightChunksToRebuild(this.shouldForceRefresh || this.toAdd.contains(lightSource));
 				this.chunkRebuildScheduler.update(lightSource, chunks);

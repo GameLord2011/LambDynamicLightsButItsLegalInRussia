@@ -150,10 +150,6 @@ public class SettingsScreen extends SpruceScreen {
 		this.config.save();
 	}
 
-	private int getTextHeight() {
-		return (5 + this.font.lineHeight) * 3 + 5;
-	}
-
 	@Override
 	protected void init() {
 		super.init();
@@ -241,13 +237,12 @@ public class SettingsScreen extends SpruceScreen {
 	}
 
 	private void buildPerformanceTab(TabContext context) {
-		context.addWidget(new SpruceLabelWidget(
-				Position.of(0, 16), VERSION,
-				context.width() - 4, SpruceTextAlignment.RIGHT
-		));
+		context.addVersionLabel();
 
 		var list = new SpruceOptionListWidget(Position.origin(), context.width(), context.height());
 		list.addSingleOptionEntry(this.config.chunkRebuildSchedulerOption);
+		list.addSingleOptionEntry(this.config.slowTickingOption);
+		list.addSingleOptionEntry(this.config.slowerTickingOption);
 		context.addInnerWidget(list);
 	}
 

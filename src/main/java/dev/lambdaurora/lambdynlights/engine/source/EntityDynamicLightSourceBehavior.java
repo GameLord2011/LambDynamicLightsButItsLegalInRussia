@@ -75,7 +75,7 @@ public interface EntityDynamicLightSourceBehavior extends EntityDynamicLightSour
 	 * @param entity the entity to tick
 	 */
 	static void tickEntity(Entity entity) {
-		if (!LambDynLights.get().shouldTick()) return;
+		if (!LambDynLights.get().shouldTick(entity)) return;
 
 		var lightSource = (EntityDynamicLightSourceBehavior) entity;
 

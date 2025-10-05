@@ -5,6 +5,10 @@ mode = "fancy"
 # The chunk rebuild scheduler mode (immediate, culling).
 chunk_rebuild_scheduler = "culling"
 
+[adaptative_ticking]
+	slow = 0
+	slower = 0
+
 # Light sources settings.
 [light_sources]
 	# Enable entities light source.

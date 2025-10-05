@@ -17,12 +17,14 @@ import com.electronwill.nightconfig.toml.TomlWriter;
 import dev.lambdaurora.lambdynlights.config.BooleanSettingEntry;
 import dev.lambdaurora.lambdynlights.config.SettingEntry;
 import dev.lambdaurora.spruceui.option.SpruceCyclingOption;
+import dev.lambdaurora.spruceui.option.SpruceDoubleOption;
 import dev.lambdaurora.spruceui.option.SpruceOption;
 import dev.lambdaurora.spruceui.tooltip.TooltipData;
 import dev.yumi.mc.core.api.YumiMods;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Text;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +68,8 @@ public class DynamicLightsConfig {
 	private final LambDynLights mod;
 	private DynamicLightsMode dynamicLightsMode;
 	private ChunkRebuildSchedulerMode chunkRebuildSchedulerMode;
+	private int slowTickingDistance;
+	private int slowerTickingDistance;
 	private final List<SettingEntry<?>> settingEntries;
 	private final BooleanSettingEntry entitiesLightSource;
 	private final BooleanSettingEntry selfLightSource;
@@ -101,6 +105,23 @@ public class DynamicLightsConfig {
 					ChunkRebuildSchedulerMode.CULLING.getTranslatedText(), ChunkRebuildSchedulerMode.IMMEDIATE.getTranslatedText()
 			)).build()
 	);
+
+	public final SpruceOption slowTickingOption = SpruceDoubleOption.doubleBuilder(
+			"lambdynlights.option.adaptative_ticking.slow",
+			0, 32, 1,
+			() -> MathHelper.sqrt(this.slowTickingDistance) / 16.0,
+			value -> this.setSlowTickingChunks(value.intValue(), true),
+			option -> option.getDisplayText(Text.literal(String.valueOf((int) option.get())))
+	).build();
+
+	public final SpruceOption slowerTickingOption = SpruceDoubleOption.doubleBuilder(
+			"lambdynlights.option.adaptative_ticking.slower",
+			0, 32, 1,
+			() -> MathHelper.sqrt(this.slowerTickingDistance) / 16.0,
+			value -> this.setSlowerTickingChunks(value.intValue(), true),
+			option -> option.getDisplayText(Text.literal(String.valueOf((int) option.get())))
+	).build();
+
 
 	public DynamicLightsConfig(@NotNull LambDynLights mod) {
 		this.mod = mod;
@@ -184,6 +205,8 @@ public class DynamicLightsConfig {
 		);
 		this.chunkRebuildSchedulerMode = ChunkRebuildSchedulerMode.byId(chunkRebuildSchedulerMode)
 				.orElse(DEFAULT_CHUNK_REBUILD_SCHEDULER_MODE);
+		this.setSlowTickingChunks(config.getIntOrElse("adaptative_ticking.slow", 0), false);
+		this.setSlowerTickingChunks(config.getIntOrElse("adaptative_ticking.slower", 0), false);
 		this.settingEntries.forEach(entry -> entry.load(this.config));
 		this.creeperLightingMode = ExplosiveLightingMode.byId(this.config.getOrElse("light_sources.creeper", DEFAULT_CREEPER_LIGHTING_MODE.getName()))
 				.orElse(DEFAULT_CREEPER_LIGHTING_MODE);
@@ -341,6 +364,30 @@ public class DynamicLightsConfig {
 	public void setChunkRebuildSchedulerMode(@NotNull ChunkRebuildSchedulerMode mode) {
 		this.chunkRebuildSchedulerMode = mode;
 		this.config.set("chunk_rebuild_scheduler", mode.getName());
+	}
+
+	public int getSlowTickingDistance() {
+		return this.slowTickingDistance;
+	}
+
+	public int getSlowerTickingDistance() {
+		return this.slowerTickingDistance;
+	}
+
+	private void setSlowTickingChunks(int chunks, boolean save) {
+		this.slowTickingDistance = MathHelper.square(chunks * 16);
+
+		if (save) {
+			this.config.set("adaptative_ticking.slow", chunks);
+		}
+	}
+
+	private void setSlowerTickingChunks(int chunks, boolean save) {
+		this.slowerTickingDistance = MathHelper.square(chunks * 16);
+
+		if (save) {
+			this.config.set("adaptative_ticking.slower", chunks);
+		}
 	}
 
 	/**
