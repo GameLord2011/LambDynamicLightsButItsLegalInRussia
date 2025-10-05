@@ -510,6 +510,7 @@
 
 ## 4.8.0
 
+- Cleaned up a bit the settings screen and added explanations to the entities dynamic light sources tab.
 - Updated German translations ([#320](https://github.com/LambdAurora/LambDynamicLights/pull/320)).
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"

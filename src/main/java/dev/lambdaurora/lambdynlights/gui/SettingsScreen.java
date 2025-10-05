@@ -18,10 +18,8 @@ import dev.lambdaurora.spruceui.Position;
 import dev.lambdaurora.spruceui.SpruceTextAlignment;
 import dev.lambdaurora.spruceui.SpruceTexts;
 import dev.lambdaurora.spruceui.option.SpruceOption;
-import dev.lambdaurora.spruceui.option.SpruceSeparatorOption;
 import dev.lambdaurora.spruceui.option.SpruceSimpleActionOption;
 import dev.lambdaurora.spruceui.screen.SpruceScreen;
-import dev.lambdaurora.spruceui.tooltip.TooltipData;
 import dev.lambdaurora.spruceui.widget.SpruceButtonWidget;
 import dev.lambdaurora.spruceui.widget.SpruceLabelWidget;
 import dev.lambdaurora.spruceui.widget.SpruceWidget;
@@ -160,8 +158,6 @@ public class SettingsScreen extends SpruceScreen {
 	protected void init() {
 		super.init();
 
-		var dynamicLightSources = Text.translatable(DYNAMIC_LIGHT_SOURCES_KEY);
-
 		int tabIndex = 0;
 		if (this.tabbedWidget != null) {
 			var oldEntry = this.tabbedWidget.getList().getCurrentTab();
@@ -173,9 +169,16 @@ public class SettingsScreen extends SpruceScreen {
 		this.tabbedWidget.addTabEntry(Text.translatable("lambdynlights.menu.tabs.general"), null,
 				this.tabContainerBuilder(this::buildGeneralTab)
 		);
-		this.tabbedWidget.addSeparatorEntry(null);
-		this.tabbedWidget.addTabEntry(Text.empty().append(dynamicLightSources).append(": ").append(this.entitiesOption.getPrefix()),
-				null, this.tabContainerBuilder(this::buildEntitiesTab));
+		this.tabbedWidget.addSeparatorEntry(Text.translatable(DYNAMIC_LIGHT_SOURCES_KEY));
+		this.tabbedWidget.addTabEntry(
+				this.entitiesOption.getPrefix(), null,
+				this.tabContainerBuilder(this::buildEntitiesTab)
+		);
+		this.tabbedWidget.addTabEntry(
+				Text.translatable("lambdynlights.menu.tabs.dynamic_lights.special"),
+				null,
+				this.tabContainerBuilder(this::buildSpecialTab)
+		);
 		this.tabbedWidget.addSeparatorEntry(Text.translatable("lambdynlights.menu.tabs.advanced"));
 		this.tabbedWidget.addTabEntry(
 				Text.translatable("lambdynlights.menu.tabs.debug"),
@@ -225,25 +228,18 @@ public class SettingsScreen extends SpruceScreen {
 	}
 
 	private void buildGeneralTab(TabContext context) {
-		context.addWidget(new SpruceLabelWidget(
-				Position.of(0, 16), VERSION,
-				context.width() - 4, SpruceTextAlignment.RIGHT
-		));
+		context.addVersionLabel();
 
 		var list = new SpruceOptionListWidget(Position.origin(), context.width(), context.height());
 		list.addSingleOptionEntry(this.config.dynamicLightsModeOption);
-		list.addSingleOptionEntry(new SpruceSeparatorOption(DYNAMIC_LIGHT_SOURCES_KEY, true, TooltipData.EMPTY));
 		list.addOptionEntry(this.entitiesOption, this.selfOption);
 		list.addSingleOptionEntry(this.waterSensitiveOption);
-		list.addSingleOptionEntry(new SpruceSeparatorOption(SPECIAL_DYNAMIC_LIGHT_SOURCES_KEY, true, TooltipData.EMPTY));
-		list.addOptionEntry(this.creeperLightingOption, this.tntLightingOption);
-		list.addOptionEntry(this.config.getBeamLighting().getOption(), this.config.getFireflyLighting().getOption());
-		list.addOptionEntry(this.config.getGuardianLaser().getOption(), this.config.getSonicBoomLighting().getOption());
-		list.addSmallSingleOptionEntry(this.config.getGlowingEffectLighting().getOption());
 		context.addInnerWidget(list);
 	}
 
 	private void buildDebugTab(TabContext context) {
+		context.addVersionLabel();
+
 		var list = new SpruceOptionListWidget(Position.origin(), context.width(), context.height());
 		list.addSingleOptionEntry(this.config.getDebugActiveDynamicLightingCells().getOption());
 		list.addSingleOptionEntry(this.debugCellDisplayRadiusOption);
@@ -261,9 +257,27 @@ public class SettingsScreen extends SpruceScreen {
 		);
 	}
 
+	private void buildSpecialTab(TabContext context) {
+		context.addVersionLabel();
+
+		var list = new SpruceOptionListWidget(Position.origin(), context.width(), context.height());
+		list.addOptionEntry(this.creeperLightingOption, this.tntLightingOption);
+		list.addOptionEntry(this.config.getBeamLighting().getOption(), this.config.getFireflyLighting().getOption());
+		list.addOptionEntry(this.config.getGuardianLaser().getOption(), this.config.getSonicBoomLighting().getOption());
+		list.addSmallSingleOptionEntry(this.config.getGlowingEffectLighting().getOption());
+		context.addInnerWidget(list);
+	}
+
 	private void buildLightSourcesTab(TabContext context, List<DynamicLightHandlerHolder<?>> entries) {
 		var oldSearch = this.searchInput != null ? this.searchInput.getText() : "";
 		this.searchInput = context.addSearchInput();
+		this.searchInput.setTooltip(Text.translatable(
+				"lambdynlights.menu.tabs.dynamic_lights.entity.search.tooltip",
+				Text.literal("@").withStyle(TextFormatting.AQUA),
+				Text.literal("@minecraft").withStyle(TextFormatting.AQUA),
+				Text.literal("$").append(SpruceTexts.OPTIONS_ON).withStyle(TextFormatting.GOLD),
+				Text.literal("$").append(SpruceTexts.OPTIONS_OFF).withStyle(TextFormatting.GOLD)
+		));
 		var list = new LightSourceListWidget(Position.origin(), context.width(), context.height(), this.searchInput);
 		list.addAll(entries);
 		context.addInnerWidget(list);
@@ -273,6 +287,13 @@ public class SettingsScreen extends SpruceScreen {
 	record TabContext(SpruceTabbedWidget tabbedWidget, SpruceContainerWidget container, int height) {
 		int width() {
 			return this.container().getWidth();
+		}
+
+		void addVersionLabel() {
+			this.addWidget(new SpruceLabelWidget(
+					Position.of(0, 16), VERSION,
+					this.width() - 4, SpruceTextAlignment.RIGHT
+			));
 		}
 
 		SpruceTextFieldWidget addSearchInput() {
