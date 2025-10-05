@@ -14,6 +14,7 @@ import dev.lambdaurora.lambdynlights.engine.scheduler.CullingChunkRebuildSchedul
 import dev.lambdaurora.lambdynlights.engine.scheduler.SimpleChunkRebuildScheduler;
 import dev.lambdaurora.lambdynlights.util.DynamicLightDebugRenderer;
 import dev.lambdaurora.spruceui.util.Nameable;
+import net.minecraft.TextFormatting;
 import net.minecraft.network.chat.Text;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,11 +32,11 @@ import java.util.function.Function;
 public enum ChunkRebuildSchedulerMode implements Nameable {
 	IMMEDIATE(
 			SimpleChunkRebuildScheduler::new,
-			Text.translatable("lambdynlights.option.chunk_rebuild_scheduler.mode.immediate")
+			Text.translatable("lambdynlights.option.chunk_rebuild_scheduler.mode.immediate").withStyle(TextFormatting.RED)
 	),
 	CULLING(
 			CullingChunkRebuildScheduler::new,
-			Text.translatable("lambdynlights.option.chunk_rebuild_scheduler.mode.culling")
+			Text.translatable("lambdynlights.option.chunk_rebuild_scheduler.mode.culling").withStyle(TextFormatting.GREEN)
 	);
 
 	private final Function<DynamicLightDebugRenderer.SectionRebuild, ChunkRebuildScheduler> factory;

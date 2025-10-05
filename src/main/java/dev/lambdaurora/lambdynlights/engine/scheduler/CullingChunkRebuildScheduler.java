@@ -13,6 +13,7 @@ import dev.lambdaurora.lambdynlights.accessor.FrustumStorage;
 import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
 import dev.lambdaurora.lambdynlights.util.DynamicLightDebugRenderer;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -23,6 +24,7 @@ import net.minecraft.core.ChunkSectionPos;
 import org.jetbrains.annotations.NotNull;
 import org.joml.FrustumIntersection;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -34,8 +36,10 @@ import java.util.function.Consumer;
  * @since 4.8.0
  */
 public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
-	private final Long2ObjectMap<Map<DynamicLightSource, ChunkRebuildStatus>> trackedChunks = new Long2ObjectOpenHashMap<>();
+	private final Long2ObjectMap<Map<DynamicLightSource, ChunkRebuildStatus>> trackedChunks
+			= new Long2ObjectOpenHashMap<>();
 
+	private final long[] times = new long[40];
 	private int rebuildQueuedLastTick = 0;
 
 	public CullingChunkRebuildScheduler(
@@ -60,10 +64,22 @@ public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
 				.count();
 	}
 
+	/**
+	 * {@return the average time it took in nanoseconds to compute spatial lookup across 40 ticks}
+	 */
+	public float getTickTime() {
+		return (float) Arrays.stream(this.times)
+				.filter(value -> value > 0)
+				.average()
+				.orElse(0);
+	}
+
 	@Override
 	public void appendF3Debug(@NotNull Consumer<String> consumer) {
-		consumer.accept("Scheduled Chunk Rebuilds (Culling): %d / %d"
-				.formatted(this.getRebuildQueuedLastTick(), this.getCurrentlyQueued())
+		consumer.accept("Scheduled Chunk Rebuilds (Culling): %d / %d | Timing: %.3fms (avg. 40t)"
+				.formatted(
+						this.getRebuildQueuedLastTick(), this.getCurrentlyQueued(), this.getTickTime() / 1_000_000.f
+				)
 		);
 	}
 
@@ -87,7 +103,12 @@ public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
 				if (newStatus == ChunkRebuildStatus.REMOVE_REQUESTED && (oldStatus == null || !oldStatus.needsCleanup())) {
 					map.remove(lightSource);
 				} else {
-					map.put(lightSource, oldStatus != ChunkRebuildStatus.AFFECTED ? newStatus : ChunkRebuildStatus.REQUESTED_AGAIN);
+					map.put(
+							lightSource,
+							(oldStatus != null && oldStatus.needsCleanup() && newStatus != ChunkRebuildStatus.REMOVE_REQUESTED)
+									? ChunkRebuildStatus.REQUESTED_AGAIN
+									: newStatus
+					);
 				}
 
 				if (map.isEmpty()) {
@@ -124,6 +145,11 @@ public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
 	}
 
 	@Override
+	public void close() {
+		this.sectionRebuildDebugRenderer.setRequestedChunks(Long2ObjectMaps::emptyMap);
+	}
+
+	@Override
 	public void startTick() {
 		super.startTick();
 		this.rebuildQueuedLastTick = 0;
@@ -131,6 +157,7 @@ public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
 
 	@Override
 	public void endTick() {
+		long startTime = System.nanoTime();
 		final var renderer = Minecraft.getInstance().levelRenderer;
 		final var frustum = this.getFrustum(renderer);
 
@@ -182,21 +209,27 @@ public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
 			}
 		}
 
-		if (this.sectionRebuildDebugRenderer.isEnabled()) {
-			this.sectionRebuildDebugRenderer.setRequestedChunks(
-					this.trackedChunks.long2ObjectEntrySet().stream()
-							.filter(trackedChunk ->
-									trackedChunk.getValue().values()
-											.stream()
-											.anyMatch(status -> status != ChunkRebuildStatus.AFFECTED)
-							)
-							.mapToLong(Long2ObjectMap.Entry::getLongKey)
-							.toArray()
-			);
+		long endTime = System.nanoTime();
+		for (int i = 0; i < this.times.length - 1; i++) {
+			this.times[i] = this.times[i + 1];
 		}
+		this.times[this.times.length - 1] = endTime - startTime;
+
+		this.sectionRebuildDebugRenderer.setRequestedChunks(() -> {
+			var chunks = new Long2ObjectOpenHashMap<int[]>();
+			this.trackedChunks.long2ObjectEntrySet()
+					.forEach(trackedChunk -> {
+						var statuses = new int[ChunkRebuildStatus.VALUES.size()];
+						trackedChunk.getValue().values().forEach(status -> {
+							statuses[status.ordinal()] += 1;
+						});
+						chunks.put(trackedChunk.getLongKey(), statuses);
+					});
+			return chunks;
+		});
 	}
 
-	private @NotNull Frustum getFrustum(LevelRenderer renderer) {
+	private Frustum getFrustum(LevelRenderer renderer) {
 		return ((FrustumStorage) renderer).lambdynlights$getFrustum();
 	}
 }

@@ -97,7 +97,9 @@ public class DynamicLightsConfig {
 	public final SpruceOption chunkRebuildSchedulerOption = new SpruceCyclingOption("lambdynlights.option.chunk_rebuild_scheduler",
 			amount -> this.setChunkRebuildSchedulerMode(this.chunkRebuildSchedulerMode.next()),
 			option -> option.getDisplayText(this.chunkRebuildSchedulerMode.getTranslatedText()),
-			TooltipData.builder().text(Text.translatable("lambdynlights.option.chunk_rebuild_scheduler.tooltip")).build()
+			TooltipData.builder().text(Text.translatable("lambdynlights.option.chunk_rebuild_scheduler.tooltip",
+					ChunkRebuildSchedulerMode.CULLING.getTranslatedText(), ChunkRebuildSchedulerMode.IMMEDIATE.getTranslatedText()
+			)).build()
 	);
 
 	public DynamicLightsConfig(@NotNull LambDynLights mod) {

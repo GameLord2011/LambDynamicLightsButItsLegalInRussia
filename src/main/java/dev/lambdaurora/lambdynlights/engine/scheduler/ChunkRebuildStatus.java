@@ -9,6 +9,11 @@
 
 package dev.lambdaurora.lambdynlights.engine.scheduler;
 
+import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.VisibleForTesting;
+
+import java.util.List;
+
 /**
  * Represents the status of a chunk section rebuild in the context of dynamic lighting.
  *
@@ -17,10 +22,23 @@ package dev.lambdaurora.lambdynlights.engine.scheduler;
  * @since 4.8.0
  */
 public enum ChunkRebuildStatus {
-	REQUESTED,
-	AFFECTED,
-	REQUESTED_AGAIN,
-	REMOVE_REQUESTED;
+	REQUESTED(0xff9b00a6),
+	AFFECTED(0xff00ff00),
+	REQUESTED_AGAIN(0xff9b00a6),
+	REMOVE_REQUESTED(0xffff0000);
+
+	@Unmodifiable
+	public static final List<ChunkRebuildStatus> VALUES = List.of(values());
+	private final int color;
+
+	ChunkRebuildStatus(int color) {
+		this.color = color;
+	}
+
+	@VisibleForTesting
+	public int color() {
+		return this.color;
+	}
 
 	public boolean needsRebuild() {
 		return this != AFFECTED;

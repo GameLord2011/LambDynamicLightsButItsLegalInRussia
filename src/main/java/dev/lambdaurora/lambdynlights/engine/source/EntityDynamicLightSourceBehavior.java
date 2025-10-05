@@ -119,9 +119,7 @@ public interface EntityDynamicLightSourceBehavior extends EntityDynamicLightSour
 		this.lambdynlights$getTrackedLitChunkPos().forEach(chunk -> {
 			result.put(chunk, ChunkRebuildStatus.REMOVE_REQUESTED);
 		});
-		newPos.forEach(chunk -> {
-			result.put(chunk, ChunkRebuildStatus.REQUESTED);
-		});
+		newPos.forEach(chunk -> result.put(chunk, ChunkRebuildStatus.REQUESTED));
 
 		this.updateDynamicLightPreviousCoordinates();
 		this.setLastDynamicLuminance(luminance);

@@ -467,7 +467,12 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		this.engine.resetSize();
 
 		if (level == null) this.chunkRebuildScheduler = null;
-		else this.chunkRebuildScheduler = this.config.getChunkRebuildSchedulerMode().create(this.sectionRebuildDebugRenderer);
+		else {
+			if (this.chunkRebuildScheduler != null) {
+				this.chunkRebuildScheduler.close();
+			}
+			this.chunkRebuildScheduler = this.config.getChunkRebuildSchedulerMode().create(this.sectionRebuildDebugRenderer);
+		}
 	}
 
 	/**

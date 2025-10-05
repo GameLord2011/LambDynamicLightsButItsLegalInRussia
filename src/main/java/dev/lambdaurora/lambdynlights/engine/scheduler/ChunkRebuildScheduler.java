@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.ChunkSectionPos;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Closeable;
 import java.util.function.Consumer;
 
 /**
@@ -27,7 +28,7 @@ import java.util.function.Consumer;
  * @version 4.8.0
  * @since 4.8.0
  */
-public abstract class ChunkRebuildScheduler {
+public abstract class ChunkRebuildScheduler implements Closeable {
 	protected final Minecraft client = Minecraft.getInstance();
 	protected final DynamicLightDebugRenderer.SectionRebuild sectionRebuildDebugRenderer;
 	private int sourceUpdatedLastTick = 0;
@@ -70,6 +71,12 @@ public abstract class ChunkRebuildScheduler {
 	}
 
 	protected abstract void remove(@NotNull DynamicLightSource lightSource, @NotNull LongSet chunks);
+
+	/**
+	 * Closes this chunk rebuild scheduler.
+	 */
+	@Override
+	public void close() {}
 
 	public void startTick() {
 		this.sourceUpdatedLastTick = 0;
