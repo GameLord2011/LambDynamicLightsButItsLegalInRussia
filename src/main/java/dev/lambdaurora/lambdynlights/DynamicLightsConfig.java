@@ -42,12 +42,13 @@ import java.util.concurrent.Executors;
  * Represents the mod configuration.
  *
  * @author LambdAurora
- * @version 4.4.0
+ * @version 4.8.0
  * @since 1.0.0
  */
 public class DynamicLightsConfig {
 	private static final Logger LOGGER = LoggerFactory.getLogger("LambDynamicLights|Config");
 	private static final DynamicLightsMode DEFAULT_DYNAMIC_LIGHTS_MODE = DynamicLightsMode.FANCY;
+	private static final ChunkRebuildSchedulerMode DEFAULT_CHUNK_REBUILD_SCHEDULER_MODE = ChunkRebuildSchedulerMode.CULLING;
 	private static final boolean DEFAULT_ENTITIES_LIGHT_SOURCE = true;
 	private static final boolean DEFAULT_SELF_LIGHT_SOURCE = true;
 	private static final boolean DEFAULT_WATER_SENSITIVE_CHECK = true;
@@ -64,6 +65,7 @@ public class DynamicLightsConfig {
 	private final CommentedConfig config;
 	private final LambDynLights mod;
 	private DynamicLightsMode dynamicLightsMode;
+	private ChunkRebuildSchedulerMode chunkRebuildSchedulerMode;
 	private final List<SettingEntry<?>> settingEntries;
 	private final BooleanSettingEntry entitiesLightSource;
 	private final BooleanSettingEntry selfLightSource;
@@ -91,6 +93,12 @@ public class DynamicLightsConfig {
 					.append(Text.translatable("lambdynlights.tooltip.mode.2", DynamicLightsMode.FASTEST.getTranslatedText(), DynamicLightsMode.FAST.getTranslatedText()))
 					.append(Text.literal("\n"))
 					.append(Text.translatable("lambdynlights.tooltip.mode.3", DynamicLightsMode.FANCY.getTranslatedText()))).build());
+
+	public final SpruceOption chunkRebuildSchedulerOption = new SpruceCyclingOption("lambdynlights.option.chunk_rebuild_scheduler",
+			amount -> this.setChunkRebuildSchedulerMode(this.chunkRebuildSchedulerMode.next()),
+			option -> option.getDisplayText(this.chunkRebuildSchedulerMode.getTranslatedText()),
+			TooltipData.builder().text(Text.translatable("lambdynlights.option.chunk_rebuild_scheduler.tooltip")).build()
+	);
 
 	public DynamicLightsConfig(@NotNull LambDynLights mod) {
 		this.mod = mod;
@@ -169,6 +177,11 @@ public class DynamicLightsConfig {
 		String dynamicLightsModeValue = this.config.getOrElse("mode", DEFAULT_DYNAMIC_LIGHTS_MODE.getName());
 		this.dynamicLightsMode = DynamicLightsMode.byId(dynamicLightsModeValue)
 				.orElse(DEFAULT_DYNAMIC_LIGHTS_MODE);
+		String chunkRebuildSchedulerMode = this.config.getOrElse(
+				"chunk_rebuild_scheduler", DEFAULT_CHUNK_REBUILD_SCHEDULER_MODE.getName()
+		);
+		this.chunkRebuildSchedulerMode = ChunkRebuildSchedulerMode.byId(chunkRebuildSchedulerMode)
+				.orElse(DEFAULT_CHUNK_REBUILD_SCHEDULER_MODE);
 		this.settingEntries.forEach(entry -> entry.load(this.config));
 		this.creeperLightingMode = ExplosiveLightingMode.byId(this.config.getOrElse("light_sources.creeper", DEFAULT_CREEPER_LIGHTING_MODE.getName()))
 				.orElse(DEFAULT_CREEPER_LIGHTING_MODE);
@@ -280,6 +293,7 @@ public class DynamicLightsConfig {
 	 */
 	public void reset() {
 		this.setDynamicLightsMode(DEFAULT_DYNAMIC_LIGHTS_MODE);
+		this.setChunkRebuildSchedulerMode(DEFAULT_CHUNK_REBUILD_SCHEDULER_MODE);
 		this.settingEntries.forEach(SettingEntry::reset);
 		this.setCreeperLightingMode(DEFAULT_CREEPER_LIGHTING_MODE);
 		this.setTntLightingMode(DEFAULT_TNT_LIGHTING_MODE);
@@ -308,6 +322,23 @@ public class DynamicLightsConfig {
 
 		this.dynamicLightsMode = mode;
 		this.config.set("mode", mode.getName());
+	}
+
+	/**
+	 * {@return the chunk rebuild scheduler mode}
+	 */
+	public @NotNull ChunkRebuildSchedulerMode getChunkRebuildSchedulerMode() {
+		return this.chunkRebuildSchedulerMode;
+	}
+
+	/**
+	 * Sets the dynamic lighting mode.
+	 *
+	 * @param mode the dynamic lights mode
+	 */
+	public void setChunkRebuildSchedulerMode(@NotNull ChunkRebuildSchedulerMode mode) {
+		this.chunkRebuildSchedulerMode = mode;
+		this.config.set("chunk_rebuild_scheduler", mode.getName());
 	}
 
 	/**

@@ -20,7 +20,6 @@ import dev.lambdaurora.lambdynlights.compat.CompatLayer;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightBehaviorSources;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightingEngine;
 import dev.lambdaurora.lambdynlights.engine.scheduler.ChunkRebuildScheduler;
-import dev.lambdaurora.lambdynlights.engine.scheduler.CullingChunkRebuildScheduler;
 import dev.lambdaurora.lambdynlights.engine.source.DeferredDynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSource;
@@ -60,6 +59,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
@@ -76,7 +76,7 @@ import java.util.function.Predicate;
  * Represents the LambDynamicLights mod.
  *
  * @author LambdAurora
- * @version 4.6.0
+ * @version 4.8.0
  * @since 1.0.0
  */
 @ApiStatus.Internal
@@ -115,8 +115,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 			new DynamicLightSectionDebugRenderer(this)
 	);
 
-	public final ChunkRebuildScheduler chunkRebuildScheduler
-			= new CullingChunkRebuildScheduler(this.sectionRebuildDebugRenderer);
+	private ChunkRebuildScheduler chunkRebuildScheduler;
 
 	private long lastUpdate = System.currentTimeMillis();
 	private boolean shouldTick = false;
@@ -212,6 +211,12 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 		DebugScreenEntries.register(id("dynamic_light_sources"),
 				(displayer, level, clientChunk, serverChunk) -> {
+					int sourceUpdatedLastTick = 0;
+
+					if (this.chunkRebuildScheduler != null) {
+						sourceUpdatedLastTick = this.chunkRebuildScheduler.getSourceUpdatedLastTick();
+					}
+
 					var builder = new StringBuilder(debugPrefix + "Dynamic Light Sources: ");
 					builder.append(this.getLightSourcesCount())
 							.append(" (Occupying ")
@@ -219,7 +224,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 							.append('/')
 							.append(this.engine.getSize())
 							.append(" ; Updated: ")
-							.append(this.chunkRebuildScheduler.getSourceUpdatedLastTick());
+							.append(sourceUpdatedLastTick);
 
 					if (!this.config.getDynamicLightsMode().isEnabled()) {
 						builder.append(" ; ");
@@ -242,9 +247,11 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		DebugScreenEntries.register(
 				id("chunk_rebuild_scheduler"),
 				(displayer, level, clientChunk, serverChunk) -> {
-					this.chunkRebuildScheduler.appendF3Debug(line ->
-							displayer.addToGroup(debugGroup, debugPrefix + line)
-					);
+					if (this.chunkRebuildScheduler != null) {
+						this.chunkRebuildScheduler.appendF3Debug(line ->
+								displayer.addToGroup(debugGroup, debugPrefix + line)
+						);
+					}
 				}
 		);
 		DebugScreenEntries.register(
@@ -446,7 +453,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	/**
 	 * Clears light sources.
 	 */
-	public void onChangeWorld() {
+	public void onChangeWorld(@Nullable ClientLevel level) {
 		var chunkProviders = this.dynamicLightSources.iterator();
 		DynamicLightSource it;
 		while (chunkProviders.hasNext()) {
@@ -458,7 +465,9 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		}
 
 		this.engine.resetSize();
-		this.chunkRebuildScheduler.clear();
+
+		if (level == null) this.chunkRebuildScheduler = null;
+		else this.chunkRebuildScheduler = this.config.getChunkRebuildSchedulerMode().create(this.sectionRebuildDebugRenderer);
 	}
 
 	/**

@@ -12,6 +12,7 @@ package dev.lambdaurora.lambdynlights.engine.scheduler;
 import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
 import dev.lambdaurora.lambdynlights.mixin.LevelRendererAccessor;
 import dev.lambdaurora.lambdynlights.util.DynamicLightDebugRenderer;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.ChunkSectionPos;
@@ -19,6 +20,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
+/**
+ * Represents a chunk section rebuild scheduler for dynamic light sources.
+ *
+ * @author LambdAurora, Akarys
+ * @version 4.8.0
+ * @since 4.8.0
+ */
 public abstract class ChunkRebuildScheduler {
 	protected final Minecraft client = Minecraft.getInstance();
 	protected final DynamicLightDebugRenderer.SectionRebuild sectionRebuildDebugRenderer;
@@ -38,14 +46,18 @@ public abstract class ChunkRebuildScheduler {
 	public void appendF3Debug(@NotNull Consumer<String> consumer) {
 	}
 
-	public final void update(@NotNull DynamicLightSource lightSource, @NotNull LongSet chunks) {
+	public final void update(
+			@NotNull DynamicLightSource lightSource, @NotNull Long2ObjectMap<ChunkRebuildStatus> chunks
+	) {
 		if (!chunks.isEmpty()) {
 			this.sourceUpdatedLastTick++;
 			this.accept(lightSource, chunks);
 		}
 	}
 
-	protected abstract void accept(@NotNull DynamicLightSource lightSource, @NotNull LongSet chunks);
+	protected abstract void accept(
+			@NotNull DynamicLightSource lightSource, @NotNull Long2ObjectMap<ChunkRebuildStatus> chunks
+	);
 
 	public final void remove(@NotNull DynamicLightSource lightSource) {
 		final var chunks = lightSource.getDynamicLightChunksToRebuild(true);
@@ -54,15 +66,10 @@ public abstract class ChunkRebuildScheduler {
 			this.sourceUpdatedLastTick++;
 		}
 
-		this.remove(lightSource, chunks);
+		this.remove(lightSource, chunks.keySet());
 	}
 
 	protected abstract void remove(@NotNull DynamicLightSource lightSource, @NotNull LongSet chunks);
-
-	/**
-	 * Clears this chunk rebuild scheduler.
-	 */
-	public abstract void clear();
 
 	public void startTick() {
 		this.sourceUpdatedLastTick = 0;

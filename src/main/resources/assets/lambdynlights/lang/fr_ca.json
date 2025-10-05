@@ -14,6 +14,7 @@
 	"lambdynlights.menu.tabs.debug": "Debug",
 	"lambdynlights.menu.tabs.debug.description": "Pour les moddeurs, en cas de bugs bizarres.",
 	"lambdynlights.menu.tabs.general": "Général",
+	"lambdynlights.menu.tabs.performance": "Performance",
 	"lambdynlights.menu.title": "Paramètres de %s",
 	"lambdynlights.option.debug.active_dynamic_lighting_cells": "Affiche les cellules de lumières active",
 	"lambdynlights.option.debug.active_dynamic_lighting_cells.tooltip": "Affiche dans le monde toutes les cellules qui sont actives dans le moteur de lumière dynamique.",

@@ -2,6 +2,9 @@
 # The dynamic lights mode
 mode = "fancy"
 
+# The chunk rebuild scheduler mode (immediate, culling).
+chunk_rebuild_scheduler = "culling"
+
 # Light sources settings.
 [light_sources]
 	# Enable entities light source.

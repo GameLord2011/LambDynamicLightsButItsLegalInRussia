@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
  * Represents the settings screen of LambDynamicLights.
  *
  * @author LambdAurora
- * @version 4.4.0
+ * @version 4.8.0
  * @since 1.0.0
  */
 public class SettingsScreen extends SpruceScreen {
@@ -173,6 +173,9 @@ public class SettingsScreen extends SpruceScreen {
 		this.tabbedWidget.addTabEntry(Text.translatable("lambdynlights.menu.tabs.general"), null,
 				this.tabContainerBuilder(this::buildGeneralTab)
 		);
+		this.tabbedWidget.addTabEntry(Text.translatable("lambdynlights.menu.tabs.performance"), null,
+				this.tabContainerBuilder(this::buildPerformanceTab)
+		);
 		this.tabbedWidget.addSeparatorEntry(null);
 		this.tabbedWidget.addTabEntry(Text.empty().append(dynamicLightSources).append(": ").append(this.entitiesOption.getPrefix()),
 				null, this.tabContainerBuilder(this::buildEntitiesTab));
@@ -240,6 +243,17 @@ public class SettingsScreen extends SpruceScreen {
 		list.addOptionEntry(this.config.getBeamLighting().getOption(), this.config.getFireflyLighting().getOption());
 		list.addOptionEntry(this.config.getGuardianLaser().getOption(), this.config.getSonicBoomLighting().getOption());
 		list.addSmallSingleOptionEntry(this.config.getGlowingEffectLighting().getOption());
+		context.addInnerWidget(list);
+	}
+
+	private void buildPerformanceTab(TabContext context) {
+		context.addWidget(new SpruceLabelWidget(
+				Position.of(0, 16), VERSION,
+				context.width() - 4, SpruceTextAlignment.RIGHT
+		));
+
+		var list = new SpruceOptionListWidget(Position.origin(), context.width(), context.height());
+		list.addSingleOptionEntry(this.config.chunkRebuildSchedulerOption);
 		context.addInnerWidget(list);
 	}
 
