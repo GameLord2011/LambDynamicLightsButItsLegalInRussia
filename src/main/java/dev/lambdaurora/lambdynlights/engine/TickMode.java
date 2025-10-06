@@ -40,4 +40,10 @@ public enum TickMode {
 			return other;
 		return this;
 	}
+
+	public TickMode max(TickMode other) {
+		if (this.delay > other.delay)
+			return other;
+		return this;
+	}
 }

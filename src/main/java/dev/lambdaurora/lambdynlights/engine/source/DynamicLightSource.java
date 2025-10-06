@@ -19,7 +19,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.DoubleConsumer;
 import java.util.function.LongConsumer;
 import java.util.stream.Stream;
 
@@ -31,6 +30,11 @@ import java.util.stream.Stream;
  * @since 4.0.0
  */
 public interface DynamicLightSource {
+	/**
+	 * {@return the identifier of this dynamic light source, may not be unique}
+	 */
+	int getDynamicLightId();
+
 	/**
 	 * Splits this dynamic light source into spatial lookup entries.
 	 *

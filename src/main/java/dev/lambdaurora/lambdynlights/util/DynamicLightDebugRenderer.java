@@ -18,6 +18,7 @@ import dev.lambdaurora.spruceui.util.ColorUtil;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -236,6 +237,10 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 			if (!this.isEnabled()) return;
 
 			this.requestedChunks = chunks.get();
+		}
+
+		public void clearRequestedChunks() {
+			this.requestedChunks = Long2ObjectMaps.emptyMap();
 		}
 
 		public void tick() {

@@ -14,10 +14,10 @@ import com.electronwill.nightconfig.core.io.ParsingException;
 import com.electronwill.nightconfig.core.io.ParsingMode;
 import com.electronwill.nightconfig.toml.TomlParser;
 import com.electronwill.nightconfig.toml.TomlWriter;
+import dev.lambdaurora.lambdynlights.config.AdaptativeTickingOption;
 import dev.lambdaurora.lambdynlights.config.BooleanSettingEntry;
 import dev.lambdaurora.lambdynlights.config.SettingEntry;
 import dev.lambdaurora.spruceui.option.SpruceCyclingOption;
-import dev.lambdaurora.spruceui.option.SpruceDoubleOption;
 import dev.lambdaurora.spruceui.option.SpruceOption;
 import dev.lambdaurora.spruceui.tooltip.TooltipData;
 import dev.yumi.mc.core.api.YumiMods;
@@ -51,6 +51,8 @@ public class DynamicLightsConfig {
 	private static final Logger LOGGER = LoggerFactory.getLogger("LambDynamicLights|Config");
 	private static final DynamicLightsMode DEFAULT_DYNAMIC_LIGHTS_MODE = DynamicLightsMode.FANCY;
 	private static final ChunkRebuildSchedulerMode DEFAULT_CHUNK_REBUILD_SCHEDULER_MODE = ChunkRebuildSchedulerMode.CULLING;
+	private static final int DEFAULT_SLOW_TICKING_DISTANCE = 5;
+	private static final int DEFAULT_SLOWER_TICKING_DISTANCE = 8;
 	private static final boolean DEFAULT_ENTITIES_LIGHT_SOURCE = true;
 	private static final boolean DEFAULT_SELF_LIGHT_SOURCE = true;
 	private static final boolean DEFAULT_WATER_SENSITIVE_CHECK = true;
@@ -70,6 +72,7 @@ public class DynamicLightsConfig {
 	private ChunkRebuildSchedulerMode chunkRebuildSchedulerMode;
 	private int slowTickingDistance;
 	private int slowerTickingDistance;
+	private final BooleanSettingEntry backgroundAdaptativeTicking;
 	private final List<SettingEntry<?>> settingEntries;
 	private final BooleanSettingEntry entitiesLightSource;
 	private final BooleanSettingEntry selfLightSource;
@@ -106,27 +109,46 @@ public class DynamicLightsConfig {
 			)).build()
 	);
 
-	public final SpruceOption slowTickingOption = SpruceDoubleOption.doubleBuilder(
-			"lambdynlights.option.adaptative_ticking.slow",
-			0, 32, 1,
+	public final AdaptativeTickingOption slowTickingOption = new AdaptativeTickingOption(
+			"slow",
 			() -> MathHelper.sqrt(this.slowTickingDistance) / 16.0,
-			value -> this.setSlowTickingChunks(value.intValue(), true),
-			option -> option.getDisplayText(Text.literal(String.valueOf((int) option.get())))
-	).build();
+			chunks -> {
+				this.setSlowTickingChunks(chunks, true);
 
-	public final SpruceOption slowerTickingOption = SpruceDoubleOption.doubleBuilder(
-			"lambdynlights.option.adaptative_ticking.slower",
-			0, 32, 1,
+				if (this.getSlowTickingDistance() > this.getSlowerTickingDistance()) {
+					this.setSlowerTickingChunks(chunks, true);
+				}
+			},
+			TooltipData.builder()
+					.text(Text.translatable("lambdynlights.option.adaptative_ticking.slow.tooltip"))
+					.build()
+	);
+
+	public final AdaptativeTickingOption slowerTickingOption = new AdaptativeTickingOption(
+			"slower",
 			() -> MathHelper.sqrt(this.slowerTickingDistance) / 16.0,
-			value -> this.setSlowerTickingChunks(value.intValue(), true),
-			option -> option.getDisplayText(Text.literal(String.valueOf((int) option.get())))
-	).build();
+			chunks -> {
+				this.setSlowerTickingChunks(chunks, true);
+
+				if (this.getSlowTickingDistance() > this.getSlowerTickingDistance()) {
+					this.setSlowTickingChunks(chunks, true);
+				}
+			},
+			TooltipData.builder()
+					.text(Text.translatable("lambdynlights.option.adaptative_ticking.slower.tooltip"))
+					.build()
+	);
 
 
 	public DynamicLightsConfig(@NotNull LambDynLights mod) {
 		this.mod = mod;
 		this.config = CommentedConfig.inMemory();
 
+		this.backgroundAdaptativeTicking = new BooleanSettingEntry("adaptative_ticking.background_sleep", true, this.config,
+				TooltipData.builder()
+						.text(Text.translatable("lambdynlights.option.adaptative_ticking.background_sleep.tooltip"))
+						.build()
+		);
 		this.entitiesLightSource = new BooleanSettingEntry("light_sources.entities", DEFAULT_ENTITIES_LIGHT_SOURCE, this.config,
 				TooltipData.builder().text(Text.translatable("lambdynlights.tooltip.entities")).build());
 		this.selfLightSource = new BooleanSettingEntry("light_sources.self", DEFAULT_SELF_LIGHT_SOURCE, this.config,
@@ -172,7 +194,11 @@ public class DynamicLightsConfig {
 				TooltipData.builder().text(Text.translatable("lambdynlights.option.debug.display_behavior_bounding_box.tooltip")).build()
 		);
 
+		this.slowTickingOption.setCompanion(this.slowerTickingOption);
+		this.slowerTickingOption.setCompanion(this.slowTickingOption);
+
 		this.settingEntries = List.of(
+				this.backgroundAdaptativeTicking,
 				this.entitiesLightSource,
 				this.selfLightSource,
 				this.waterSensitiveCheck,
@@ -205,8 +231,8 @@ public class DynamicLightsConfig {
 		);
 		this.chunkRebuildSchedulerMode = ChunkRebuildSchedulerMode.byId(chunkRebuildSchedulerMode)
 				.orElse(DEFAULT_CHUNK_REBUILD_SCHEDULER_MODE);
-		this.setSlowTickingChunks(config.getIntOrElse("adaptative_ticking.slow", 0), false);
-		this.setSlowerTickingChunks(config.getIntOrElse("adaptative_ticking.slower", 0), false);
+		this.setSlowTickingChunks(config.getIntOrElse("adaptative_ticking.slow", DEFAULT_SLOW_TICKING_DISTANCE), false);
+		this.setSlowerTickingChunks(config.getIntOrElse("adaptative_ticking.slower", DEFAULT_SLOWER_TICKING_DISTANCE), false);
 		this.settingEntries.forEach(entry -> entry.load(this.config));
 		this.creeperLightingMode = ExplosiveLightingMode.byId(this.config.getOrElse("light_sources.creeper", DEFAULT_CREEPER_LIGHTING_MODE.getName()))
 				.orElse(DEFAULT_CREEPER_LIGHTING_MODE);
@@ -319,6 +345,8 @@ public class DynamicLightsConfig {
 	public void reset() {
 		this.setDynamicLightsMode(DEFAULT_DYNAMIC_LIGHTS_MODE);
 		this.setChunkRebuildSchedulerMode(DEFAULT_CHUNK_REBUILD_SCHEDULER_MODE);
+		this.setSlowTickingChunks(DEFAULT_SLOW_TICKING_DISTANCE, true);
+		this.setSlowerTickingChunks(DEFAULT_SLOWER_TICKING_DISTANCE, true);
 		this.settingEntries.forEach(SettingEntry::reset);
 		this.setCreeperLightingMode(DEFAULT_CREEPER_LIGHTING_MODE);
 		this.setTntLightingMode(DEFAULT_TNT_LIGHTING_MODE);
@@ -388,6 +416,13 @@ public class DynamicLightsConfig {
 		if (save) {
 			this.config.set("adaptative_ticking.slower", chunks);
 		}
+	}
+
+	/**
+	 * {@return the background adaptative ticking setting holder}
+	 */
+	public BooleanSettingEntry getBackgroundAdaptativeTicking() {
+		return this.backgroundAdaptativeTicking;
 	}
 
 	/**

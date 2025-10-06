@@ -146,7 +146,7 @@ public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
 
 	@Override
 	public void close() {
-		this.sectionRebuildDebugRenderer.setRequestedChunks(Long2ObjectMaps::emptyMap);
+		this.sectionRebuildDebugRenderer.clearRequestedChunks();
 	}
 
 	@Override

@@ -23,6 +23,7 @@ import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.LongConsumer;
 import java.util.stream.Stream;
 
@@ -34,6 +35,9 @@ import java.util.stream.Stream;
  * @since 4.0.0
  */
 public final class DeferredDynamicLightSource implements DynamicLightSource {
+	private static final AtomicInteger ID_COUNTER = new AtomicInteger(0);
+
+	private final int id = ID_COUNTER.getAndIncrement();
 	private final DynamicLightBehavior behavior;
 	private DynamicLightBehavior.BoundingBox previousBoundingBox;
 
@@ -44,6 +48,11 @@ public final class DeferredDynamicLightSource implements DynamicLightSource {
 
 	public DynamicLightBehavior behavior() {
 		return this.behavior;
+	}
+
+	@Override
+	public int getDynamicLightId() {
+		return this.id;
 	}
 
 	@Override
