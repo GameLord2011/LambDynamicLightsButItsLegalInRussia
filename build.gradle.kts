@@ -69,7 +69,7 @@ lambdamcdev.manifests {
 		withAccessTransformer("META-INF/accesstransformer.cfg")
 		withMixins("lambdynlights.mixins.json", "lambdynlights.lightsource.mixins.json")
 		withDepend(Constants.NAMESPACE + "_api", "[${version},)", Nmt.DependencySide.CLIENT)
-		withDepend("minecraft", "[${libs.versions.minecraft.get()},)")
+		withDepend("minecraft", project.property("neoforge_mc_constraints").toString())
 		withDepend("spruceui", "[${libs.versions.spruceui.get()},)", Nmt.DependencySide.CLIENT)
 		withDepend("yumi_mc_core", "[${libs.versions.yumi.mc.foundation.get()},)", Nmt.DependencySide.CLIENT)
 		withBreak("sodiumdynamiclights", "*", Nmt.DependencySide.CLIENT)
