@@ -519,6 +519,8 @@
   - Light sources behind the camera will tick a lot slower.
 - Cleaned up a bit the settings screen and added explanations to the entities dynamic light sources tab.
 - Updated German translations ([#320](https://github.com/LambdAurora/LambDynamicLights/pull/320)).
+- Updated [Yumi Minecraft Libraries: Foundation].
+  - Fixed crashes with the latest versions of NeoForge.
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"

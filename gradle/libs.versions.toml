@@ -1,14 +1,14 @@
 [versions]
 minecraft = "1.21.10"
 fabric-loader = "0.17.2"
-neoforge-loader = "10.0.10"
+neoforge-loader = "10.0.18"
 fabric-api = "0.133.14+1.21.9"
 mappings-yalmm = "2"
 mappings-parchment = "2024.07.28"
 
 # Dependencies
 yumi-commons = "1.0.0-beta.5"
-yumi-mc-foundation = "1.0.0-alpha.16+1.21.9"
+yumi-mc-foundation = "1.0.0-alpha.17+1.21.9"
 spruceui = "9.0.0+1.21.9"
 pridelib = "1.5.1+1.21.9"
 modmenu = "15.0.0-beta.1"
