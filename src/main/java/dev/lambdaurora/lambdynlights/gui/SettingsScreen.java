@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * Represents the settings screen of LambDynamicLights.
  *
  * @author LambdAurora
- * @version 4.4.0
+ * @version 4.8.0
  * @since 1.0.0
  */
 public class SettingsScreen extends SpruceScreen {
@@ -150,10 +150,6 @@ public class SettingsScreen extends SpruceScreen {
 		this.config.save();
 	}
 
-	private int getTextHeight() {
-		return (5 + this.font.lineHeight) * 3 + 5;
-	}
-
 	@Override
 	protected void init() {
 		super.init();
@@ -168,6 +164,9 @@ public class SettingsScreen extends SpruceScreen {
 		this.tabbedWidget.getList().setBackground(RandomPrideFlagBackground.random());
 		this.tabbedWidget.addTabEntry(Text.translatable("lambdynlights.menu.tabs.general"), null,
 				this.tabContainerBuilder(this::buildGeneralTab)
+		);
+		this.tabbedWidget.addTabEntry(Text.translatable("lambdynlights.menu.tabs.performance"), null,
+				this.tabContainerBuilder(this::buildPerformanceTab)
 		);
 		this.tabbedWidget.addSeparatorEntry(Text.translatable(DYNAMIC_LIGHT_SOURCES_KEY));
 		this.tabbedWidget.addTabEntry(
@@ -234,6 +233,17 @@ public class SettingsScreen extends SpruceScreen {
 		list.addSingleOptionEntry(this.config.dynamicLightsModeOption);
 		list.addOptionEntry(this.entitiesOption, this.selfOption);
 		list.addSingleOptionEntry(this.waterSensitiveOption);
+		context.addInnerWidget(list);
+	}
+
+	private void buildPerformanceTab(TabContext context) {
+		context.addVersionLabel();
+
+		var list = new SpruceOptionListWidget(Position.origin(), context.width(), context.height());
+		list.addSingleOptionEntry(this.config.chunkRebuildSchedulerOption);
+		list.addSingleOptionEntry(this.config.slowTickingOption);
+		list.addSingleOptionEntry(this.config.slowerTickingOption);
+		list.addSingleOptionEntry(this.config.getBackgroundAdaptativeTicking().getOption());
 		context.addInnerWidget(list);
 	}
 
