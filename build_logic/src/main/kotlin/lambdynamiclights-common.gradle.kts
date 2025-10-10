@@ -20,12 +20,13 @@ version = "${ldl.version()}+${McVersionLookup.getVersionTag(ldl.mcVersion())}"
 lambdamcdev.namespace = Constants.NAMESPACE
 val javaVersion = Integer.parseInt(project.property("java_version").toString())
 
-if (!(System.getenv("CURSEFORGE_TOKEN") != null
+// What is this devbuild switch? Serously, what is this?
+/*if (!(System.getenv("CURSEFORGE_TOKEN") != null
 			|| System.getenv("MODRINTH_TOKEN") != null
 			|| System.getenv("LDL_MAVEN") != null)
 ) {
 	version = (version as String) + "-local"
-}
+}*/
 
 repositories {
 	mavenCentral()
