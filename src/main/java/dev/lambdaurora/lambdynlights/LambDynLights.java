@@ -75,7 +75,7 @@ import java.util.function.Predicate;
  * Represents the LambDynamicLights mod.
  *
  * @author LambdAurora
- * @version 4.8.0
+ * @version 4.9.0
  * @since 1.0.0
  */
 @ApiStatus.Internal
@@ -105,11 +105,9 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 	private final DynamicLightDebugRenderer.SectionRebuild sectionRebuildDebugRenderer
 			= new DynamicLightDebugRenderer.SectionRebuild(this);
-	public final @Unmodifiable List<DynamicLightDebugRenderer> opaqueDebugRenderers = List.of(
+	public final @Unmodifiable List<DynamicLightDebugRenderer> renderers = List.of(
 			new DynamicLightBehaviorDebugRenderer(this, this.dynamicLightSources),
-			new DynamicLightLevelDebugRenderer(this)
-	);
-	public final @Unmodifiable List<DynamicLightDebugRenderer> transparentDebugRenderers = List.of(
+			new DynamicLightLevelDebugRenderer(this),
 			sectionRebuildDebugRenderer,
 			new DynamicLightSectionDebugRenderer(this)
 	);
@@ -244,8 +242,8 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 		// If the entity is far behind the camera, we greatly slow it down.
 		var camera = Minecraft.getInstance().gameRenderer.getMainCamera();
-		var planeNormal = camera.getLookVector();
-		var planeOrigin = camera.getPosition();
+		var planeNormal = camera.forwardVector();
+		var planeOrigin = camera.position();
 
 		var planeOriginToEntity = new Vector3f(
 				(float) (x - planeOrigin.x),

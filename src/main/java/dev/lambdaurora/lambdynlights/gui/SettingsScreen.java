@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  * Represents the settings screen of LambDynamicLights.
  *
  * @author LambdAurora
- * @version 4.8.0
+ * @version 4.9.0
  * @since 1.0.0
  */
 public class SettingsScreen extends SpruceScreen {
@@ -140,7 +140,7 @@ public class SettingsScreen extends SpruceScreen {
 		this.resetOption = SpruceSimpleActionOption.reset(btn -> {
 			this.config.reset();
 			var client = Minecraft.getInstance();
-			this.init(client, client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight());
+			this.init(client.getWindow().getGuiScaledWidth(), client.getWindow().getGuiScaledHeight());
 		});
 	}
 

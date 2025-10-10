@@ -527,6 +527,11 @@
 - Fixed crash due to null frustum.
   - This crash happens very inconsistently upon joining a world, when the first client tick happens but the frustum is not yet setup.
 
+## 4.9.0-alpha.1
+
+- Updated to Minecraft 25w41a.
+- Updated [SpruceUI].
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"
