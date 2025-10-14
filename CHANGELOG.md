@@ -537,7 +537,7 @@
 
 - Fixed bad API identifier in NeoForge JarJar metadata.
   - This fixes some issues loading newer versions of LambDynamicLights with mods that include its API JAR on NeoForge.
-- Updated Vietnamese translations ([#330](https://github.com/LambdAurora/LambDynamicLights/pull/326)).
+- Updated Vietnamese translations ([#330](https://github.com/LambdAurora/LambDynamicLights/pull/330)).
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
