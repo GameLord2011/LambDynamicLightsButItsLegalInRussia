@@ -1,16 +1,16 @@
 [versions]
-minecraft = "25w41a"
+minecraft = "25w42a"
 fabric-loader = "0.17.3"
 neoforge-loader = "10.0.18"
 fabric-api = "0.135.1+1.21.11"
-mappings-yalmm = "2"
+mappings-yalmm = "4"
 mappings-parchment = "2024.07.28"
 
 # Dependencies
 yumi-commons = "1.0.0"
 yumi-mc-foundation = "1.0.0-alpha.17+1.21.9"
-spruceui = "9.0.0+25w41a"
-pridelib = "1.5.1+1.21.9"
+spruceui = "9.1.0-alpha.1+25w42a"
+pridelib = "1.5.1+25w42a"
 
 modmenu = "16.0.0-rc.1"
 trinkets = "3.10.0"

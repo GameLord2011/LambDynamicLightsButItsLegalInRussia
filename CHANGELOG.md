@@ -539,9 +539,9 @@
   - This fixes some issues loading newer versions of LambDynamicLights with mods that include its API JAR on NeoForge.
 - Updated Vietnamese translations ([#330](https://github.com/LambdAurora/LambDynamicLights/pull/330)).
 
-## 4.9.0-alpha.1
+## 4.9.0-alpha.2
 
-- Updated to Minecraft 25w41a.
+- Updated to Minecraft 25w42a.
 - Updated [SpruceUI].
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
