@@ -1,8 +1,4 @@
 import lambdynamiclights.Constants
-import net.fabricmc.loom.LoomGradleExtension
-import net.fabricmc.loom.api.mappings.layered.MappingsNamespace
-import net.fabricmc.loom.task.RemapJarTask
-import net.fabricmc.loom.task.RemapSourcesJarTask
 
 plugins {
 	id("lambdynamiclights")
@@ -12,7 +8,16 @@ val prettyName = "${Constants.PRETTY_NAME} (API)"
 
 base.archivesName.set(Constants.NAME + "-api")
 
+val mojmap = lambdamcdev.setupMojmapRemapping()
+configurations["mojmapApi"].extendsFrom(configurations["api"])
+
 dependencies {
+	api(libs.yumi.commons.event) {
+		// Exclude Minecraft and loader-provided libraries.
+		exclude(group = "org.slf4j")
+		exclude(group = "org.ow2.asm")
+	}
+
 	include(libs.yumi.commons.core)
 	include(libs.yumi.commons.collections)
 	include(libs.yumi.commons.event)
@@ -38,7 +43,7 @@ lambdamcdev {
 		nmt {
 			fmj.copyTo(this)
 			withLoaderVersion("[2,)")
-			withDepend("minecraft", "[" + libs.versions.minecraft.get() + ",)")
+			withDepend("minecraft", project.property("neoforge_mc_constraints").toString())
 		}
 
 		fmj {
@@ -57,11 +62,14 @@ tasks.generateFmj.configure {
 	dependsOn(generateNmt)
 }
 
-val mojmap = lambdamcdev.setupMojmapRemapping()
 val remapMojmap = mojmap.registerRemap(tasks.remapJar) {}
 mojmap.setJarArtifact(remapMojmap)
 val remapMojmapSources = mojmap.registerSourcesRemap(tasks.remapSourcesJar) {}
 mojmap.setSourcesArtifact(remapMojmapSources)
+
+tasks.runClient {
+	this.enabled = false
+}
 
 // Configure the maven publication.
 publishing {
@@ -69,7 +77,7 @@ publishing {
 		create<MavenPublication>("mavenJava") {
 			from(components["java"])
 
-			artifactId = "lambdynamiclights-api"
+			artifactId = Constants.API_ARTIFACT
 
 			pom {
 				name.set(prettyName)

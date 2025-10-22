@@ -12,11 +12,14 @@
 		"EntityTypeMixin",
 		"GuiMixin",
 		"LevelRendererAccessor",
+		"LevelRendererMixin",
 		"MinecraftClientMixin",
 		"OptionsMixin",
 		"ParticleGroupMixin",
 		"RegistryOpsAccessor",
 		"VideoSettingsScreenMixin",
+		"sodium.RSOTabAccessor",
+		"sodium.SodiumOptionsAPITabFrameMixin",
 		"sodium.SodiumOptionsGuiMixin"
 	],
 	"injectors": {

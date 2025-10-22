@@ -29,7 +29,7 @@ lambdamcdev {
 				.withIcon("assets/${Constants.NAMESPACE}/icon.png")
 				.withEnvironment("client")
 				.withDepend("fabricloader", ">=${libs.versions.fabric.loader.get()}")
-				.withDepend("minecraft", "~1.21.9-")
+				.withDepend("minecraft", project.property("fabric_mc_constraints").toString())
 				.withDepend("java", ">=${project.property("java_version")}")
 				.withModMenu {
 					it.withCurseForge("https://www.curseforge.com/minecraft/mc-mods/lambdynamiclights")
@@ -51,12 +51,6 @@ dependencies {
 		//parchment("org.parchmentmc.data:parchment-${Constants.getMcVersionString()}:${libs.versions.mappings.parchment.get()}@zip")
 		mappings("dev.lambdaurora:yalmm:${libs.versions.minecraft.get()}+build.${libs.versions.mappings.yalmm.get()}")
 	})
-
-	api(libs.yumi.commons.event) {
-		// Exclude Minecraft and loader-provided libraries.
-		exclude(group = "org.slf4j")
-		exclude(group = "org.ow2.asm")
-	}
 }
 
 tasks.jar {
