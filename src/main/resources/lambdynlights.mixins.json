@@ -18,6 +18,8 @@
 		"ParticleGroupMixin",
 		"RegistryOpsAccessor",
 		"VideoSettingsScreenMixin",
+		"sodium.RSOTabAccessor",
+		"sodium.SodiumOptionsAPITabFrameMixin",
 		"sodium.SodiumOptionsGuiMixin"
 	],
 	"injectors": {

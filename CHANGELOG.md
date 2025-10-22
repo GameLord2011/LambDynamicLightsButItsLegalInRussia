@@ -527,6 +527,23 @@
 - Fixed crash due to null frustum.
   - This crash happens very inconsistently upon joining a world, when the first client tick happens but the frustum is not yet setup.
 
+### 4.8.3
+
+- Fixed integration with Sodium Options API.
+- Updated Upside-down English translations.
+- Updated Turkish translations ([#326](https://github.com/LambdAurora/LambDynamicLights/pull/326)).
+
+### 4.8.4
+
+- Fixed bad API identifier in NeoForge JarJar metadata.
+  - This fixes some issues loading newer versions of LambDynamicLights with mods that include its API JAR on NeoForge.
+- Updated Vietnamese translations ([#330](https://github.com/LambdAurora/LambDynamicLights/pull/330)).
+
+### 4.8.5
+
+- Fixed bad Maven metadata which prevented auto-import of some libraries needed by LambDynamicLights.
+  - This update is only technical, as such this update only affects the publishing of the mod for other modders to use.
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"
