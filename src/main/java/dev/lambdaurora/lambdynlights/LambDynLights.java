@@ -354,8 +354,6 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	}
 
 	public void onEndLevelTick() {
-		var renderer = Minecraft.getInstance().levelRenderer;
-
 		this.chunkRebuildScheduler.startTick();
 
 		this.lightSourcesLock.writeLock().lock();
