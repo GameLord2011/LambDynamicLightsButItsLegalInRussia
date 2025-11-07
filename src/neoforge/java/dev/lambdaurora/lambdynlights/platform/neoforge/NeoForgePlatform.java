@@ -31,7 +31,10 @@ import java.util.function.Consumer;
  * @since 4.5.0
  */
 public final class NeoForgePlatform implements Platform {
+	public static final NeoForgePlatform INSTANCE = new NeoForgePlatform();
 	final List<PendingResourceReloader> reloaders = new ArrayList<>();
+
+	private NeoForgePlatform() {}
 
 	@Override
 	public void registerReloader(LightSourceLoader<?> reloader) {

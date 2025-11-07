@@ -66,7 +66,7 @@ lambdamcdev.manifests {
 		withDescription(Constants.RUNTIME_DESCRIPTION)
 		withLoaderVersion("[2,)")
 		withYumiEntrypoints("yumi:client_init", "dev.lambdaurora.lambdynlights.LambDynLights::INSTANCE")
-		withYumiEntrypoints("lambdynlights:platform", "dev.lambdaurora.lambdynlights.platform.neoforge.NeoForgePlatform")
+		withYumiEntrypoints("lambdynlights:platform", "dev.lambdaurora.lambdynlights.platform.neoforge.NeoForgePlatform::INSTANCE")
 		withAccessTransformer("META-INF/accesstransformer.cfg")
 		withMixins("lambdynlights.mixins.json", "lambdynlights.lightsource.mixins.json")
 		withDepend(Constants.NAMESPACE + "_api", "[${version},)", Nmt.DependencySide.CLIENT)
