@@ -552,6 +552,10 @@
     The fix is to only rely on the interface methods that should be unique enough to prevent future issues.
     This also means this is an issue which is load-order dependent.*
 
+## Next
+
+- Added Korean translations ([#333](https://github.com/LambdAurora/LambDynamicLights/pull/333)).
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"
