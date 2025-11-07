@@ -13,7 +13,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Contract;
@@ -59,7 +59,7 @@ public record ItemDerivedEntityLuminance(
 		boolean wet = this.always.map(value -> switch (value) {
 			case DRY -> false;
 			case WET -> true;
-		}).orElseGet(() -> this.includeRain ? entity.isInWaterOrRain() : entity.isSubmergedInWater());
+		}).orElseGet(() -> this.includeRain ? entity.isInWaterOrRain() : entity.isUnderWater());
 
 		return itemLightSourceManager.getLuminance(this.item, wet);
 	}

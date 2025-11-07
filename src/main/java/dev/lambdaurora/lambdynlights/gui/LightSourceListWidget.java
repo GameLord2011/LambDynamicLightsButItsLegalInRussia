@@ -28,7 +28,7 @@ import dev.lambdaurora.spruceui.widget.container.SpruceParentWidget;
 import dev.lambdaurora.spruceui.widget.text.SpruceTextFieldWidget;
 import dev.yumi.commons.TriState;
 import dev.yumi.commons.collections.YumiCollections;
-import net.minecraft.TextFormatting;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -38,8 +38,8 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.locale.Language;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.Text;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
@@ -63,11 +63,11 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		this.explanationEntry = new LightSourceListEntry(this);
 		this.explanationEntry.children.add(new SpruceLabelWidget(
 				Position.of(this.explanationEntry, this.explanationEntry.getWidth() / 2 - 145, 0),
-				Text.literal("ℹ ").withStyle(TextFormatting.DARK_AQUA)
-						.append(Text.translatable(
+				Component.literal("ℹ ").withStyle(ChatFormatting.DARK_AQUA)
+						.append(Component.translatable(
 										"lambdynlights.menu.tabs.dynamic_lights.entity.explanation",
-										Text.translatable("lambdynlights")
-								).withStyle(TextFormatting.GRAY)
+										Component.translatable("lambdynlights")
+								).withStyle(ChatFormatting.GRAY)
 						),
 				145 * 2,
 				Language.getInstance().isDefaultRightToLeft() ? SpruceTextAlignment.RIGHT : SpruceTextAlignment.LEFT
@@ -76,12 +76,12 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		searchBar.setChangedListener(this::update);
 		searchBar.setRenderTextProvider((input, firstCharacterIndex) -> {
 			if (this.children().isEmpty()) {
-				return FormattedCharSequence.forward(input, Style.EMPTY.withColor(TextFormatting.RED));
+				return FormattedCharSequence.forward(input, Style.EMPTY.withColor(ChatFormatting.RED));
 			}
 
 			var list = Stream.of(input.split(" "))
 					.map(this::stylizeFilterPart)
-					.map(Text::getVisualOrderText)
+					.map(Component::getVisualOrderText)
 					.toList();
 			return FormattedCharSequence.fromList(list);
 		});
@@ -134,7 +134,7 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		for (var part : filter) {
 			if (part.startsWith("@")) {
 				// Namespace
-				if (!entry.option.lambdynlights$getId().namespace().startsWith(part.substring(1))) {
+				if (!entry.option.lambdynlights$getId().getNamespace().startsWith(part.substring(1))) {
 					return false;
 				}
 
@@ -159,17 +159,17 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		return true;
 	}
 
-	private Text stylizeFilterPart(String filter) {
+	private Component stylizeFilterPart(String filter) {
 		if (filter.startsWith("@")) {
-			return Text.literal(filter + " ").withStyle(TextFormatting.AQUA);
+			return Component.literal(filter + " ").withStyle(ChatFormatting.AQUA);
 		} else if (filter.startsWith("$")) {
 			var valueFilter = this.evaluateValueFilter(filter.substring(1));
-			return Text.literal(filter + " ").withStyle(switch (valueFilter) {
-				case TriState.TRUE, TriState.FALSE -> TextFormatting.GOLD;
-				default -> TextFormatting.RED;
+			return Component.literal(filter + " ").withStyle(switch (valueFilter) {
+				case TriState.TRUE, TriState.FALSE -> ChatFormatting.GOLD;
+				default -> ChatFormatting.RED;
 			});
 		} else {
-			return Text.literal(filter + " ");
+			return Component.literal(filter + " ");
 		}
 	}
 
@@ -213,7 +213,7 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 						}
 				);
 
-		builder.add(NarratedElementType.USAGE, Text.translatable("narration.component_list.usage"));
+		builder.add(NarratedElementType.USAGE, Component.translatable("narration.component_list.usage"));
 	}
 
 	public static sealed class LightSourceListEntry
@@ -393,8 +393,8 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 			);
 
 			if (Minecraft.getInstance().options.advancedItemTooltips) {
-				var id = BuiltInRegistries.ENTITY_TYPE.getId((EntityType<?>) option);
-				label.setTooltip(Text.literal(id.toString()).withStyle(TextFormatting.GRAY));
+				var id = BuiltInRegistries.ENTITY_TYPE.getKey((EntityType<?>) option);
+				label.setTooltip(Component.literal(id.toString()).withStyle(ChatFormatting.GRAY));
 			}
 
 			entry.children.add(label);

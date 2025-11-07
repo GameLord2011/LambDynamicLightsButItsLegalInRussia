@@ -10,7 +10,7 @@
 package dev.lambdaurora.lambdynlights.api.item;
 
 import dev.yumi.commons.event.Event;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -35,7 +35,7 @@ public interface ItemLightSourceManager {
 	 *
 	 * @since 4.6.0
 	 */
-	Identifier RESOURCE_RELOADER_ID = Identifier.of("lambdynlights", "item");
+	Identifier RESOURCE_RELOADER_ID = Identifier.fromNamespaceAndPath("lambdynlights", "item");
 
 	/**
 	 * {@return the registration event for item light sources}

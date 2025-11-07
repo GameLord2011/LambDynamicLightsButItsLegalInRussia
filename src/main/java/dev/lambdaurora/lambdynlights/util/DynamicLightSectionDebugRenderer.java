@@ -9,16 +9,16 @@
 
 package dev.lambdaurora.lambdynlights.util;
 
-import com.mojang.blaze3d.vertex.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightingEngine;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.debug.DebugValueAccess;
@@ -57,7 +57,7 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 
 	@Override
 	public void render(
-			@NotNull MatrixStack matrices, @NotNull MultiBufferSource bufferSource, double x, double y, double z,
+			@NotNull PoseStack poses, @NotNull MultiBufferSource bufferSource, double x, double y, double z,
 			@NotNull DebugValueAccess debugValueAccess, @NotNull Frustum frustum
 	) {
 		int cellDisplayRadius = this.config.getDebugCellDisplayRadius();
@@ -71,13 +71,13 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 		if (this.data == null || Duration.between(this.lastUpdateTime, instant).compareTo(REFRESH_INTERVAL) > 0) {
 			this.lastUpdateTime = instant;
 			this.data = new DynamicLightSectionDebugRenderer.SectionData(
-					this.lightingEngine, RADIUS, this.client.player.getBlockPos()
+					this.lightingEngine, RADIUS, this.client.player.blockPosition()
 			);
 		}
 
-		int playerCellX = DynamicLightingEngine.positionToCell(this.client.player.getBlockPos().getX());
-		int playerCellY = DynamicLightingEngine.positionToCell(this.client.player.getBlockPos().getY());
-		int playerCellZ = DynamicLightingEngine.positionToCell(this.client.player.getBlockPos().getZ());
+		int playerCellX = DynamicLightingEngine.positionToCell(this.client.player.blockPosition().getX());
+		int playerCellY = DynamicLightingEngine.positionToCell(this.client.player.blockPosition().getY());
+		int playerCellZ = DynamicLightingEngine.positionToCell(this.client.player.blockPosition().getZ());
 
 		int playerHash = this.lightingEngine.hashCell(playerCellX, playerCellY, playerCellZ);
 
@@ -91,7 +91,7 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 						int currentHash = this.lightingEngine.hashCell(cellX, cellY, cellZ);
 
 						DebugRenderer.renderFloatingText(
-								matrices,
+								poses,
 								bufferSource,
 								"HASH(%d, %d, %d) = %d".formatted(cellX, cellY, cellZ, currentHash),
 								cellX * DynamicLightingEngine.CELL_SIZE + DynamicLightingEngine.CELL_SIZE / 2.0,
@@ -105,10 +105,10 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 			}
 		}
 
-		renderEdges(matrices, this.data.matchShape, this.data.origin, bufferSource, x, y, z, DynamicLightingEngine.CELL_SIZE, COLOR);
+		renderEdges(poses, this.data.matchShape, this.data.origin, bufferSource, x, y, z, DynamicLightingEngine.CELL_SIZE, COLOR);
 		if (this.config.getDebugActiveDynamicLightingCells().get()) {
-			renderEdges(matrices, this.data.activeShape, this.data.origin, bufferSource, x, y, z, DynamicLightingEngine.CELL_SIZE, ACTIVE_COLOR);
-			renderEdges(matrices, this.data.activeNeighborShape, this.data.origin, bufferSource, x, y, z, DynamicLightingEngine.CELL_SIZE, ACTIVE_NEIGHBOR_COLOR);
+			renderEdges(poses, this.data.activeShape, this.data.origin, bufferSource, x, y, z, DynamicLightingEngine.CELL_SIZE, ACTIVE_COLOR);
+			renderEdges(poses, this.data.activeNeighborShape, this.data.origin, bufferSource, x, y, z, DynamicLightingEngine.CELL_SIZE, ACTIVE_NEIGHBOR_COLOR);
 
 			this.data.activeShape.forAllBoxes((startCellX, startCellY, startCellZ, endCellX, endCellY, endCellZ) -> {
 				for (int currentCellX = startCellX; currentCellX < endCellX; currentCellX++) {
@@ -119,7 +119,7 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 							int cellZ = currentCellZ + data.origin.getZ();
 
 							DebugRenderer.renderFloatingText(
-									matrices,
+									poses,
 									bufferSource,
 									"%d".formatted(this.lightingEngine.getEntryCountAt(cellX, cellY, cellZ)),
 									cellX * DynamicLightingEngine.CELL_SIZE + DynamicLightingEngine.CELL_SIZE / 2.0,
@@ -135,10 +135,10 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 		}
 
 		VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.debugSectionQuads());
-		renderFaces(matrices, this.data.matchShape, this.data.origin, vertexConsumer, x, y, z, DynamicLightingEngine.CELL_SIZE, COLOR);
+		renderFaces(poses, this.data.matchShape, this.data.origin, vertexConsumer, x, y, z, DynamicLightingEngine.CELL_SIZE, COLOR);
 		if (this.config.getDebugActiveDynamicLightingCells().get()) {
-			renderFaces(matrices, this.data.activeShape, this.data.origin, vertexConsumer, x, y, z, DynamicLightingEngine.CELL_SIZE, ACTIVE_COLOR);
-			renderFaces(matrices, this.data.activeNeighborShape, this.data.origin, vertexConsumer, x, y, z, DynamicLightingEngine.CELL_SIZE, ACTIVE_NEIGHBOR_COLOR);
+			renderFaces(poses, this.data.activeShape, this.data.origin, vertexConsumer, x, y, z, DynamicLightingEngine.CELL_SIZE, ACTIVE_COLOR);
+			renderFaces(poses, this.data.activeNeighborShape, this.data.origin, vertexConsumer, x, y, z, DynamicLightingEngine.CELL_SIZE, ACTIVE_NEIGHBOR_COLOR);
 		}
 	}
 

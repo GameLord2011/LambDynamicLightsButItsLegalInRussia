@@ -170,7 +170,7 @@ public interface EntityLuminance {
 		}
 
 		private static Type register(String name, MapCodec<? extends EntityLuminance> codec) {
-			return register(Identifier.of("lambdynlights", name), codec);
+			return register(Identifier.fromNamespaceAndPath("lambdynlights", name), codec);
 		}
 
 		public static Type registerSimple(@NotNull Identifier id, @NotNull EntityLuminance singleton) {
@@ -178,7 +178,7 @@ public interface EntityLuminance {
 		}
 
 		private static Type registerSimple(String name, EntityLuminance singleton) {
-			return registerSimple(Identifier.of("lambdynlights", name), singleton);
+			return registerSimple(Identifier.fromNamespaceAndPath("lambdynlights", name), singleton);
 		}
 	}
 }

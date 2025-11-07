@@ -19,7 +19,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.core.ChunkSectionPos;
+import net.minecraft.core.SectionPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.FrustumIntersection;
@@ -174,19 +174,19 @@ public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
 			}
 
 			if (shouldRebuild) {
-				int x = ChunkSectionPos.x(chunkPos);
-				int y = ChunkSectionPos.y(chunkPos);
-				int z = ChunkSectionPos.z(chunkPos);
+				int x = SectionPos.x(chunkPos);
+				int y = SectionPos.y(chunkPos);
+				int z = SectionPos.z(chunkPos);
 
 				// If the frustum is not yet setup, consider we can see the chunks.
 				// We'd rather display than to cause visual glitches.
 				int hitResult = frustum == null ? FrustumIntersection.INTERSECT : frustum.cubeInFrustum(
-						ChunkSectionPos.sectionToBlockCoord(x),
-						ChunkSectionPos.sectionToBlockCoord(y),
-						ChunkSectionPos.sectionToBlockCoord(z),
-						ChunkSectionPos.sectionToBlockCoord(x, 16),
-						ChunkSectionPos.sectionToBlockCoord(y, 16),
-						ChunkSectionPos.sectionToBlockCoord(z, 16)
+						SectionPos.sectionToBlockCoord(x),
+						SectionPos.sectionToBlockCoord(y),
+						SectionPos.sectionToBlockCoord(z),
+						SectionPos.sectionToBlockCoord(x, 16),
+						SectionPos.sectionToBlockCoord(y, 16),
+						SectionPos.sectionToBlockCoord(z, 16)
 				);
 				boolean isNotCulled = hitResult == FrustumIntersection.INTERSECT || hitResult == FrustumIntersection.INSIDE;
 

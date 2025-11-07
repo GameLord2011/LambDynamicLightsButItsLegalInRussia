@@ -11,7 +11,7 @@ package dev.lambdaurora.lambdynlights.api.data;
 
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSource;
 import dev.lambdaurora.lambdynlights.api.item.ItemLuminance;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.advancements.criterion.ItemPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
@@ -129,7 +129,7 @@ public abstract class ItemLightSourceDataProvider
 		 */
 		@SuppressWarnings("deprecation")
 		public void add(@NotNull ItemLike item, @NotNull ItemLuminance luminance, boolean waterSensitive) {
-			var itemId = item.asItem().builtInRegistryHolder().key().value();
+			var itemId = item.asItem().builtInRegistryHolder().key().identifier();
 			this.add(this.deriveId(itemId), luminance, waterSensitive, item);
 		}
 
@@ -179,7 +179,7 @@ public abstract class ItemLightSourceDataProvider
 		 * @see #add(String, TagKey, ItemLuminance, boolean)
 		 */
 		public void add(@NotNull TagKey<Item> tag, @NotNull ItemLuminance luminance, boolean waterSensitive) {
-			this.add(this.deriveId(tag.id()), tag, luminance, waterSensitive);
+			this.add(this.deriveId(tag.location()), tag, luminance, waterSensitive);
 		}
 	}
 }

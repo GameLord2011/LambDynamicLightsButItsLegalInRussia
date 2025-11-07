@@ -18,8 +18,8 @@ import dev.lambdaurora.lambdynlights.engine.scheduler.ChunkRebuildStatus;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import net.minecraft.core.ChunkSectionPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.SectionPos;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -109,16 +109,16 @@ public final class DeferredDynamicLightSource implements DynamicLightSource {
 		for (int x = chunkStartX; x <= chunkEndX; x++) {
 			for (int y = chunkStartY; y <= chunkEndY; y++) {
 				for (int z = chunkStartZ; z <= chunkEndZ; z++) {
-					consumer.accept(ChunkSectionPos.asLong(x, y, z));
+					consumer.accept(SectionPos.asLong(x, y, z));
 				}
 			}
 		}
 	}
 
 	private static int getStartChunk(int blockPos) {
-		int chunkStart = ChunkSectionPos.blockToSectionCoord(blockPos);
+		int chunkStart = SectionPos.blockToSectionCoord(blockPos);
 
-		if ((MathHelper.floor(blockPos) & 15) < 8) {
+		if ((Mth.floor(blockPos) & 15) < 8) {
 			chunkStart--;
 		}
 
@@ -126,9 +126,9 @@ public final class DeferredDynamicLightSource implements DynamicLightSource {
 	}
 
 	private static int getEndChunk(int blockPos) {
-		int chunkStart = ChunkSectionPos.blockToSectionCoord(blockPos);
+		int chunkStart = SectionPos.blockToSectionCoord(blockPos);
 
-		if ((MathHelper.floor(blockPos) & 15) >= 8) {
+		if ((Mth.floor(blockPos) & 15) >= 8) {
 			chunkStart++;
 		}
 

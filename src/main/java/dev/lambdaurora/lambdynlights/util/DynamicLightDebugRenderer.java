@@ -9,7 +9,7 @@
 
 package dev.lambdaurora.lambdynlights.util;
 
-import com.mojang.blaze3d.vertex.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.lambdaurora.lambdynlights.DynamicLightsConfig;
 import dev.lambdaurora.lambdynlights.LambDynLights;
@@ -23,12 +23,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
-import net.minecraft.core.ChunkSectionPos;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
@@ -54,7 +54,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 	}
 
 	static void renderFaces(
-			MatrixStack matrices,
+			PoseStack poses,
 			DiscreteVoxelShape shape,
 			Vec3i origin,
 			VertexConsumer vertexConsumer,
@@ -68,12 +68,12 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 			int realCellX = cellX + origin.getX();
 			int realCellY = cellY + origin.getY();
 			int realCellZ = cellZ + origin.getZ();
-			renderFace(matrices, vertexConsumer, direction, x, y, z, cellSize, realCellX, realCellY, realCellZ, color);
+			renderFace(poses, vertexConsumer, direction, x, y, z, cellSize, realCellX, realCellY, realCellZ, color);
 		});
 	}
 
 	static void renderEdges(
-			MatrixStack matrices,
+			PoseStack poses,
 			DiscreteVoxelShape shape,
 			Vec3i origin,
 			MultiBufferSource multiBufferSource,
@@ -90,7 +90,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 			int realEndCellZ = endCellZ + origin.getZ();
 			VertexConsumer vertexConsumer = multiBufferSource.getBuffer(RenderType.debugLineStrip(1.0));
 			renderEdge(
-					matrices, vertexConsumer, x, y, z, cellSize,
+					poses, vertexConsumer, x, y, z, cellSize,
 					realStartCellX, realStartCellY, realStartCellZ,
 					realEndCellX, realEndCellY, realEndCellZ,
 					color
@@ -99,7 +99,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 	}
 
 	static void renderFace(
-			MatrixStack matrices, VertexConsumer vertexConsumer, Direction direction,
+			PoseStack poses, VertexConsumer vertexConsumer, Direction direction,
 			double x, double y, double z,
 			int cellSize, int cellX, int cellY, int cellZ,
 			int color
@@ -108,7 +108,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 		float faceY = (float) (cellY * cellSize - y);
 		float faceZ = (float) (cellZ * cellSize - z);
 		ShapeRenderer.renderFace(
-				matrices.peek().model(), vertexConsumer, direction,
+				poses.last().pose(), vertexConsumer, direction,
 				faceX, faceY, faceZ,
 				faceX + cellSize, faceY + cellSize, faceZ + cellSize,
 				ColorUtil.floatColor(ColorUtil.argbUnpackRed(color)),
@@ -119,7 +119,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 	}
 
 	static void renderEdge(
-			MatrixStack matrices, VertexConsumer vertexConsumer,
+			PoseStack poses, VertexConsumer vertexConsumer,
 			double x, double y, double z,
 			int cellSize,
 			int startCellX, int startCellY, int startCellZ,
@@ -132,18 +132,18 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 		float endX = (float) (endCellX * cellSize - x);
 		float endY = (float) (endCellY * cellSize - y);
 		float endZ = (float) (endCellZ * cellSize - z);
-		renderLine(matrices, vertexConsumer, startX, startY, startZ, endX, endY, endZ, color);
+		renderLine(poses, vertexConsumer, startX, startY, startZ, endX, endY, endZ, color);
 	}
 
 	static void renderLine(
-			MatrixStack matrices, VertexConsumer vertexConsumer,
+			PoseStack poses, VertexConsumer vertexConsumer,
 			float startX, float startY, float startZ,
 			float endX, float endY, float endZ,
 			int color
 	) {
-		Matrix4f modelMatrix = matrices.peek().model();
-		vertexConsumer.addVertex(modelMatrix, startX, startY, startZ).color(color);
-		vertexConsumer.addVertex(modelMatrix, endX, endY, endZ).color(color);
+		Matrix4f modelMatrix = poses.last().pose();
+		vertexConsumer.addVertex(modelMatrix, startX, startY, startZ).setColor(color);
+		vertexConsumer.addVertex(modelMatrix, endX, endY, endZ).setColor(color);
 	}
 
 	public static class SectionRebuild extends DynamicLightDebugRenderer {
@@ -162,21 +162,21 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 
 		@Override
 		public void render(
-				@NotNull MatrixStack matrices, @NotNull MultiBufferSource bufferSource, double x, double y, double z,
+				@NotNull PoseStack poses, @NotNull MultiBufferSource bufferSource, double x, double y, double z,
 				@NotNull DebugValueAccess debugValueAccess, @NotNull Frustum frustum
 		) {
 			if (!this.isEnabled()) return;
 
-			matrices.push();
-			matrices.translate(-x, -y, -z);
+			poses.pushPose();
+			poses.translate(-x, -y, -z);
 			for (var entry : this.scheduledChunks.long2IntEntrySet()) {
-				this.renderBox(matrices, bufferSource, SCHEDULED_COLOR, entry.getIntValue() / 4.f, ChunkSectionPos.of(entry.getLongKey()));
+				this.renderBox(poses, bufferSource, SCHEDULED_COLOR, entry.getIntValue() / 4.f, SectionPos.of(entry.getLongKey()));
 			}
-			matrices.pop();
+			poses.popPose();
 
 			if (this.requestedChunks != null) {
 				for (var chunk : this.requestedChunks.long2ObjectEntrySet()) {
-					var chunkPos = ChunkSectionPos.of(chunk.getLongKey());
+					var chunkPos = SectionPos.of(chunk.getLongKey());
 					var statuses = chunk.getValue();
 					boolean canRenderBox = false;
 
@@ -186,7 +186,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 							var status = ChunkRebuildStatus.VALUES.get(i);
 
 							DebugRenderer.renderFloatingText(
-									matrices,
+									poses,
 									bufferSource,
 									statuses[i] + "x " + status,
 									chunkPos.minBlockX() + 8,
@@ -205,24 +205,24 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 					}
 
 					if (canRenderBox) {
-						matrices.push();
-						matrices.translate(-x, -y, -z);
-						this.renderBox(matrices, bufferSource, REQUESTED_COLOR, 1.f, chunkPos);
-						matrices.pop();
+						poses.pushPose();
+						poses.translate(-x, -y, -z);
+						this.renderBox(poses, bufferSource, REQUESTED_COLOR, 1.f, chunkPos);
+						poses.popPose();
 					}
 				}
 			}
 		}
 
-		private void renderBox(MatrixStack matrices, MultiBufferSource bufferSource, int color, float alpha, ChunkSectionPos chunk) {
+		private void renderBox(PoseStack poses, MultiBufferSource bufferSource, int color, float alpha, SectionPos chunk) {
 			float red = ColorUtil.floatColor(ColorUtil.argbUnpackRed(color));
 			float green = ColorUtil.floatColor(ColorUtil.argbUnpackGreen(color));
 			float blue = ColorUtil.floatColor(ColorUtil.argbUnpackBlue(color));
 
 			ShapeRenderer.renderLineBox(
-					matrices.peek(), bufferSource.getBuffer(RenderType.lines()),
+					poses.last(), bufferSource.getBuffer(RenderType.lines()),
 					chunk.minBlockX(), chunk.minBlockY(), chunk.minBlockZ(),
-					ChunkSectionPos.sectionToBlockCoord(chunk.x(), 16), ChunkSectionPos.sectionToBlockCoord(chunk.y(), 16), ChunkSectionPos.sectionToBlockCoord(chunk.z(), 16),
+					SectionPos.sectionToBlockCoord(chunk.x(), 16), SectionPos.sectionToBlockCoord(chunk.y(), 16), SectionPos.sectionToBlockCoord(chunk.z(), 16),
 					red, green, blue, alpha
 			);
 		}

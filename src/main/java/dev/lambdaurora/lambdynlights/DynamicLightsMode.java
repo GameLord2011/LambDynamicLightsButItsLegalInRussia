@@ -12,8 +12,8 @@ package dev.lambdaurora.lambdynlights;
 import dev.lambdaurora.lambdynlights.engine.TickMode;
 import dev.lambdaurora.spruceui.SpruceTexts;
 import dev.lambdaurora.spruceui.util.Nameable;
-import net.minecraft.TextFormatting;
-import net.minecraft.network.chat.Text;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -27,15 +27,15 @@ import java.util.Optional;
  * @since 1.0.0
  */
 public enum DynamicLightsMode implements Nameable {
-	OFF(TickMode.REAL_TIME, TextFormatting.RED, SpruceTexts.OPTIONS_OFF),
-	FASTEST(TickMode.SLOWER, TextFormatting.GOLD, SpruceTexts.OPTIONS_GENERIC_FASTEST),
-	FAST(TickMode.SLOW, TextFormatting.YELLOW, SpruceTexts.OPTIONS_GENERIC_FAST),
-	FANCY(TickMode.REAL_TIME, TextFormatting.GREEN, SpruceTexts.OPTIONS_GENERIC_FANCY);
+	OFF(TickMode.REAL_TIME, ChatFormatting.RED, SpruceTexts.OPTIONS_OFF),
+	FASTEST(TickMode.SLOWER, ChatFormatting.GOLD, SpruceTexts.OPTIONS_GENERIC_FASTEST),
+	FAST(TickMode.SLOW, ChatFormatting.YELLOW, SpruceTexts.OPTIONS_GENERIC_FAST),
+	FANCY(TickMode.REAL_TIME, ChatFormatting.GREEN, SpruceTexts.OPTIONS_GENERIC_FANCY);
 
 	private final TickMode tickMode;
-	private final Text translatedText;
+	private final Component translatedText;
 
-	DynamicLightsMode(TickMode tickMode, @NotNull TextFormatting formatting, @NotNull Text translatedText) {
+	DynamicLightsMode(TickMode tickMode, @NotNull ChatFormatting formatting, @NotNull Component translatedText) {
 		this.tickMode = tickMode;
 		this.translatedText = translatedText.copy().withStyle(formatting);
 	}
@@ -73,7 +73,7 @@ public enum DynamicLightsMode implements Nameable {
 	 *
 	 * @return the translated text of the dynamic lights mode
 	 */
-	public @NotNull Text getTranslatedText() {
+	public @NotNull Component getTranslatedText() {
 		return this.translatedText;
 	}
 

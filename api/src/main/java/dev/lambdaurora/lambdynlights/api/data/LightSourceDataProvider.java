@@ -139,7 +139,7 @@ public abstract class LightSourceDataProvider<L, C extends LightSourceDataProvid
 		 * @return the identifier of the given {@code path} and the default namespace
 		 */
 		public @NotNull Identifier idOf(@NotNull String path) {
-			return Identifier.of(LightSourceDataProvider.this.defaultNamespace, path);
+			return Identifier.fromNamespaceAndPath(LightSourceDataProvider.this.defaultNamespace, path);
 		}
 
 		/**
@@ -159,12 +159,12 @@ public abstract class LightSourceDataProvider<L, C extends LightSourceDataProvid
 		public @NotNull Identifier deriveId(@NotNull Identifier originalId) {
 			var id = originalId;
 
-			if (!id.namespace().equals(LightSourceDataProvider.this.defaultNamespace())) {
+			if (!id.getNamespace().equals(LightSourceDataProvider.this.defaultNamespace())) {
 				// The namespace is different:
-				id = this.idOf(originalId.path());
+				id = this.idOf(originalId.getPath());
 
-				if (!originalId.namespace().equals(Identifier.DEFAULT_NAMESPACE)) {
-					id = id.withPrefix(originalId.namespace() + "/");
+				if (!originalId.getNamespace().equals(Identifier.DEFAULT_NAMESPACE)) {
+					id = id.withPrefix(originalId.getNamespace() + "/");
 				}
 			}
 

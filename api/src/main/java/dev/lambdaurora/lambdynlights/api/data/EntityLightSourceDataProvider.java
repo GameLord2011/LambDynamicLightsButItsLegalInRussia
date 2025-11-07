@@ -11,7 +11,7 @@ package dev.lambdaurora.lambdynlights.api.data;
 
 import dev.lambdaurora.lambdynlights.api.entity.EntityLightSource;
 import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
-import net.minecraft.advancements.critereon.EntityTypePredicate;
+import net.minecraft.advancements.criterion.EntityTypePredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.data.PackOutput;
@@ -164,7 +164,7 @@ public abstract class EntityLightSourceDataProvider
 		 */
 		@SuppressWarnings("deprecation")
 		public void add(@NotNull EntityType<?> type, @NotNull EntityLuminance... luminances) {
-			var typeId = type.builtInRegistryHolder().key().value();
+			var typeId = type.builtInRegistryHolder().key().identifier();
 			this.add(this.deriveId(typeId), type, luminances);
 		}
 
@@ -209,7 +209,7 @@ public abstract class EntityLightSourceDataProvider
 		 * @see #add(String, TagKey, EntityLuminance...)
 		 */
 		public void add(@NotNull TagKey<EntityType<?>> tag, @NotNull EntityLuminance... luminances) {
-			this.add(this.deriveId(tag.id()), tag, luminances);
+			this.add(this.deriveId(tag.location()), tag, luminances);
 		}
 	}
 }

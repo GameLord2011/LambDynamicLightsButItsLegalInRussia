@@ -19,9 +19,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.io.Resource;
-import net.minecraft.resources.io.ResourceManager;
-import net.minecraft.resources.io.ResourceReloader;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 import org.slf4j.Logger;
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
  * @version 4.6.0
  * @since 4.0.0
  */
-public abstract class LightSourceLoader<L> implements ResourceReloader {
+public abstract class LightSourceLoader<L> implements PreparableReloadListener {
 	protected static final String SILENCE_ERROR_KEY = "silence_error";
 
 	private final Minecraft client = Minecraft.getInstance();
@@ -84,13 +84,13 @@ public abstract class LightSourceLoader<L> implements ResourceReloader {
 
 	@Override
 	public CompletableFuture<Void> reload(
-			SharedState sharedState, Executor prepareExecutor, Synchronizer synchronizer, Executor applyExecutor
+			SharedState sharedState, Executor prepareExecutor, PreparationBarrier synchronizer, Executor applyExecutor
 	) {
 		return CompletableFuture.supplyAsync(() -> {
 					this.load(sharedState.resourceManager());
 					return Unit.INSTANCE;
 				}, prepareExecutor)
-				.thenCompose(synchronizer::whenPrepared)
+				.thenCompose(synchronizer::wait)
 				.thenAcceptAsync((reloadState) -> {
 					if (this.client.level != null) {
 						this.apply(this.client.level.registryAccess());
@@ -106,7 +106,7 @@ public abstract class LightSourceLoader<L> implements ResourceReloader {
 	protected void load(ResourceManager resourceManager) {
 		this.loadedLightSources.clear();
 
-		resourceManager.findResources("dynamiclights/" + this.getResourcePath(), path -> path.path().endsWith(".json"))
+		resourceManager.listResources("dynamiclights/" + this.getResourcePath(), path -> path.getPath().endsWith(".json"))
 				.forEach(this::load);
 	}
 
@@ -134,7 +134,7 @@ public abstract class LightSourceLoader<L> implements ResourceReloader {
 	}
 
 	protected void load(Identifier resourceId, Resource resource) {
-		var id = Identifier.of(resourceId.namespace(), resourceId.path().replace(".json", ""));
+		var id = Identifier.fromNamespaceAndPath(resourceId.getNamespace(), resourceId.getPath().replace(".json", ""));
 
 		try (var reader = new InputStreamReader(resource.open())) {
 			var rawJson = JsonParser.parseReader(reader);

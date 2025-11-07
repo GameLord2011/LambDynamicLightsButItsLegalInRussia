@@ -14,7 +14,7 @@ import dev.lambdaurora.spruceui.SpruceTexts;
 import dev.lambdaurora.spruceui.option.SpruceOption;
 import dev.lambdaurora.spruceui.option.SpruceToggleBooleanOption;
 import dev.lambdaurora.spruceui.tooltip.TooltipData;
-import net.minecraft.network.chat.Text;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,16 +44,16 @@ public final class LightSourceSettingEntry extends BooleanSettingEntry {
 		}
 
 		@Override
-		public Text getDisplayText() {
+		public Component getDisplayText() {
 			boolean value = this.get();
-			Text toggleText = SpruceTexts.getToggleText(value);
+			Component toggleText = SpruceTexts.getToggleText(value);
 
 			return this.getDisplayText(toggleText);
 		}
 
 		@Override
-		public Text getDisplayText(Text value) {
-			return Text.translatable("spruceui.options.generic", this.getPrefix(), value);
+		public Component getDisplayText(Component value) {
+			return Component.translatable("spruceui.options.generic", this.getPrefix(), value);
 		}
 	}
 }

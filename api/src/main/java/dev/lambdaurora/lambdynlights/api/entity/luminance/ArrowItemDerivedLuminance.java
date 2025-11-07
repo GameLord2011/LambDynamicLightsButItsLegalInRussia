@@ -35,7 +35,7 @@ public final class ArrowItemDerivedLuminance implements EntityLuminance {
 	@Override
 	public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Entity entity) {
 		if (entity instanceof AbstractArrow arrow) {
-			return itemLightSourceManager.getLuminance(arrow.getPickupItemStackOrigin(), entity.isSubmergedInWater());
+			return itemLightSourceManager.getLuminance(arrow.getPickupItemStackOrigin(), entity.isUnderWater());
 		}
 
 		return 0;

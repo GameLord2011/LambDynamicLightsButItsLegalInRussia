@@ -26,7 +26,7 @@ import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSourceBehavior;
 import dev.lambdaurora.lambdynlights.gui.DevModeGui;
-import dev.lambdaurora.lambdynlights.platform.PlatformProvider;
+import dev.lambdaurora.lambdynlights.platform.Platform;
 import dev.lambdaurora.lambdynlights.resource.LightSourceLoader;
 import dev.lambdaurora.lambdynlights.resource.entity.EntityLightSources;
 import dev.lambdaurora.lambdynlights.resource.item.ItemLightSources;
@@ -37,7 +37,7 @@ import dev.yumi.mc.core.api.ModContainer;
 import dev.yumi.mc.core.api.YumiMods;
 import dev.yumi.mc.core.api.entrypoint.EntrypointContainer;
 import dev.yumi.mc.core.api.entrypoint.client.ClientModInitializer;
-import net.minecraft.TextFormatting;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.debug.DebugScreenEntries;
@@ -48,7 +48,7 @@ import net.minecraft.client.particle.SonicBoomParticle;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.network.chat.Text;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.Entity;
@@ -146,10 +146,9 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		});
 
 		var platform = YumiMods.get()
-				.getEntrypoints(LambDynLightsConstants.NAMESPACE + ":platform_provider", PlatformProvider.class)
+				.getEntrypoints(LambDynLightsConstants.NAMESPACE + ":platform", Platform.class)
 				.getFirst()
-				.value()
-				.getPlatform(mod);
+				.value();
 
 		this.lightSourceApplicationPredicate.set(platform.getLightSourceLoaderApplicationPredicate());
 		platform.registerReloader(this.itemLightSources);
@@ -278,7 +277,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	}
 
 	private void registerDebugEntries() {
-		final var debugPrefix = TextFormatting.LIGHT_PURPLE + "[LDL] " + TextFormatting.RESET;
+		final var debugPrefix = ChatFormatting.LIGHT_PURPLE + "[LDL] " + ChatFormatting.RESET;
 		final var debugGroup = id("debug");
 
 		DebugScreenEntries.register(id("dynamic_light_sources"),
@@ -300,9 +299,9 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 					if (!this.config.getDynamicLightsMode().isEnabled()) {
 						builder.append(" ; ");
-						builder.append(TextFormatting.RED);
+						builder.append(ChatFormatting.RED);
 						builder.append("Disabled");
-						builder.append(TextFormatting.RESET);
+						builder.append(ChatFormatting.RESET);
 					}
 
 					builder.append(')');
@@ -333,7 +332,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 					if (player != null) {
 						displayer.addToGroup(debugGroup, debugPrefix + "Dynamic Light At Feet: %.3f"
-								.formatted(this.engine.getDynamicLightLevel(player.getBlockPos())));
+								.formatted(this.engine.getDynamicLightLevel(player.blockPosition())));
 					}
 				}
 		);
@@ -408,9 +407,9 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 
 			if (client.player != null) {
 				client.player.displayClientMessage(
-						Text.translatable(
+						Component.translatable(
 								LambDynLightsConstants.NAMESPACE + ".key.toggle_fps_dynamic_lighting.info",
-								toggleText.copy().withStyle(newValue ? TextFormatting.GREEN : TextFormatting.RED)
+								toggleText.copy().withStyle(newValue ? ChatFormatting.GREEN : ChatFormatting.RED)
 						),
 						true
 				);
@@ -671,7 +670,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 			return false;
 		}
 
-		var eyePos = BlockPos.ofFloored(entity.getX(), entity.getEyeY(), entity.getZ());
+		var eyePos = BlockPos.containing(entity.getX(), entity.getEyeY(), entity.getZ());
 		return !entity.level().getFluidState(eyePos).isEmpty();
 	}
 
@@ -734,6 +733,6 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	 * @param path the path
 	 */
 	public static Identifier id(String path) {
-		return Identifier.of(LambDynLightsConstants.NAMESPACE, path);
+		return Identifier.fromNamespaceAndPath(LambDynLightsConstants.NAMESPACE, path);
 	}
 }

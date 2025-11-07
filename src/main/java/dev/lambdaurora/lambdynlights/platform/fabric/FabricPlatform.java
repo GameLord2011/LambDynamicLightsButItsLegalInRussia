@@ -13,19 +13,16 @@ import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.LambDynLightsConstants;
 import dev.lambdaurora.lambdynlights.mixin.RegistryOpsAccessor;
 import dev.lambdaurora.lambdynlights.platform.Platform;
-import dev.lambdaurora.lambdynlights.platform.PlatformProvider;
 import dev.lambdaurora.lambdynlights.resource.LightSourceLoader;
 import dev.yumi.commons.event.ListenableEvent;
-import dev.yumi.mc.core.api.ModContainer;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceCondition;
 import net.fabricmc.fabric.api.resource.conditions.v1.ResourceConditions;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.io.ResourceType;
+import net.minecraft.server.packs.PackType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -37,15 +34,10 @@ import java.util.function.Consumer;
  * @version 4.5.1
  * @since 4.5.0
  */
-public final class FabricPlatform implements Platform, PlatformProvider {
-	@Override
-	public Platform getPlatform(ModContainer mod) {
-		return this;
-	}
-
+public final class FabricPlatform implements Platform {
 	@Override
 	public void registerReloader(LightSourceLoader<?> reloader) {
-		var resourceLoader = ResourceLoader.get(ResourceType.CLIENT_RESOURCES);
+		var resourceLoader = ResourceLoader.get(PackType.CLIENT_RESOURCES);
 		resourceLoader.registerReloader(reloader.id(), reloader);
 		for (var dependency : reloader.dependencies()) {
 			resourceLoader.addReloaderOrdering(dependency, reloader.id());

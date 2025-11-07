@@ -14,9 +14,9 @@ import dev.lambdaurora.lambdynlights.engine.lookup.SpatialLookupEntry;
 import dev.lambdaurora.lambdynlights.engine.scheduler.ChunkRebuildStatus;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.ChunkSectionPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.core.SectionPos;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.LongConsumer;
@@ -61,17 +61,17 @@ public interface DynamicLightSource {
 	 * @param chunkConsumer the consumer of the relevant chunks
 	 */
 	static void gatherClosestChunks(double x, double y, double z, LongConsumer chunkConsumer) {
-		var chunkPos = new BlockPos.Mutable(
-				ChunkSectionPos.blockToSectionCoord(x),
-				ChunkSectionPos.blockToSectionCoord(y),
-				ChunkSectionPos.blockToSectionCoord(z)
+		var chunkPos = new BlockPos.MutableBlockPos(
+				SectionPos.blockToSectionCoord(x),
+				SectionPos.blockToSectionCoord(y),
+				SectionPos.blockToSectionCoord(z)
 		);
 
-		chunkConsumer.accept(ChunkSectionPos.asLong(chunkPos.getX(), chunkPos.getY(), chunkPos.getZ()));
+		chunkConsumer.accept(SectionPos.asLong(chunkPos.getX(), chunkPos.getY(), chunkPos.getZ()));
 
-		var directionX = (MathHelper.floor(x) & 15) >= 8 ? Direction.EAST : Direction.WEST;
-		var directionY = (MathHelper.floor(y) & 15) >= 8 ? Direction.UP : Direction.DOWN;
-		var directionZ = (MathHelper.floor(z) & 15) >= 8 ? Direction.SOUTH : Direction.NORTH;
+		var directionX = (Mth.floor(x) & 15) >= 8 ? Direction.EAST : Direction.WEST;
+		var directionY = (Mth.floor(y) & 15) >= 8 ? Direction.UP : Direction.DOWN;
+		var directionZ = (Mth.floor(z) & 15) >= 8 ? Direction.SOUTH : Direction.NORTH;
 
 		for (int i = 0; i < 7; i++) {
 			if (i % 4 == 0) {
@@ -84,7 +84,7 @@ public interface DynamicLightSource {
 				chunkPos.move(directionZ.getOpposite()); // origin
 				chunkPos.move(directionY); // Y
 			}
-			chunkConsumer.accept(ChunkSectionPos.asLong(chunkPos.getX(), chunkPos.getY(), chunkPos.getZ()));
+			chunkConsumer.accept(SectionPos.asLong(chunkPos.getX(), chunkPos.getY(), chunkPos.getZ()));
 		}
 	}
 }

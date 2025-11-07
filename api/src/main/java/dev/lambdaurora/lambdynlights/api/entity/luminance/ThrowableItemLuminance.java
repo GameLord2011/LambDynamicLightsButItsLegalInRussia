@@ -35,7 +35,7 @@ public final class ThrowableItemLuminance implements EntityLuminance {
 	@Override
 	public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Entity entity) {
 		if (entity instanceof ThrowableItemProjectile tip) {
-			return itemLightSourceManager.getLuminance(tip.getItem(), tip.isSubmergedInWater());
+			return itemLightSourceManager.getLuminance(tip.getItem(), tip.isUnderWater());
 		}
 
 		return 0;
