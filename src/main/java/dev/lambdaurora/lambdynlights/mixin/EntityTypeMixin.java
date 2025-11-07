@@ -14,7 +14,7 @@ import dev.lambdaurora.lambdynlights.accessor.DynamicLightHandlerHolder;
 import dev.lambdaurora.lambdynlights.config.LightSourceSettingEntry;
 import dev.lambdaurora.spruceui.tooltip.TooltipData;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Text;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(EntityType.class)
 public abstract class EntityTypeMixin<T extends Entity> implements DynamicLightHandlerHolder<T> {
 	@Shadow
-	public abstract Text getDescription();
+	public abstract Component getDescription();
 
 	@Shadow
 	public abstract String getDescriptionId();
@@ -37,12 +37,12 @@ public abstract class EntityTypeMixin<T extends Entity> implements DynamicLightH
 	public LightSourceSettingEntry lambdynlights$getSetting() {
 		if (this.lambdynlights$setting == null) {
 			var self = (EntityType<?>) (Object) this;
-			var id = BuiltInRegistries.ENTITY_TYPE.getId(self);
-			if (id.namespace().equals("minecraft") && id.path().equals("pig") && self != EntityType.PIG) {
+			var id = BuiltInRegistries.ENTITY_TYPE.getKey(self);
+			if (id.getNamespace().equals("minecraft") && id.getPath().equals("pig") && self != EntityType.PIG) {
 				return null;
 			}
 
-			String key = id.namespace() + "." + id.path();
+			String key = id.getNamespace() + "." + id.getPath();
 
 			this.lambdynlights$setting = new LightSourceSettingEntry(key, this.getDescriptionId(), true, null, TooltipData.EMPTY);
 			LambDynLights.get().config.load(this.lambdynlights$setting);
@@ -52,10 +52,10 @@ public abstract class EntityTypeMixin<T extends Entity> implements DynamicLightH
 	}
 
 	@Override
-	public Text lambdynlights$getName() {
+	public Component lambdynlights$getName() {
 		var name = this.getDescription();
 		if (name == null) {
-			return Text.translatable("lambdynlights.dummy");
+			return Component.translatable("lambdynlights.dummy");
 		}
 		return name;
 	}

@@ -88,7 +88,7 @@ public record DisplayEntityLuminance(List<EntityLuminance> luminance) implements
 		@Override
 		public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Entity entity) {
 			if (entity instanceof Display.ItemDisplay display)
-				return itemLightSourceManager.getLuminance(display.getItemStack(), display.isSubmergedInWater());
+				return itemLightSourceManager.getLuminance(display.getItemStack(), display.isUnderWater());
 			return 0;
 		}
 	}

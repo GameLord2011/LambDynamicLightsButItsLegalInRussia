@@ -18,7 +18,7 @@ import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -41,7 +41,7 @@ public final class DynamicLightingEngine implements CellHasher {
 
 	public static final double MAX_RADIUS = 7.75;
 	public static final double MAX_RADIUS_SQUARED = MAX_RADIUS * MAX_RADIUS;
-	public static final int CELL_SIZE = MathHelper.ceil(MAX_RADIUS);
+	public static final int CELL_SIZE = Mth.ceil(MAX_RADIUS);
 	public static final int DEFAULT_LIGHT_SOURCES = 1024;
 	private static final Vec3i[] CELL_OFFSETS;
 
@@ -89,7 +89,7 @@ public final class DynamicLightingEngine implements CellHasher {
 
 		double result = 0;
 
-		var currentCell = new BlockPos.Mutable(
+		var currentCell = new BlockPos.MutableBlockPos(
 				positionToCell(pos.getX()),
 				positionToCell(pos.getY()),
 				positionToCell(pos.getZ())
@@ -113,7 +113,7 @@ public final class DynamicLightingEngine implements CellHasher {
 			}
 		}
 
-		return MathHelper.clamp(result, 0, 15);
+		return Mth.clamp(result, 0, 15);
 	}
 
 	/**

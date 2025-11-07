@@ -129,7 +129,7 @@ public final class ItemLightSources extends LightSourceLoader<ItemLightSource> i
 
 		if (!matchedAny) {
 			if (stack.getItem() instanceof BlockItem blockItem) {
-				var state = blockItem.getBlock().defaultState();
+				var state = blockItem.getBlock().defaultBlockState();
 				var component = stack.getOrDefault(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY);
 
 				if (!component.isEmpty()) {
@@ -139,7 +139,7 @@ public final class ItemLightSources extends LightSourceLoader<ItemLightSource> i
 				luminance = state.getLightEmission();
 			} else {
 				// In case someone injects there.
-				luminance = Block.byItem(stack.getItem()).defaultState().getLightEmission();
+				luminance = Block.byItem(stack.getItem()).defaultBlockState().getLightEmission();
 			}
 		}
 

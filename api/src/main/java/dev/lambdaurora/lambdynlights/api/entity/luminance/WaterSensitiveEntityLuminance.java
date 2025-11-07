@@ -51,7 +51,7 @@ public record WaterSensitiveEntityLuminance(
 
 	@Override
 	public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Entity entity) {
-		boolean submergedInWater = entity.isSubmergedInWater();
+		boolean submergedInWater = entity.isUnderWater();
 
 		if (submergedInWater) {
 			return EntityLuminance.getLuminance(itemLightSourceManager, entity, this.inWater);

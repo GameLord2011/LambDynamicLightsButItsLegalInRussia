@@ -10,7 +10,7 @@
 package dev.lambdaurora.lambdynlights.accessor;
 
 import dev.lambdaurora.lambdynlights.config.LightSourceSettingEntry;
-import net.minecraft.network.chat.Text;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -21,7 +21,7 @@ import org.jetbrains.annotations.ApiStatus;
 public interface DynamicLightHandlerHolder<T> {
 	LightSourceSettingEntry lambdynlights$getSetting();
 
-	Text lambdynlights$getName();
+	Component lambdynlights$getName();
 
 	Identifier lambdynlights$getId();
 

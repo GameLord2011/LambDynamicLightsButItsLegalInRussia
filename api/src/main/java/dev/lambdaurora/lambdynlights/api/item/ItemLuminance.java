@@ -12,10 +12,10 @@ package dev.lambdaurora.lambdynlights.api.item;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Brightness;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
@@ -126,7 +126,7 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 
 		@Override
 		public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemStack stack) {
-			return this.block.defaultState().getLightEmission();
+			return this.block.defaultBlockState().getLightEmission();
 		}
 	}
 
@@ -146,7 +146,7 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 
 		@Override
 		public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemStack stack) {
-			return Block.byItem(stack.getItem()).defaultState().getLightEmission();
+			return Block.byItem(stack.getItem()).defaultBlockState().getLightEmission();
 		}
 	}
 

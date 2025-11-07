@@ -11,7 +11,7 @@ package dev.lambdaurora.lambdynlights.api.entity;
 
 import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.yumi.commons.event.Event;
-import net.minecraft.advancements.critereon.EntityTypePredicate;
+import net.minecraft.advancements.criterion.EntityTypePredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -39,7 +39,7 @@ public interface EntityLightSourceManager {
 	 *
 	 * @since 4.6.0
 	 */
-	Identifier RESOURCE_RELOADER_ID = Identifier.of("lambdynlights", "entity");
+	Identifier RESOURCE_RELOADER_ID = Identifier.fromNamespaceAndPath("lambdynlights", "entity");
 
 	/**
 	 * {@return the registration event for entity light sources}

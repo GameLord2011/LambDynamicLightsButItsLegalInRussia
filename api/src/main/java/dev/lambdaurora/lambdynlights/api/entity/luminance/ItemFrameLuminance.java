@@ -36,7 +36,7 @@ public final class ItemFrameLuminance implements EntityLuminance {
 	public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Entity entity) {
 		if (entity instanceof ItemFrame itemFrame) {
 			var world = entity.level();
-			return itemLightSourceManager.getLuminance(itemFrame.getItem(), !world.getFluidState(entity.getBlockPos()).isEmpty());
+			return itemLightSourceManager.getLuminance(itemFrame.getItem(), !world.getFluidState(entity.blockPosition()).isEmpty());
 		}
 
 		return 0;

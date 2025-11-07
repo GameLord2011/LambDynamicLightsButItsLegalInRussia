@@ -10,7 +10,7 @@
 package dev.lambdaurora.lambdynlights.api.behavior;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 import org.joml.Vector3d;
@@ -147,12 +147,12 @@ public class LineLightBehavior implements DynamicLightBehavior {
 	@Override
 	public @NotNull BoundingBox getBoundingBox() {
 		return new BoundingBox(
-				MathHelper.floor(this.startPoint.x()),
-				MathHelper.floor(this.startPoint.y()),
-				MathHelper.floor(this.startPoint.z()),
-				MathHelper.ceil(this.endPoint.x()),
-				MathHelper.ceil(this.endPoint.y()),
-				MathHelper.ceil(this.endPoint.z())
+				Mth.floor(this.startPoint.x()),
+				Mth.floor(this.startPoint.y()),
+				Mth.floor(this.startPoint.z()),
+				Mth.ceil(this.endPoint.x()),
+				Mth.ceil(this.endPoint.y()),
+				Mth.ceil(this.endPoint.z())
 		);
 	}
 }

@@ -21,8 +21,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
-import net.minecraft.core.ChunkSectionPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.gizmos.Gizmos;
@@ -145,12 +145,12 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 			if (!this.isEnabled()) return;
 
 			for (var entry : this.scheduledChunks.long2IntEntrySet()) {
-				this.addBox(SCHEDULED_COLOR, (int) (entry.getIntValue() / 4.f * 255), ChunkSectionPos.of(entry.getLongKey()));
+				this.addBox(SCHEDULED_COLOR, (int) (entry.getIntValue() / 4.f * 255), SectionPos.of(entry.getLongKey()));
 			}
 
 			if (this.requestedChunks != null) {
 				for (var chunk : this.requestedChunks.long2ObjectEntrySet()) {
-					var chunkPos = ChunkSectionPos.of(chunk.getLongKey());
+					var chunkPos = SectionPos.of(chunk.getLongKey());
 					var statuses = chunk.getValue();
 					boolean canRenderBox = false;
 
@@ -185,12 +185,12 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 			}
 		}
 
-		private void addBox(int color, int alpha, ChunkSectionPos chunk) {
+		private void addBox(int color, int alpha, SectionPos chunk) {
 			var box = new AABB(
 					chunk.minBlockX(), chunk.minBlockY(), chunk.minBlockZ(),
-					ChunkSectionPos.sectionToBlockCoord(chunk.x(), 16),
-					ChunkSectionPos.sectionToBlockCoord(chunk.y(), 16),
-					ChunkSectionPos.sectionToBlockCoord(chunk.z(), 16)
+					SectionPos.sectionToBlockCoord(chunk.x(), 16),
+					SectionPos.sectionToBlockCoord(chunk.y(), 16),
+					SectionPos.sectionToBlockCoord(chunk.z(), 16)
 			);
 
 			Gizmos.cuboid(box, GizmoStyle.stroke((alpha << 24) | (color & 0x00ffffff)));

@@ -14,7 +14,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.lambdaurora.lambdynlights.api.entity.luminance.EntityLuminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import dev.lambdaurora.lambdynlights.api.predicate.LightSourceLocationPredicate;
-import net.minecraft.advancements.critereon.*;
+import net.minecraft.advancements.criterion.*;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentExactPredicate;
@@ -64,7 +64,7 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 	/**
 	 * Represents a predicate to match entities with.
 	 * <p>
-	 * This is inspired from the {@linkplain net.minecraft.advancements.critereon.EntityPredicate entity predicate}
+	 * This is inspired from the {@linkplain net.minecraft.advancements.criterion.EntityPredicate entity predicate}
 	 * found in advancements but with fewer features since this one needs to work on the client.
 	 *
 	 * @param entityType the entity type predicate to match if present

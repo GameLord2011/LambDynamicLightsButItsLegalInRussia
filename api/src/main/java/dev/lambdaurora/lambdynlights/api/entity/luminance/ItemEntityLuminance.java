@@ -35,7 +35,7 @@ public final class ItemEntityLuminance implements EntityLuminance {
 	@Override
 	public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Entity entity) {
 		if (entity instanceof ItemEntity itemEntity) {
-			return itemLightSourceManager.getLuminance(itemEntity.getItem(), entity.isSubmergedInWater());
+			return itemLightSourceManager.getLuminance(itemEntity.getItem(), entity.isUnderWater());
 		}
 
 		return 0;

@@ -12,7 +12,6 @@ package dev.lambdaurora.lambdynlights.config;
 import com.electronwill.nightconfig.core.Config;
 import dev.lambdaurora.spruceui.option.SpruceOption;
 import dev.lambdaurora.spruceui.tooltip.TooltipData;
-import net.minecraft.network.chat.Text;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

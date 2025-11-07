@@ -15,8 +15,8 @@ import dev.lambdaurora.spruceui.option.SpruceDoubleOption;
 import dev.lambdaurora.spruceui.tooltip.TooltipData;
 import dev.lambdaurora.spruceui.widget.SpruceWidget;
 import dev.lambdaurora.spruceui.widget.option.SpruceOptionSliderWidget;
-import net.minecraft.TextFormatting;
-import net.minecraft.network.chat.Text;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.IntConsumer;
@@ -47,8 +47,8 @@ public final class AdaptiveTickingOption extends SpruceDoubleOption {
 					double value = option.get();
 
 					return option.getDisplayText(value == 33
-							? SpruceTexts.OPTIONS_OFF.copy().withStyle(TextFormatting.RED)
-							: Text.literal(String.valueOf((int) value))
+							? SpruceTexts.OPTIONS_OFF.copy().withStyle(ChatFormatting.RED)
+							: Component.literal(String.valueOf((int) value))
 					);
 				},
 				tooltip

@@ -18,8 +18,8 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gizmos.Gizmos;
 import net.minecraft.gizmos.TextGizmo;
+import net.minecraft.util.Mth;
 import net.minecraft.util.debug.DebugValueAccess;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,10 +51,10 @@ public class DynamicLightLevelDebugRenderer extends DynamicLightDebugRenderer {
 			return;
 		}
 
-		int startX = this.client.player.getBlockPos().getX();
-		int startY = this.client.player.getBlockPos().getY();
-		int startZ = this.client.player.getBlockPos().getZ();
-		var pos = new BlockPos.Mutable();
+		int startX = this.client.player.blockPosition().getX();
+		int startY = this.client.player.blockPosition().getY();
+		int startZ = this.client.player.blockPosition().getZ();
+		var pos = new BlockPos.MutableBlockPos();
 
 		if (lightDisplayRadius > 0) {
 			for (int offsetX = 0; offsetX < lightDisplayRadius * 2 + 1; offsetX++) {
@@ -76,9 +76,9 @@ public class DynamicLightLevelDebugRenderer extends DynamicLightDebugRenderer {
 
 						if (light < 7.5) {
 							red = 255;
-							green = (int) MathHelper.lerp(light / 7.5, 0x00, 0xFF);
+							green = (int) Mth.lerp(light / 7.5, 0x00, 0xFF);
 						} else {
-							red = (int) MathHelper.lerp((light - 7.5) / 7.5, 0xFF, 0x00);
+							red = (int) Mth.lerp((light - 7.5) / 7.5, 0xFF, 0x00);
 							green = 255;
 						}
 

@@ -50,7 +50,7 @@ public record TheEndGatewayBeamLightBehavior(TheEndGatewayBlockEntity gateway, L
 
 		double distanceSquared = dx * dx + dz * dz;
 
-		return gateway.getCachedState().getLightEmission() - Math.sqrt(distanceSquared) * falloffRatio;
+		return gateway.getBlockState().getLightEmission() - Math.sqrt(distanceSquared) * falloffRatio;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import dev.lambdaurora.lambdynlights.util.DynamicLightDebugRenderer;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.ChunkSectionPos;
+import net.minecraft.core.SectionPos;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
@@ -90,7 +90,7 @@ public abstract class ChunkRebuildScheduler implements Closeable {
 	 * @param chunkPos the packed chunk position
 	 */
 	protected final void scheduleChunkRebuild(long chunkPos) {
-		this.scheduleChunkRebuild(ChunkSectionPos.x(chunkPos), ChunkSectionPos.y(chunkPos), ChunkSectionPos.z(chunkPos));
+		this.scheduleChunkRebuild(SectionPos.x(chunkPos), SectionPos.y(chunkPos), SectionPos.z(chunkPos));
 		this.sectionRebuildDebugRenderer.scheduleChunkRebuild(chunkPos);
 	}
 

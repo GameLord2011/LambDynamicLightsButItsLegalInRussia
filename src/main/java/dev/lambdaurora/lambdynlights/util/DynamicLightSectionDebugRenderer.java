@@ -69,13 +69,13 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 		if (this.data == null || Duration.between(this.lastUpdateTime, instant).compareTo(REFRESH_INTERVAL) > 0) {
 			this.lastUpdateTime = instant;
 			this.data = new DynamicLightSectionDebugRenderer.SectionData(
-					this.lightingEngine, RADIUS, this.client.player.getBlockPos()
+					this.lightingEngine, RADIUS, this.client.player.blockPosition()
 			);
 		}
 
-		int playerCellX = DynamicLightingEngine.positionToCell(this.client.player.getBlockPos().getX());
-		int playerCellY = DynamicLightingEngine.positionToCell(this.client.player.getBlockPos().getY());
-		int playerCellZ = DynamicLightingEngine.positionToCell(this.client.player.getBlockPos().getZ());
+		int playerCellX = DynamicLightingEngine.positionToCell(this.client.player.blockPosition().getX());
+		int playerCellY = DynamicLightingEngine.positionToCell(this.client.player.blockPosition().getY());
+		int playerCellZ = DynamicLightingEngine.positionToCell(this.client.player.blockPosition().getZ());
 
 		int playerHash = this.lightingEngine.hashCell(playerCellX, playerCellY, playerCellZ);
 
