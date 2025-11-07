@@ -25,7 +25,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,8 +67,8 @@ public class DynamicLightsConfig {
 			.normalize();
 	private final CommentedConfig config;
 	private final LambDynLights mod;
-	private DynamicLightsMode dynamicLightsMode;
-	private ChunkRebuildSchedulerMode chunkRebuildSchedulerMode;
+	private DynamicLightsMode dynamicLightsMode = DEFAULT_DYNAMIC_LIGHTS_MODE;
+	private ChunkRebuildSchedulerMode chunkRebuildSchedulerMode = DEFAULT_CHUNK_REBUILD_SCHEDULER_MODE;
 	private int slowTickingDistance;
 	private int slowerTickingDistance;
 	private final BooleanSettingEntry backgroundAdaptiveTicking;
@@ -85,8 +84,8 @@ public class DynamicLightsConfig {
 	private final BooleanSettingEntry debugActiveDynamicLightingCells;
 	private final BooleanSettingEntry debugDisplayDynamicLightingChunkRebuild;
 	private final BooleanSettingEntry debugDisplayHandlerBoundingBox;
-	private ExplosiveLightingMode creeperLightingMode;
-	private ExplosiveLightingMode tntLightingMode;
+	private ExplosiveLightingMode creeperLightingMode = DEFAULT_CREEPER_LIGHTING_MODE;
+	private ExplosiveLightingMode tntLightingMode = DEFAULT_TNT_LIGHTING_MODE;
 	private int debugCellDisplayRadius;
 	private int debugLightLevelRadius;
 
@@ -140,7 +139,7 @@ public class DynamicLightsConfig {
 	);
 
 
-	public DynamicLightsConfig(@NotNull LambDynLights mod) {
+	public DynamicLightsConfig(LambDynLights mod) {
 		this.mod = mod;
 		this.config = CommentedConfig.inMemory();
 
@@ -308,11 +307,11 @@ public class DynamicLightsConfig {
 		this.maybeSerialize().ifPresent(data -> SAVE_EXECUTOR.execute(() -> this.doSave(data)));
 	}
 
-	private @NotNull String serialize() {
+	private String serialize() {
 		return new TomlWriter().writeToString(this.config);
 	}
 
-	private @NotNull Optional<String> maybeSerialize() {
+	private Optional<String> maybeSerialize() {
 		var data = this.serialize();
 		int hash = data.hashCode();
 
@@ -368,7 +367,7 @@ public class DynamicLightsConfig {
 	 *
 	 * @param mode the dynamic lights mode
 	 */
-	public void setDynamicLightsMode(@NotNull DynamicLightsMode mode) {
+	public void setDynamicLightsMode(DynamicLightsMode mode) {
 		if (this.dynamicLightsMode.isEnabled() != mode.isEnabled()) {
 			this.mod.shouldForceRefresh = true;
 		}
@@ -380,7 +379,7 @@ public class DynamicLightsConfig {
 	/**
 	 * {@return the chunk rebuild scheduler mode}
 	 */
-	public @NotNull ChunkRebuildSchedulerMode getChunkRebuildSchedulerMode() {
+	public ChunkRebuildSchedulerMode getChunkRebuildSchedulerMode() {
 		return this.chunkRebuildSchedulerMode;
 	}
 
@@ -389,7 +388,7 @@ public class DynamicLightsConfig {
 	 *
 	 * @param mode the dynamic lights mode
 	 */
-	public void setChunkRebuildSchedulerMode(@NotNull ChunkRebuildSchedulerMode mode) {
+	public void setChunkRebuildSchedulerMode(ChunkRebuildSchedulerMode mode) {
 		this.chunkRebuildSchedulerMode = mode;
 		this.config.set("chunk_rebuild_scheduler", mode.getName());
 	}
@@ -460,7 +459,7 @@ public class DynamicLightsConfig {
 	 *
 	 * @param lightingMode the Creeper dynamic lighting mode
 	 */
-	public void setCreeperLightingMode(@NotNull ExplosiveLightingMode lightingMode) {
+	public void setCreeperLightingMode(ExplosiveLightingMode lightingMode) {
 		this.creeperLightingMode = lightingMode;
 		this.config.set("light_sources.creeper", lightingMode.getName());
 	}
@@ -479,7 +478,7 @@ public class DynamicLightsConfig {
 	 *
 	 * @param lightingMode the TNT dynamic lighting mode
 	 */
-	public void setTntLightingMode(@NotNull ExplosiveLightingMode lightingMode) {
+	public void setTntLightingMode(ExplosiveLightingMode lightingMode) {
 		this.tntLightingMode = lightingMode;
 		this.config.set("light_sources.tnt", lightingMode.getName());
 	}

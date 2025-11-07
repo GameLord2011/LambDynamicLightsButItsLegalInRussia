@@ -35,9 +35,10 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,7 @@ public class SettingsScreen extends SpruceScreen {
 	private static final String DYNAMIC_LIGHT_SOURCES_KEY = "lambdynlights.menu.light_sources";
 	private static final String SPECIAL_DYNAMIC_LIGHT_SOURCES_KEY = "lambdynlights.menu.light_sources.special";
 	private final DynamicLightsConfig config;
-	private final Screen parent;
+	private final @Nullable Screen parent;
 	private final SpruceOption entitiesOption;
 	private final SpruceOption selfOption;
 	private final SpruceOption waterSensitiveOption;
@@ -64,8 +65,8 @@ public class SettingsScreen extends SpruceScreen {
 	private final SpruceOption debugCellDisplayRadiusOption;
 	private final SpruceOption debugLightLevelRadiusOption;
 	private final SpruceOption resetOption;
-	private SpruceTabbedWidget tabbedWidget;
-	private SpruceTextFieldWidget searchInput;
+	private @Nullable SpruceTabbedWidget tabbedWidget;
+	private @Nullable SpruceTextFieldWidget searchInput;
 
 	static {
 		String rawVersion = LambDynLightsConstants.VERSION;
@@ -77,11 +78,11 @@ public class SettingsScreen extends SpruceScreen {
 		var version = Component.literal('v' + rawVersion).withStyle(ChatFormatting.GRAY);
 
 		if (rawVersion.matches("^.+-rc\\.\\d+\\+.+$")) {
-			version = version.append(Component.literal(" (Release Candidate)").withStyle(ChatFormatting.GOLD));
+			version.append(Component.literal(" (Release Candidate)").withStyle(ChatFormatting.GOLD));
 		}
 
 		if (LambDynLightsConstants.isDevMode()) {
-			version = version.append(Component.literal(" (dev)").withStyle(ChatFormatting.RED));
+			version.append(Component.literal(" (dev)").withStyle(ChatFormatting.RED));
 		}
 
 		VERSION = version;
@@ -218,7 +219,7 @@ public class SettingsScreen extends SpruceScreen {
 		var container = new SpruceContainerWidget(Position.origin(), width, height);
 
 		tabConsumer.accept(new TabContext(
-				this.tabbedWidget,
+				Objects.requireNonNull(this.tabbedWidget),
 				container,
 				height - this.tabbedWidget.getList().getPosition().getRelativeY()
 		));

@@ -14,7 +14,6 @@ import dev.lambdaurora.spruceui.SpruceTexts;
 import dev.lambdaurora.spruceui.util.Nameable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -35,7 +34,7 @@ public enum DynamicLightsMode implements Nameable {
 	private final TickMode tickMode;
 	private final Component translatedText;
 
-	DynamicLightsMode(TickMode tickMode, @NotNull ChatFormatting formatting, @NotNull Component translatedText) {
+	DynamicLightsMode(TickMode tickMode, ChatFormatting formatting, Component translatedText) {
 		this.tickMode = tickMode;
 		this.translatedText = translatedText.copy().withStyle(formatting);
 	}
@@ -52,7 +51,7 @@ public enum DynamicLightsMode implements Nameable {
 	/**
 	 * {@return the corresponding tick mode for this dynamic lights mode}
 	 */
-	public @NotNull TickMode tickMode() {
+	public TickMode tickMode() {
 		return this.tickMode;
 	}
 
@@ -73,12 +72,12 @@ public enum DynamicLightsMode implements Nameable {
 	 *
 	 * @return the translated text of the dynamic lights mode
 	 */
-	public @NotNull Component getTranslatedText() {
+	public Component getTranslatedText() {
 		return this.translatedText;
 	}
 
 	@Override
-	public @NotNull String getName() {
+	public String getName() {
 		return this.name().toLowerCase();
 	}
 
@@ -88,7 +87,7 @@ public enum DynamicLightsMode implements Nameable {
 	 * @param id the identifier of the dynamic lights mode
 	 * @return the dynamic lights mode if found, else empty
 	 */
-	public static @NotNull Optional<DynamicLightsMode> byId(@NotNull String id) {
+	public static Optional<DynamicLightsMode> byId(String id) {
 		return Arrays.stream(values()).filter(mode -> mode.getName().equalsIgnoreCase(id)).findFirst();
 	}
 }

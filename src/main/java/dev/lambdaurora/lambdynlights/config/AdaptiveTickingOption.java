@@ -17,7 +17,7 @@ import dev.lambdaurora.spruceui.widget.SpruceWidget;
 import dev.lambdaurora.spruceui.widget.option.SpruceOptionSliderWidget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.IntConsumer;
 import java.util.function.Supplier;
@@ -31,13 +31,13 @@ import java.util.function.Supplier;
  */
 public final class AdaptiveTickingOption extends SpruceDoubleOption {
 	private Runnable setCallback = () -> {};
-	private Slider currentSlider;
+	private @Nullable Slider currentSlider;
 
 	public AdaptiveTickingOption(
 			String key,
 			Supplier<Double> getter,
 			IntConsumer setter,
-			@NotNull TooltipData tooltip
+			TooltipData tooltip
 	) {
 		super(
 				"lambdynlights.option.adaptive_ticking." + key,

@@ -15,21 +15,20 @@ import dev.lambdaurora.spruceui.option.SpruceOption;
 import dev.lambdaurora.spruceui.option.SpruceToggleBooleanOption;
 import dev.lambdaurora.spruceui.tooltip.TooltipData;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public final class LightSourceSettingEntry extends BooleanSettingEntry {
 	public LightSourceSettingEntry(
-			String key, String guiKey, boolean defaultValue, @Nullable Config config, @NotNull TooltipData tooltip
+			String key, String guiKey, boolean defaultValue, @Nullable Config config, TooltipData tooltip
 	) {
 		super("light_sources.settings.entities." + key, guiKey, defaultValue, config, tooltip);
 	}
 
 	@Override
-	protected SpruceOption buildOption(@NotNull TooltipData tooltip) {
+	protected SpruceOption buildOption(TooltipData tooltip) {
 		return new Option(
 				this.guiKey(),
 				this::get,
@@ -39,7 +38,7 @@ public final class LightSourceSettingEntry extends BooleanSettingEntry {
 	}
 
 	public static final class Option extends SpruceToggleBooleanOption {
-		public Option(String key, Supplier<Boolean> getter, Consumer<Boolean> setter, @NotNull TooltipData tooltip) {
+		public Option(String key, Supplier<Boolean> getter, Consumer<Boolean> setter, TooltipData tooltip) {
 			super(key, getter, setter, tooltip, false);
 		}
 

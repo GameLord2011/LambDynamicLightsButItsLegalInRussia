@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,7 +30,7 @@ public abstract class LevelRendererMixin implements FrustumStorage {
 	private Frustum lambdynlights$frustum;
 
 	@Override
-	public Frustum lambdynlights$getFrustum() {
+	public @Nullable Frustum lambdynlights$getFrustum() {
 		return this.lambdynlights$frustum;
 	}
 

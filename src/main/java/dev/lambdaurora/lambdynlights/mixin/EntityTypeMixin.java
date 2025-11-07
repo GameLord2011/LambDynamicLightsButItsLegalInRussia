@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,7 +35,7 @@ public abstract class EntityTypeMixin<T extends Entity> implements DynamicLightH
 	private LightSourceSettingEntry lambdynlights$setting;
 
 	@Override
-	public LightSourceSettingEntry lambdynlights$getSetting() {
+	public @Nullable LightSourceSettingEntry lambdynlights$getSetting() {
 		if (this.lambdynlights$setting == null) {
 			var self = (EntityType<?>) (Object) this;
 			var id = BuiltInRegistries.ENTITY_TYPE.getKey(self);

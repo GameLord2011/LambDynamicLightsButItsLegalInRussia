@@ -13,7 +13,6 @@ import dev.lambdaurora.spruceui.SpruceTexts;
 import dev.lambdaurora.spruceui.util.Nameable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -32,7 +31,7 @@ public enum ExplosiveLightingMode implements Nameable {
 
 	private final Component translatedText;
 
-	ExplosiveLightingMode(@NotNull ChatFormatting formatting, @NotNull Component translatedText) {
+	ExplosiveLightingMode(ChatFormatting formatting, Component translatedText) {
 		this.translatedText = translatedText.copy().withStyle(formatting);
 	}
 
@@ -62,12 +61,12 @@ public enum ExplosiveLightingMode implements Nameable {
 	 *
 	 * @return the translated text of the explosives dynamic lighting mode
 	 */
-	public @NotNull Component getTranslatedText() {
+	public Component getTranslatedText() {
 		return this.translatedText;
 	}
 
 	@Override
-	public @NotNull String getName() {
+	public String getName() {
 		return this.name().toLowerCase();
 	}
 
@@ -77,7 +76,7 @@ public enum ExplosiveLightingMode implements Nameable {
 	 * @param id the identifier of the explosives dynamic lighting mode
 	 * @return the explosives dynamic lighting mode if found, else empty
 	 */
-	public static @NotNull Optional<ExplosiveLightingMode> byId(@NotNull String id) {
+	public static Optional<ExplosiveLightingMode> byId(String id) {
 		return Arrays.stream(values()).filter(mode -> mode.getName().equalsIgnoreCase(id)).findFirst();
 	}
 }

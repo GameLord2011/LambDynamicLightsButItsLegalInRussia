@@ -18,7 +18,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -38,7 +37,7 @@ public abstract class ItemLightSourceDataProvider
 	}
 
 	@Override
-	protected @NotNull ItemLightSourceDataProvider.Context createContext(HolderLookup.@NotNull Provider lookupProvider) {
+	protected ItemLightSourceDataProvider.Context createContext(HolderLookup.Provider lookupProvider) {
 		return new Context(lookupProvider);
 	}
 
@@ -60,8 +59,8 @@ public abstract class ItemLightSourceDataProvider
 		 * @see #add(String, ItemPredicate, ItemLuminance, boolean)
 		 */
 		public void add(
-				@NotNull Identifier key,
-				@NotNull ItemPredicate predicate, @NotNull ItemLuminance luminance, boolean waterSensitive
+				Identifier key,
+				ItemPredicate predicate, ItemLuminance luminance, boolean waterSensitive
 		) {
 			this.add(key, new ItemLightSource(predicate, luminance, waterSensitive));
 		}
@@ -76,8 +75,8 @@ public abstract class ItemLightSourceDataProvider
 		 * @see #add(Identifier, ItemPredicate, ItemLuminance, boolean)
 		 */
 		public void add(
-				@NotNull String key,
-				@NotNull ItemPredicate predicate, @NotNull ItemLuminance luminance, boolean waterSensitive
+				String key,
+				ItemPredicate predicate, ItemLuminance luminance, boolean waterSensitive
 		) {
 			this.add(this.idOf(key), predicate, luminance, waterSensitive);
 		}
@@ -93,8 +92,8 @@ public abstract class ItemLightSourceDataProvider
 		 * @see #add(ItemLike, ItemLuminance, boolean)
 		 */
 		public void add(
-				@NotNull Identifier key,
-				@NotNull ItemLuminance luminance, boolean waterSensitive, @NotNull ItemLike... items
+				Identifier key,
+				ItemLuminance luminance, boolean waterSensitive, ItemLike... items
 		) {
 			this.add(key, ItemPredicate.Builder.item().of(this.itemLookup(), items).build(), luminance, waterSensitive);
 		}
@@ -110,8 +109,8 @@ public abstract class ItemLightSourceDataProvider
 		 * @see #add(ItemLike, ItemLuminance, boolean)
 		 */
 		public void add(
-				@NotNull String key,
-				@NotNull ItemLuminance luminance, boolean waterSensitive, @NotNull ItemLike... items
+				String key,
+				ItemLuminance luminance, boolean waterSensitive, ItemLike... items
 		) {
 			this.add(this.idOf(key), luminance, waterSensitive, items);
 		}
@@ -128,7 +127,7 @@ public abstract class ItemLightSourceDataProvider
 		 * @see #add(String, ItemLuminance, boolean, ItemLike...)
 		 */
 		@SuppressWarnings("deprecation")
-		public void add(@NotNull ItemLike item, @NotNull ItemLuminance luminance, boolean waterSensitive) {
+		public void add(ItemLike item, ItemLuminance luminance, boolean waterSensitive) {
 			var itemId = item.asItem().builtInRegistryHolder().key().identifier();
 			this.add(this.deriveId(itemId), luminance, waterSensitive, item);
 		}
@@ -144,8 +143,8 @@ public abstract class ItemLightSourceDataProvider
 		 * @see #add(TagKey, ItemLuminance, boolean)
 		 */
 		public void add(
-				@NotNull Identifier key,
-				@NotNull TagKey<Item> tag, @NotNull ItemLuminance luminance, boolean waterSensitive
+				Identifier key,
+				TagKey<Item> tag, ItemLuminance luminance, boolean waterSensitive
 		) {
 			this.add(key, ItemPredicate.Builder.item().of(this.itemLookup(), tag).build(), luminance, waterSensitive);
 		}
@@ -161,8 +160,8 @@ public abstract class ItemLightSourceDataProvider
 		 * @see #add(TagKey, ItemLuminance, boolean)
 		 */
 		public void add(
-				@NotNull String key,
-				@NotNull TagKey<Item> tag, @NotNull ItemLuminance luminance, boolean waterSensitive
+				String key,
+				TagKey<Item> tag, ItemLuminance luminance, boolean waterSensitive
 		) {
 			this.add(this.idOf(key), tag, luminance, waterSensitive);
 		}
@@ -178,7 +177,7 @@ public abstract class ItemLightSourceDataProvider
 		 * @see #add(Identifier, TagKey, ItemLuminance, boolean)
 		 * @see #add(String, TagKey, ItemLuminance, boolean)
 		 */
-		public void add(@NotNull TagKey<Item> tag, @NotNull ItemLuminance luminance, boolean waterSensitive) {
+		public void add(TagKey<Item> tag, ItemLuminance luminance, boolean waterSensitive) {
 			this.add(this.deriveId(tag.location()), tag, luminance, waterSensitive);
 		}
 	}

@@ -18,7 +18,6 @@ import net.minecraft.util.Brightness;
 import net.minecraft.util.Util;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 import java.util.HashMap;
@@ -41,7 +40,7 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 	/**
 	 * {@return the type of this item luminance}
 	 */
-	@NotNull Type type();
+	Type type();
 
 	/**
 	 * Gets the luminance of the given item stack.
@@ -50,7 +49,7 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 	 * @return the luminance of the given item stack
 	 */
 	@Range(from = 0, to = 15)
-	int getLuminance(@NotNull ItemStack stack);
+	int getLuminance(ItemStack stack);
 
 	/**
 	 * Creates a new {@linkplain Value constant item luminance} with the given value.
@@ -59,7 +58,7 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 	 * @return the {@linkplain Value constant item luminance} instance
 	 * @since 4.1.0
 	 */
-	static @NotNull Value of(@Range(from = 0, to = 15) int luminance) {
+	static Value of(@Range(from = 0, to = 15) int luminance) {
 		return new ItemLuminance.Value(luminance);
 	}
 
@@ -70,7 +69,7 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 	 * @return the {@link BlockReference} instance
 	 * @since 4.1.0
 	 */
-	static @NotNull BlockReference ofBlock(@NotNull Block block) {
+	static BlockReference ofBlock(Block block) {
 		return new ItemLuminance.BlockReference(block);
 	}
 
@@ -88,12 +87,12 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 		);
 
 		@Override
-		public @NotNull Type type() {
+		public Type type() {
 			return Type.VALUE;
 		}
 
 		@Override
-		public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemStack stack) {
+		public @Range(from = 0, to = 15) int getLuminance(ItemStack stack) {
 			return this.luminance;
 		}
 	}
@@ -120,12 +119,12 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 		}
 
 		@Override
-		public @NotNull Type type() {
+		public Type type() {
 			return Type.BLOCK_REFERENCE;
 		}
 
 		@Override
-		public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemStack stack) {
+		public @Range(from = 0, to = 15) int getLuminance(ItemStack stack) {
 			return this.block.defaultBlockState().getLightEmission();
 		}
 	}
@@ -140,12 +139,12 @@ public sealed interface ItemLuminance permits ItemLuminance.Value, ItemLuminance
 		private BlockSelf() {}
 
 		@Override
-		public @NotNull Type type() {
+		public Type type() {
 			return Type.BLOCK_SELF;
 		}
 
 		@Override
-		public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemStack stack) {
+		public @Range(from = 0, to = 15) int getLuminance(ItemStack stack) {
 			return Block.byItem(stack.getItem()).defaultBlockState().getLightEmission();
 		}
 	}

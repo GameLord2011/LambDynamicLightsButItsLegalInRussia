@@ -42,8 +42,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -128,7 +127,7 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		};
 	}
 
-	private boolean checkFilter(LightSourceEntry entry, @NotNull List<String> filter) {
+	private boolean checkFilter(LightSourceEntry entry, List<String> filter) {
 		var name = entry.option.lambdynlights$getName().getString().toLowerCase();
 
 		for (var part : filter) {
@@ -279,7 +278,7 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		/* Input */
 
 		@Override
-		protected boolean onMouseClick(@NotNull MouseButtonEvent event, boolean doubleClick) {
+		protected boolean onMouseClick(MouseButtonEvent event, boolean doubleClick) {
 			var it = this.iterator();
 
 			SpruceWidget element;
@@ -299,29 +298,29 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		}
 
 		@Override
-		protected boolean onMouseRelease(@NotNull MouseButtonEvent event) {
+		protected boolean onMouseRelease(MouseButtonEvent event) {
 			this.dragging = false;
 			return this.hoveredElement(event.x(), event.y()).filter(element -> element.mouseReleased(event)).isPresent();
 		}
 
 		@Override
-		protected boolean onMouseDrag(@NotNull MouseButtonEvent event, double deltaX, double deltaY) {
+		protected boolean onMouseDrag(MouseButtonEvent event, double deltaX, double deltaY) {
 			return this.getFocused() != null && this.dragging && event.button() == GLFW.GLFW_MOUSE_BUTTON_1
 					&& this.getFocused().mouseDragged(event, deltaX, deltaY);
 		}
 
 		@Override
-		protected boolean onKeyPress(@NotNull KeyEvent event) {
+		protected boolean onKeyPress(KeyEvent event) {
 			return this.focused != null && this.focused.keyPressed(event);
 		}
 
 		@Override
-		protected boolean onKeyRelease(@NotNull KeyEvent event) {
+		protected boolean onKeyRelease(KeyEvent event) {
 			return this.focused != null && this.focused.keyReleased(event);
 		}
 
 		@Override
-		protected boolean onCharTyped(@NotNull CharacterEvent event) {
+		protected boolean onCharTyped(CharacterEvent event) {
 			return this.focused != null && this.focused.charTyped(event);
 		}
 
@@ -348,7 +347,7 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		/* Navigation */
 
 		@Override
-		public boolean onNavigation(@NotNull NavigationEvent event) {
+		public boolean onNavigation(NavigationEvent event) {
 			if (this.requiresCursor()) return false;
 			if (!event.tab() && event.direction().getAxis() == ScreenAxis.VERTICAL) {
 				if (this.isFocused()) {

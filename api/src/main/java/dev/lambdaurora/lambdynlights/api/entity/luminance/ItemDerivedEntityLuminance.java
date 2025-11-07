@@ -17,7 +17,6 @@ import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
@@ -37,9 +36,9 @@ import java.util.stream.Stream;
  * @since 4.0.0
  */
 public record ItemDerivedEntityLuminance(
-		@NotNull ItemStack item,
+		ItemStack item,
 		boolean includeRain,
-		@NotNull Optional<Always> always
+		Optional<Always> always
 ) implements EntityLuminance {
 	public static final MapCodec<ItemDerivedEntityLuminance> CODEC = RecordCodecBuilder.mapCodec(
 			instance -> instance.group(
@@ -50,12 +49,12 @@ public record ItemDerivedEntityLuminance(
 	);
 
 	@Override
-	public @NotNull Type type() {
+	public Type type() {
 		return Type.ITEM;
 	}
 
 	@Override
-	public @Range(from = 0, to = 15) int getLuminance(@NotNull ItemLightSourceManager itemLightSourceManager, @NotNull Entity entity) {
+	public @Range(from = 0, to = 15) int getLuminance(ItemLightSourceManager itemLightSourceManager, Entity entity) {
 		boolean wet = this.always.map(value -> switch (value) {
 			case DRY -> false;
 			case WET -> true;
@@ -102,7 +101,7 @@ public record ItemDerivedEntityLuminance(
 	 * @return the builder
 	 * @since 4.1.0
 	 */
-	public static @NotNull Builder builder(@NotNull ItemStack item) {
+	public static Builder builder(ItemStack item) {
 		return new Builder(item);
 	}
 
@@ -149,7 +148,7 @@ public record ItemDerivedEntityLuminance(
 		 *
 		 * @return the resulting {@link ItemDerivedEntityLuminance}
 		 */
-		public @NotNull ItemDerivedEntityLuminance build() {
+		public ItemDerivedEntityLuminance build() {
 			return new ItemDerivedEntityLuminance(this.item, this.includeRain, this.always);
 		}
 	}

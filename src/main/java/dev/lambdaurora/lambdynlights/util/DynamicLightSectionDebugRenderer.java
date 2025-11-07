@@ -22,8 +22,7 @@ import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape;
 import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -45,8 +44,7 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 	private final DynamicLightingEngine lightingEngine;
 	private Instant lastUpdateTime = Instant.now();
 
-	@Nullable
-	private DynamicLightSectionDebugRenderer.SectionData data;
+	private DynamicLightSectionDebugRenderer.@Nullable SectionData data;
 
 	public DynamicLightSectionDebugRenderer(LambDynLights mod) {
 		super(mod);
@@ -56,7 +54,7 @@ public class DynamicLightSectionDebugRenderer extends DynamicLightDebugRenderer 
 	@Override
 	public void emitGizmos(
 			double x, double y, double z,
-			@NotNull DebugValueAccess debugValueAccess, @NotNull Frustum frustum, float tickDelta
+			DebugValueAccess debugValueAccess, Frustum frustum, float tickDelta
 	) {
 		int cellDisplayRadius = this.config.getDebugCellDisplayRadius();
 

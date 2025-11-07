@@ -20,7 +20,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -39,7 +39,7 @@ public final class DeferredDynamicLightSource implements DynamicLightSource {
 
 	private final int id = ID_COUNTER.getAndIncrement();
 	private final DynamicLightBehavior behavior;
-	private DynamicLightBehavior.BoundingBox previousBoundingBox;
+	private DynamicLightBehavior.@Nullable BoundingBox previousBoundingBox;
 
 	public DeferredDynamicLightSource(DynamicLightBehavior behavior) {
 		this.behavior = behavior;
@@ -56,7 +56,7 @@ public final class DeferredDynamicLightSource implements DynamicLightSource {
 	}
 
 	@Override
-	public Stream<SpatialLookupEntry> splitIntoDynamicLightEntries(@NotNull CellHasher cellHasher) {
+	public Stream<SpatialLookupEntry> splitIntoDynamicLightEntries(CellHasher cellHasher) {
 		DynamicLightBehavior.BoundingBox boundingBox = this.behavior.getBoundingBox();
 
 		var chunks = new ArrayList<SpatialLookupEntry>();

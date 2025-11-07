@@ -17,7 +17,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.LongConsumer;
 import java.util.stream.Stream;
@@ -41,7 +40,7 @@ public interface DynamicLightSource {
 	 * @param cellHasher the cell hasher
 	 * @return a stream of spatial lookup entries this source is made of
 	 */
-	Stream<SpatialLookupEntry> splitIntoDynamicLightEntries(@NotNull CellHasher cellHasher);
+	Stream<SpatialLookupEntry> splitIntoDynamicLightEntries(CellHasher cellHasher);
 
 	/**
 	 * Computes the map of chunk sections to rebuild to display in-world the new light values.

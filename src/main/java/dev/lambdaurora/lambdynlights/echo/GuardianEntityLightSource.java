@@ -13,7 +13,9 @@ import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.api.behavior.LineLightBehavior;
 import dev.lambdaurora.lambdynlights.engine.DynamicLightingEngine;
 import net.minecraft.world.entity.monster.Guardian;
+import org.jetbrains.annotations.Contract;
 import org.joml.Vector3d;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Represents a Guardian laser light source.
@@ -23,9 +25,10 @@ import org.joml.Vector3d;
  * @since 4.0.0
  */
 public interface GuardianEntityLightSource {
-	LineLightBehavior lambdynlights$getDynamicLightBeam();
+	@Contract(pure = true)
+	@Nullable LineLightBehavior lambdynlights$getDynamicLightBeam();
 
-	void lambdynlights$setDynamicLightBeam(LineLightBehavior beam);
+	void lambdynlights$setDynamicLightBeam(@Nullable LineLightBehavior beam);
 
 	static void tick(Guardian guardian) {
 		var lightSource = (GuardianEntityLightSource) guardian;

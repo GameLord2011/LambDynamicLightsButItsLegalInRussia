@@ -20,7 +20,6 @@ import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.gizmos.Gizmos;
 import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 
@@ -47,7 +46,7 @@ public class DynamicLightBehaviorDebugRenderer extends DynamicLightDebugRenderer
 	@Override
 	public void emitGizmos(
 			double x, double y, double z,
-			@NotNull DebugValueAccess debugValueAccess, @NotNull Frustum frustum, float tickDelta
+			DebugValueAccess debugValueAccess, Frustum frustum, float tickDelta
 	) {
 		if (!this.isEnabled()) {
 			return;

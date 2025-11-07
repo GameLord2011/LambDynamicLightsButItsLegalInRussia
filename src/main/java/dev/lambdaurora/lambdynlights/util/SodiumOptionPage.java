@@ -13,7 +13,7 @@ import com.google.common.collect.ImmutableList;
 import dev.lambdaurora.lambdynlights.LambDynLightsConstants;
 import dev.lambdaurora.lambdynlights.gui.SettingsScreen;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;

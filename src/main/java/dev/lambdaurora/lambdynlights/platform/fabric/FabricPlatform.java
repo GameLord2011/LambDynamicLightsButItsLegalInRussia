@@ -23,7 +23,6 @@ import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -48,12 +47,12 @@ public final class FabricPlatform implements Platform {
 	public ListenableEvent<Identifier, Consumer<HolderLookup.Provider>> getTagLoadedEvent() {
 		return new ListenableEvent<>() {
 			@Override
-			public @NotNull Identifier defaultPhaseId() {
+			public Identifier defaultPhaseId() {
 				return Event.DEFAULT_PHASE;
 			}
 
 			@Override
-			public void register(@NotNull Identifier phaseIdentifier, @NotNull Consumer<HolderLookup.Provider> listener) {
+			public void register(Identifier phaseIdentifier, Consumer<HolderLookup.Provider> listener) {
 				CommonLifecycleEvents.TAGS_LOADED.register(
 						phaseIdentifier,
 						(registries, client) -> {if (client) listener.accept(registries);}
@@ -61,7 +60,7 @@ public final class FabricPlatform implements Platform {
 			}
 
 			@Override
-			public void addPhaseOrdering(@NotNull Identifier firstPhase, @NotNull Identifier secondPhase) {
+			public void addPhaseOrdering(Identifier firstPhase, Identifier secondPhase) {
 				CommonLifecycleEvents.TAGS_LOADED.addPhaseOrdering(firstPhase, secondPhase);
 			}
 		};

@@ -20,9 +20,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.core.SectionPos;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.FrustumIntersection;
+import org.jspecify.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -75,7 +74,7 @@ public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
 	}
 
 	@Override
-	public void appendF3Debug(@NotNull Consumer<String> consumer) {
+	public void appendF3Debug(Consumer<String> consumer) {
 		consumer.accept("Scheduled Chunk Rebuilds (Culling): %d / %d | Timing: %.3fms (avg. 40t)"
 				.formatted(
 						this.getRebuildQueuedLastTick(), this.getCurrentlyQueued(), this.getTickTime() / 1_000_000.f
@@ -84,7 +83,7 @@ public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
 	}
 
 	@Override
-	public void accept(@NotNull DynamicLightSource lightSource, @NotNull Long2ObjectMap<ChunkRebuildStatus> chunks) {
+	public void accept(DynamicLightSource lightSource, Long2ObjectMap<ChunkRebuildStatus> chunks) {
 		if (!chunks.isEmpty()) {
 			for (var chunk : chunks.long2ObjectEntrySet()) {
 				final var newStatus = chunk.getValue();
@@ -121,7 +120,7 @@ public final class CullingChunkRebuildScheduler extends ChunkRebuildScheduler {
 	}
 
 	@Override
-	public void remove(@NotNull DynamicLightSource lightSource, @NotNull LongSet chunks) {
+	public void remove(DynamicLightSource lightSource, LongSet chunks) {
 		for (long chunk : chunks) {
 			var map = this.trackedChunks.get(chunk);
 

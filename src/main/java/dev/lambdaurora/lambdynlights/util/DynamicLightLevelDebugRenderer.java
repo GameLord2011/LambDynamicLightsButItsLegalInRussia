@@ -21,7 +21,6 @@ import net.minecraft.gizmos.TextGizmo;
 import net.minecraft.util.Mth;
 import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a debug renderer for dynamic light levels.
@@ -42,7 +41,7 @@ public class DynamicLightLevelDebugRenderer extends DynamicLightDebugRenderer {
 	@Override
 	public void emitGizmos(
 			double x, double y, double z,
-			@NotNull DebugValueAccess debugValueAccess, @NotNull Frustum frustum, float tickDelta
+			DebugValueAccess debugValueAccess, Frustum frustum, float tickDelta
 	) {
 		int lightDisplayRadius = this.config.getDebugLightLevelRadius();
 

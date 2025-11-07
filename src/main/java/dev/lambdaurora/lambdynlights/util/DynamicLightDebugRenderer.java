@@ -31,7 +31,7 @@ import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -127,7 +127,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 		private static final int SCHEDULED_COLOR = 0x3f0099ff;
 		private static final int REQUESTED_COLOR = 0x3f9b00a6;
 		private final Long2IntMap scheduledChunks = new Long2IntOpenHashMap();
-		private Long2ObjectMap<int[]> requestedChunks;
+		private @Nullable Long2ObjectMap<int[]> requestedChunks;
 
 		public SectionRebuild(LambDynLights mod) {
 			super(mod);
@@ -140,7 +140,7 @@ public abstract class DynamicLightDebugRenderer implements DebugRenderer.SimpleD
 		@Override
 		public void emitGizmos(
 				double x, double y, double z,
-				@NotNull DebugValueAccess debugValueAccess, @NotNull Frustum frustum, float tickDelta
+				DebugValueAccess debugValueAccess, Frustum frustum, float tickDelta
 		) {
 			if (!this.isEnabled()) return;
 

@@ -15,11 +15,12 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.ApiStatus;
+import org.jspecify.annotations.Nullable;
 
 @ApiStatus.Internal
 @ApiStatus.NonExtendable
 public interface DynamicLightHandlerHolder<T> {
-	LightSourceSettingEntry lambdynlights$getSetting();
+	@Nullable LightSourceSettingEntry lambdynlights$getSetting();
 
 	Component lambdynlights$getName();
 

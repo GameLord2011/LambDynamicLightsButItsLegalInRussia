@@ -22,8 +22,8 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -60,7 +60,7 @@ public abstract class LightSourceLoader<L> implements PreparableReloadListener {
 	/**
 	 * {@return the identifier of this resource reloader}
 	 */
-	public abstract @NotNull Identifier id();
+	public abstract Identifier id();
 
 	/**
 	 * {@return the dependencies of this resource reloader}
@@ -78,7 +78,7 @@ public abstract class LightSourceLoader<L> implements PreparableReloadListener {
 	public abstract String getResourcePath();
 
 	@Override
-	public @NotNull String getName() {
+	public String getName() {
 		return this.id().toString();
 	}
 
@@ -162,7 +162,7 @@ public abstract class LightSourceLoader<L> implements PreparableReloadListener {
 		}
 	}
 
-	protected abstract @NotNull Optional<L> apply(DynamicOps<JsonElement> ops, LoadedLightSourceResource loadedData);
+	protected abstract Optional<L> apply(DynamicOps<JsonElement> ops, LoadedLightSourceResource loadedData);
 
 	protected boolean canApply(RegistryOps<JsonElement> ops, LoadedLightSourceResource loadedData) {
 		return this.applicationPredicate.canApply(this, ops, loadedData);
@@ -177,9 +177,9 @@ public abstract class LightSourceLoader<L> implements PreparableReloadListener {
 		);
 
 		class Pending implements ApplicationPredicate {
-			private ApplicationPredicate wrapped;
+			private @Nullable ApplicationPredicate wrapped;
 
-			public void set(ApplicationPredicate wrapped) {
+			public void set(@Nullable ApplicationPredicate wrapped) {
 				this.wrapped = wrapped;
 			}
 
