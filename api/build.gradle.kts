@@ -56,16 +56,8 @@ lambdamcdev {
 	setupJarJarCompat()
 }
 
-val generateNmt = tasks.named("generateNmt")
-
-tasks.generateFmj.configure {
-	dependsOn(generateNmt)
-}
-
-val remapMojmap = mojmap.registerRemap(tasks.remapJar) {}
-mojmap.setJarArtifact(remapMojmap)
-val remapMojmapSources = mojmap.registerSourcesRemap(tasks.remapSourcesJar) {}
-mojmap.setSourcesArtifact(remapMojmapSources)
+mojmap.setJarArtifact(tasks.jar)
+mojmap.setSourcesArtifact(tasks["sourcesJar"])
 
 tasks.runClient {
 	this.enabled = false
