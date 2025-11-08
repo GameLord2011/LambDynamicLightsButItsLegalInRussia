@@ -555,6 +555,7 @@
 ## Next
 
 - Added Korean translations ([#333](https://github.com/LambdAurora/LambDynamicLights/pull/333)).
+- Updated Ukrainian translations ([#334](https://github.com/LambdAurora/LambDynamicLights/pull/334)).
 
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
