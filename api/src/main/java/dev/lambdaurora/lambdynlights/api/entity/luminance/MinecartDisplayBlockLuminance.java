@@ -11,7 +11,7 @@ package dev.lambdaurora.lambdynlights.api.entity.luminance;
 
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.entity.vehicle.minecart.AbstractMinecart;
 import org.jetbrains.annotations.Range;
 
 /**

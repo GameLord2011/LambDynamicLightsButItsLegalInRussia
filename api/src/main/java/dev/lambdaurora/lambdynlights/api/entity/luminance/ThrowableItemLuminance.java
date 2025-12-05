@@ -11,7 +11,7 @@ package dev.lambdaurora.lambdynlights.api.entity.luminance;
 
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import org.jetbrains.annotations.Range;
 
 /**

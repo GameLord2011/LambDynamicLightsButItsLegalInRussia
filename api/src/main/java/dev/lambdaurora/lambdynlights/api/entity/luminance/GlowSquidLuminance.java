@@ -12,7 +12,7 @@ package dev.lambdaurora.lambdynlights.api.entity.luminance;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.GlowSquid;
+import net.minecraft.world.entity.animal.squid.GlowSquid;
 import org.jetbrains.annotations.Range;
 
 /**

@@ -552,10 +552,11 @@
     The fix is to only rely on the interface methods that should be unique enough to prevent future issues.
     This also means this is an issue which is load-order dependent.*
 
-## 4.9.0-alpha.3
+## 4.9.0-rc.1
 
-- Updated to Minecraft 45w45a.
+- Updated to Minecraft 1.21.11-rc2.
 - Added Korean translations ([#333](https://github.com/LambdAurora/LambDynamicLights/pull/333)).
+- Updated Argentine Spanish translations ([#339](https://github.com/LambdAurora/LambDynamicLights/pull/339)).
 - Updated [SpruceUI].
 - Updated [Yumi Minecraft Libraries: Foundation].
 
