@@ -237,6 +237,7 @@ val convertAWtoAT by tasks.registering(ConvertAccessWidenerToTransformer::class)
 }
 
 val neoforgeJarTask = tasks.register<Jar>("neoforgeJar") {
+	this.dependsOn(tasks.getByName<NestableJarGenerationTask>("processMojmapIncludeJars"))
 	this.group = "build"
 	this.from(neoforge.output)
 	this.from(convertAWtoAT) {

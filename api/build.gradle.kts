@@ -56,6 +56,20 @@ lambdamcdev {
 	setupJarJarCompat()
 }
 
+tasks.jar {
+	this.dependsOn(tasks.processIncludeJars)
+	this.archiveClassifier = "mojmap"
+}
+
+loom.nestJars(
+	tasks.jar,
+	fileTree(tasks.processIncludeJars.flatMap { it.outputDirectory })
+)
+
+tasks.remapJar {
+	this.addNestedDependencies = false
+}
+
 mojmap.setJarArtifact(tasks.jar)
 mojmap.setSourcesArtifact(tasks["sourcesJar"])
 
