@@ -5,7 +5,9 @@
  *
  * Licensed under the Lambda License. For more information,
  * see the LICENSE file.
- */@NullMarked
+ */
+
+@NullMarked
 package dev.lambdaurora.lambdynlights.api.data;
 
 import org.jspecify.annotations.NullMarked;
