@@ -572,7 +572,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		if (particle instanceof FireflyParticle)
 			return this.config.getFireflyLighting().get();
 		else if (particle instanceof SonicBoomParticle)
-			return true;
+			return this.config.getSonicBoomLighting().get();
 		else
 			return false;
 	}
