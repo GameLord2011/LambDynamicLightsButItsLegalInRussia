@@ -42,6 +42,7 @@ tasks.generateFmj.configure {
 		.withEntrypoints("yumi:client_init", "dev.lambdaurora.lambdynlights.LambDynLights::INSTANCE")
 		.withEntrypoints("lambdynlights:platform", "dev.lambdaurora.lambdynlights.platform.fabric.FabricPlatform")
 		.withEntrypoints("modmenu", "dev.lambdaurora.lambdynlights.LambDynLightsModMenu")
+		.withEntrypoints("sodium:config_api_user", "dev.lambdaurora.lambdynlights.compat.SodiumCompat")
 		.withAccessWidener("lambdynlights.accesswidener")
 		.withMixins("lambdynlights.mixins.json", "lambdynlights.lightsource.mixins.json")
 		.withDepend("${Constants.NAMESPACE}_api", ">=${version}")
@@ -74,6 +75,7 @@ lambdamcdev.manifests {
 		withDepend("yumi_mc_core", "[${libs.versions.yumi.mc.foundation.get()},)", Nmt.DependencySide.CLIENT)
 		withBreak("sodiumdynamiclights", "*", Nmt.DependencySide.CLIENT)
 		withBreak("ryoamiclights", "*", Nmt.DependencySide.CLIENT)
+		withCustom("sodium:config_api_user", "dev.lambdaurora.lambdynlights.compat.SodiumCompat")
 	}
 }
 
@@ -107,6 +109,17 @@ repositories {
 		content {
 			includeGroupAndSubgroups("net.neoforged")
 			includeGroupAndSubgroups("cpw.mods")
+		}
+	}
+	exclusiveContent {
+		filter {
+			includeGroupAndSubgroups("net.caffeinemc")
+		}
+
+		forRepository {
+			maven {
+				url = uri("https://maven.caffeinemc.net/releases/")
+			}
 		}
 	}
 }
@@ -157,6 +170,7 @@ dependencies {
 	}*/
 
 	// Mod compatibility
+	modCompileOnly(libs.sodium.api)
 	modCompileOnly(libs.trinkets)
 	modCompileOnly(libs.accessories)
 
