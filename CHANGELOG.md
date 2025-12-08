@@ -561,7 +561,7 @@
 
 ## 4.9.0-rc.1
 
-- Updated to Minecraft 1.21.11-rc2.
+- Updated to Minecraft 1.21.11-rc3.
 - Updated [SpruceUI].
 - Updated [Yumi Minecraft Libraries: Foundation].
 
