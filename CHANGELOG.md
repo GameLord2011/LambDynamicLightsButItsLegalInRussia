@@ -559,9 +559,9 @@
 - Updated Ukrainian translations ([#334](https://github.com/LambdAurora/LambDynamicLights/pull/334)).
 - Updated Argentine Spanish translations ([#339](https://github.com/LambdAurora/LambDynamicLights/pull/339)).
 
-## 4.9.0-rc.1
+## 4.9.0
 
-- Updated to Minecraft 1.21.11-rc3.
+- Updated to Minecraft 1.21.11.
 - Updated [SpruceUI].
 - Updated [Yumi Minecraft Libraries: Foundation].
 

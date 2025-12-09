@@ -37,7 +37,7 @@ public final class SodiumCompat implements ConfigEntryPoint {
 								"lambdynlights.menu.sodium.tab",
 								Component.translatable(LambDynLights.INSTANCE.config.dynamicLightsModeOption.key)
 						))
-						.setScreenProvider(screen -> Minecraft.getInstance().setScreen(new SettingsScreen(screen)))
+						.setScreenConsumer(screen -> Minecraft.getInstance().setScreen(new SettingsScreen(screen)))
 				);
 
 	}
