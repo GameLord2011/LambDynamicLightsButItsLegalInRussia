@@ -1,5 +1,5 @@
-# LambDynamicLights, ~~but without the pride flags~~ Lite?
+# LambDynamicLights, but it's legal in russia!
 
-This removes some unnecesary symbolysim from the config menu which ~~makes it religously appropiate.~~ _slightly_ increases performance?
+This removes some unnecesary symbolysim from the config menu which makes it legal in :ru:!
 
 Oh, yea, it also removes the devbuild switch cuz I'm to lazy to get a modrinth api key.
