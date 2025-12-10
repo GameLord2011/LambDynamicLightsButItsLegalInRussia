@@ -5,16 +5,16 @@ import org.gradle.accessors.dm.LibrariesForLibs
 object Constants {
 	const val NAME = "lambdynamiclights"
 	const val NAMESPACE = "lambdynlights"
-	const val PRETTY_NAME = "LambDynamicLights"
+	const val PRETTY_NAME = "LambDynamicLightsButItsLegalInRussia"
 
-	const val DESCRIPTION = "The most feature-complete dynamic lighting mod."
+	const val DESCRIPTION = "It's LambDynamicLights, but legal in Russia!"
 	const val API_DESCRIPTION = "Library to provide dynamic lighting to Minecraft through LambDynamicLights."
 	const val RUNTIME_DESCRIPTION = "The runtime of the most feature-complete dynamic lighting mod."
 
 	const val API_ARTIFACT = "$NAME-api"
 
 	@JvmField
-	val AUTHORS = listOf("LambdAurora")
+	val AUTHORS = listOf("LambdAurora", "GameLord2011")
 
 	@JvmField
 	val CONTRIBUTORS = listOf("Akarys")
