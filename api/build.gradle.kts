@@ -56,16 +56,22 @@ lambdamcdev {
 	setupJarJarCompat()
 }
 
-val generateNmt = tasks.named("generateNmt")
-
-tasks.generateFmj.configure {
-	dependsOn(generateNmt)
+tasks.jar {
+	this.dependsOn(tasks.processIncludeJars)
+	this.archiveClassifier = "mojmap"
 }
 
-val remapMojmap = mojmap.registerRemap(tasks.remapJar) {}
-mojmap.setJarArtifact(remapMojmap)
-val remapMojmapSources = mojmap.registerSourcesRemap(tasks.remapSourcesJar) {}
-mojmap.setSourcesArtifact(remapMojmapSources)
+loom.nestJars(
+	tasks.jar,
+	fileTree(tasks.processIncludeJars.flatMap { it.outputDirectory })
+)
+
+tasks.remapJar {
+	this.addNestedDependencies = false
+}
+
+mojmap.setJarArtifact(tasks.jar)
+mojmap.setSourcesArtifact(tasks["sourcesJar"])
 
 tasks.runClient {
 	this.enabled = false

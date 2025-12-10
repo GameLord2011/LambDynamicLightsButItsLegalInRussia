@@ -13,7 +13,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.lambdaurora.lambdynlights.LambDynLights;
 import dev.lambdaurora.lambdynlights.LambDynLightsConstants;
-import net.minecraft.TextFormatting;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.DebugScreenOverlay;
 import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,7 +38,7 @@ public class DebugScreenOverlayMixin {
 			Operation<Collection<String>> original
 	) {
 		instance.computeIfAbsent(LambDynLights.id("debug"), idx -> new ArrayList<>())
-				.add(TextFormatting.RED + LambDynLightsConstants.DEV_MODE_OVERLAY_TEXT);
+				.add(ChatFormatting.RED + LambDynLightsConstants.DEV_MODE_OVERLAY_TEXT);
 		return original.call(instance);
 	}
 }

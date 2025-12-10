@@ -24,16 +24,11 @@ import java.util.List;
 public class DebugRendererMixin {
 	@Shadow
 	@Final
-	private List<DebugRenderer.SimpleDebugRenderer> opaqueRenderers;
-
-	@Shadow
-	@Final
-	private List<DebugRenderer.SimpleDebugRenderer> translucentRenderers;
+	private List<DebugRenderer.SimpleDebugRenderer> renderers;
 
 	@Inject(method = "refreshRendererList", at = @At("TAIL"))
 	private void lambdynlights$onRender(CallbackInfo ci) {
 		var mod = LambDynLights.get();
-		this.opaqueRenderers.addAll(mod.opaqueDebugRenderers);
-		this.translucentRenderers.addAll(mod.transparentDebugRenderers);
+		this.renderers.addAll(mod.renderers);
 	}
 }

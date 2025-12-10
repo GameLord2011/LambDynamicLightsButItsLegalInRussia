@@ -11,6 +11,7 @@ package dev.lambdaurora.lambdynlights;
 
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanOpenHashMap;
+import org.jspecify.annotations.Nullable;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -31,9 +32,6 @@ public class LambDynLightsMixinPlugin implements IMixinConfigPlugin {
 	public LambDynLightsMixinPlugin() {
 		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.GuiMixin", LambDynLightsConstants.isDevMode());
 		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.DebugScreenOverlayMixin", LambDynLightsConstants.isDevMode());
-		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.sodium.SodiumOptionsGuiMixin", LambDynLightsCompat.isSodiumInstalled());
-		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.sodium.SodiumOptionsAPITabFrameMixin", LambDynLightsCompat.isSodiumOptionsAPIInstalled());
-		this.conditionalMixins.put("dev.lambdaurora.lambdynlights.mixin.sodium.RSOTabAccessor", LambDynLightsCompat.isRSOInstalled());
 	}
 
 	@Override
@@ -41,7 +39,7 @@ public class LambDynLightsMixinPlugin implements IMixinConfigPlugin {
 	}
 
 	@Override
-	public String getRefMapperConfig() {
+	public @Nullable String getRefMapperConfig() {
 		return null;
 	}
 
@@ -55,7 +53,7 @@ public class LambDynLightsMixinPlugin implements IMixinConfigPlugin {
 	}
 
 	@Override
-	public List<String> getMixins() {
+	public @Nullable List<String> getMixins() {
 		return null;
 	}
 

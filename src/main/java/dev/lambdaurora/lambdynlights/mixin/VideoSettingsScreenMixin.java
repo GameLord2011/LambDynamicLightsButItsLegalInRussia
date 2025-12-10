@@ -9,6 +9,8 @@
 
 package dev.lambdaurora.lambdynlights.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.lambdaurora.lambdynlights.gui.DynamicLightsOptionsOption;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
@@ -16,12 +18,11 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsSubScreen;
 import net.minecraft.client.gui.screens.options.VideoSettingsScreen;
-import net.minecraft.network.chat.Text;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(VideoSettingsScreen.class)
@@ -29,7 +30,7 @@ public abstract class VideoSettingsScreenMixin extends OptionsSubScreen {
 	@Unique
 	private OptionInstance<?> lambdynlights$option;
 
-	public VideoSettingsScreenMixin(Screen parent, Options gameOptions, Text title) {
+	public VideoSettingsScreenMixin(Screen parent, Options gameOptions, Component title) {
 		super(parent, gameOptions, title);
 	}
 
@@ -38,18 +39,18 @@ public abstract class VideoSettingsScreenMixin extends OptionsSubScreen {
 		this.lambdynlights$option = DynamicLightsOptionsOption.getOption(this);
 	}
 
-	@ModifyArg(
+	@WrapOperation(
 			method = "addOptions",
 			at = @At(
 					value = "INVOKE",
-					target = "Lnet/minecraft/client/gui/components/OptionsList;addSmall([Lnet/minecraft/client/OptionInstance;)V"
-			),
-			index = 0
+					target = "Lnet/minecraft/client/gui/screens/options/VideoSettingsScreen;qualityOptions(Lnet/minecraft/client/Options;)[Lnet/minecraft/client/OptionInstance;"
+			)
 	)
-	private OptionInstance<?>[] addOptionButton(OptionInstance<?>[] old) {
-		var options = new OptionInstance<?>[old.length + 1];
-		System.arraycopy(old, 0, options, 0, old.length);
-		options[options.length - 1] = this.lambdynlights$option;
-		return options;
+	private OptionInstance<?>[] addOptionButton(Options options, Operation<OptionInstance<?>[]> original) {
+		var old = original.call(options);
+		var replaced = new OptionInstance<?>[old.length + 1];
+		System.arraycopy(old, 0, replaced, 0, old.length);
+		replaced[replaced.length - 1] = this.lambdynlights$option;
+		return replaced;
 	}
 }
