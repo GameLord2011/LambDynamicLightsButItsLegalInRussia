@@ -159,8 +159,6 @@ dependencies {
 	implementation(libs.nightconfig.toml)
 	modImplementation(libs.spruceui)
 	include(libs.spruceui)
-	modImplementation(libs.pridelib)
-	include(libs.pridelib)
 
 	modCompileOnly(libs.modmenu) {
 		this.isTransitive = false
@@ -203,16 +201,6 @@ dependencies {
 		}
 	}
 	"mojmapInclude"(libs.spruceui) {
-		attributes {
-			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
-		}
-	}
-	"mojmapImplementation"(libs.pridelib) {
-		attributes {
-			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
-		}
-	}
-	"mojmapInclude"(libs.pridelib) {
 		attributes {
 			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
 		}
