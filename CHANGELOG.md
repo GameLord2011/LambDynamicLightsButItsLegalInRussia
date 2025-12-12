@@ -565,6 +565,10 @@
 - Updated [SpruceUI].
 - Updated [Yumi Minecraft Libraries: Foundation].
 
+### 4.9.1
+
+- Fixed crash with Sodium on NeoForge ([#345](https://github.com/LambdAurora/LambDynamicLights/issues/345)).
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"

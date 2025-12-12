@@ -75,7 +75,7 @@ lambdamcdev.manifests {
 		withDepend("yumi_mc_core", "[${libs.versions.yumi.mc.foundation.get()},)", Nmt.DependencySide.CLIENT)
 		withBreak("sodiumdynamiclights", "*", Nmt.DependencySide.CLIENT)
 		withBreak("ryoamiclights", "*", Nmt.DependencySide.CLIENT)
-		withCustom("sodium:config_api_user", "dev.lambdaurora.lambdynlights.compat.SodiumCompat")
+		withCustom("\"sodium:config_api_user\"", "dev.lambdaurora.lambdynlights.compat.SodiumCompat")
 	}
 }
 
