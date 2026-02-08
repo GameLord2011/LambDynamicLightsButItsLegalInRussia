@@ -4,7 +4,7 @@ import lambdynamiclights.LambDynamicLightsExt
 import org.gradle.accessors.dm.LibrariesForLibs
 
 plugins {
-	id("fabric-loom")
+	id("net.fabricmc.fabric-loom")
 	id("dev.lambdaurora.mcdev")
 }
 

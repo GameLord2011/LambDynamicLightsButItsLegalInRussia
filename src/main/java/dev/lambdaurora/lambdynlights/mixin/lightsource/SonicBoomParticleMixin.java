@@ -16,7 +16,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.HugeExplosionParticle;
 import net.minecraft.client.particle.SonicBoomParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.LightCoordsUtil;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Environment(EnvType.CLIENT)
@@ -36,6 +36,6 @@ public abstract class SonicBoomParticleMixin extends HugeExplosionParticle imple
 			factor = (this.lifetime - this.age) / 4.f;
 		}
 
-		this.setLuminance((int) (LightTexture.block(this.getLightColor(0)) * factor * .75f));
+		this.setLuminance((int) (LightCoordsUtil.block(this.getLightCoords(0)) * factor * .75f));
 	}
 }

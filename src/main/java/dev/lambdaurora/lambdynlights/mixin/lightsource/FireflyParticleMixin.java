@@ -13,15 +13,15 @@ import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSourceBehav
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.FireflyParticle;
 import net.minecraft.client.particle.SingleQuadParticle;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.util.LightCoordsUtil;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(FireflyParticle.class)
 public abstract class FireflyParticleMixin extends SingleQuadParticle implements EntityDynamicLightSourceBehavior {
 	@Shadow
-	public abstract int getLightColor(float tickDelta);
+	public abstract int getLightCoords(float tickDelta);
 
 	protected FireflyParticleMixin(ClientLevel clientLevel, double d, double e, double oZ, TextureAtlasSprite sprite) {
 		super(clientLevel, d, e, oZ, sprite);
@@ -29,6 +29,6 @@ public abstract class FireflyParticleMixin extends SingleQuadParticle implements
 
 	@Override
 	public void dynamicLightTick() {
-		this.setLuminance(LightTexture.block(this.getLightColor(0)) / 2);
+		this.setLuminance(LightCoordsUtil.block(this.getLightCoords(0)) / 2);
 	}
 }

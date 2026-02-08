@@ -54,8 +54,6 @@ public interface CompatLayer {
 				layers.add(new AccessoriesCompat());
 			} else if (YumiMods.get().getMod("trinkets").isPresent()) {
 				layers.add(new TrinketsCompat());
-			} else if (YumiMods.get().getMod("curios").isPresent()) {
-				layers.add(new CuriosCompat());
 			}
 		} catch (LinkageError e) {
 			LambDynLights.error(

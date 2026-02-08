@@ -1,5 +1,4 @@
 import com.modrinth.minotaur.dependencies.ModDependency
-import dev.lambdaurora.mcdev.api.MappingVariant
 import dev.lambdaurora.mcdev.api.McVersionLookup
 import dev.lambdaurora.mcdev.api.ModVersionDependency
 import dev.lambdaurora.mcdev.api.manifest.Nmt
@@ -8,10 +7,7 @@ import dev.lambdaurora.mcdev.task.GenerateNeoForgeJiJDataTask
 import dev.lambdaurora.mcdev.task.packaging.PackageModrinthTask
 import lambdynamiclights.Constants
 import lambdynamiclights.Utils
-import lambdynamiclights.task.AssembleFinalJarTask
-import lambdynamiclights.task.AssembleNeoForgeJarTask
 import net.darkhax.curseforgegradle.TaskPublishCurseForge
-import net.fabricmc.loom.build.nesting.NestableJarGenerationTask
 
 plugins {
 	id("lambdynamiclights")
@@ -61,9 +57,6 @@ lambdamcdev.manifests {
 
 	nmt {
 		fmj.copyTo(this)
-		withNamespace(Constants.NAMESPACE + "_runtime")
-		withName(Constants.PRETTY_NAME + " (Runtime)")
-		withDescription(Constants.RUNTIME_DESCRIPTION)
 		withLoaderVersion("[2,)")
 		withYumiEntrypoints("yumi:client_init", "dev.lambdaurora.lambdynlights.LambDynLights::INSTANCE")
 		withYumiEntrypoints("lambdynlights:platform", "dev.lambdaurora.lambdynlights.platform.neoforge.NeoForgePlatform::INSTANCE")
@@ -128,8 +121,6 @@ loom {
 	accessWidenerPath = file("src/main/resources/lambdynlights.accesswidener")
 }
 
-val mojmap = lambdamcdev.setupMojmapRemapping()
-
 afterEvaluate {
 	val shims: SourceSet by sourceSets.creating {
 		this.compileClasspath += configurations["minecraftNamedCompile"]
@@ -147,22 +138,22 @@ afterEvaluate {
 }
 
 dependencies {
-	api(project(":api", configuration = "namedElements"))
+	api(project(":api"))
 	include(project(":api"))
 
-	modImplementation(libs.fabric.loader)
-	fabricApiModules.forEach { modImplementation(it) }
-	modImplementation(libs.yumi.mc.foundation)
+	implementation(libs.fabric.loader)
+	fabricApiModules.forEach { implementation(it) }
+	implementation(libs.yumi.mc.foundation)
 	include(libs.yumi.mc.foundation)
 
 	implementation(libs.nightconfig.core)
 	implementation(libs.nightconfig.toml)
-	modImplementation(libs.spruceui)
+	implementation(libs.spruceui)
 	include(libs.spruceui)
-	modImplementation(libs.pridelib)
+	implementation(libs.pridelib)
 	include(libs.pridelib)
 
-	modCompileOnly(libs.modmenu) {
+	compileOnly(libs.modmenu) {
 		this.isTransitive = false
 	}
 	/*modLocalRuntime(libs.modmenu) {
@@ -170,59 +161,38 @@ dependencies {
 	}*/
 
 	// Mod compatibility
-	modCompileOnly(libs.sodium.api)
-	modCompileOnly(libs.trinkets)
-	modCompileOnly(libs.accessories)
+	compileOnly(libs.sodium.api)
+	//modCompileOnly(libs.trinkets)
+	//modCompileOnly(libs.accessories)
 
 	shadow(libs.nightconfig.core)
 	shadow(libs.nightconfig.toml)
 
 	"neoforgeCompileOnly"(libs.neoforge.loader)
 	"neoforgeImplementation"(sourceSets.main.get().output)
-
-	//region Mojmap
-	"mojmapInclude"(project(":api", configuration = "mojmapRuntimeElements"))
-	"mojmapApi"(project(":api")) {
-		attributes {
-			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
-		}
-	}
-	"mojmapImplementation"(libs.yumi.mc.foundation) {
-		attributes {
-			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
-		}
-	}
-	"mojmapInclude"(libs.yumi.mc.foundation) {
-		attributes {
-			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
-		}
-	}
-	"mojmapImplementation"(libs.spruceui) {
-		attributes {
-			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
-		}
-	}
-	"mojmapInclude"(libs.spruceui) {
-		attributes {
-			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
-		}
-	}
-	"mojmapImplementation"(libs.pridelib) {
-		attributes {
-			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
-		}
-	}
-	"mojmapInclude"(libs.pridelib) {
-		attributes {
-			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
-		}
-	}
-	//endregion
 }
 
 loom.runs.getByName("client") {
 	this.vmArg("-DMC_DEBUG_ENABLED")
 	this.vmArg("-DMC_DEBUG_HOTKEYS")
+}
+
+val convertAWtoAT by tasks.registering(ConvertAccessWidenerToTransformer::class) {
+	this.group = "generation"
+	this.input = loom.accessWidenerPath
+	this.output = project.layout.buildDirectory.get().file("generated/accesstransformer.cfg")
+}
+
+val generateJarJarMetadata by tasks.registering(GenerateNeoForgeJiJDataTask::class) {
+	val includeConfig = project.configurations.getByName("includeInternal");
+	this.from(includeConfig)
+	this.outputFile.set(
+		project.layout.buildDirectory
+			.asFile
+			.map(File::toPath)
+			.map { path -> path.resolve("generated/jarjar/metadata.json").toFile() }
+			.get()
+	)
 }
 
 tasks.shadowJar {
@@ -236,61 +206,26 @@ tasks.shadowJar {
 	from(rootProject.file("LICENSE")) {
 		rename { "${it}_${Constants.NAME}" }
 	}
-}
 
-tasks.remapJar {
-	this.dependsOn(tasks.shadowJar)
-
-	this.destinationDirectory = project.layout.buildDirectory.dir("devlibs")
-}
-
-val convertAWtoAT by tasks.registering(ConvertAccessWidenerToTransformer::class) {
-	this.group = "generation"
-	this.input = loom.accessWidenerPath
-	this.output = project.layout.buildDirectory.get().file("generated/accesstransformer.cfg")
-}
-
-val neoforgeJarTask = tasks.register<Jar>("neoforgeJar") {
-	this.dependsOn(tasks.getByName<NestableJarGenerationTask>("processMojmapIncludeJars"))
-	this.group = "build"
-	this.from(neoforge.output)
-	this.from(convertAWtoAT) {
+	from(neoforge.output)
+	from(convertAWtoAT) {
 		into("META-INF")
 	}
-	this.archiveClassifier = "neoforge"
-	this.destinationDirectory = project.layout.buildDirectory.dir("devlibs/neoforge")
 }
 
-loom.nestJars(
-	neoforgeJarTask,
-	fileTree(tasks.getByName<NestableJarGenerationTask>("processMojmapIncludeJars").outputDirectory)
-)
-
-val neoforgeSourcesJarTask = tasks.register<Jar>("neoforgeSourcesJar") {
-	this.group = "build"
+tasks.named<Jar>("sourcesJar") {
 	this.from(neoforge.java.sourceDirectories)
 	this.from(neoforge.resources.sourceDirectories)
 	this.from(convertAWtoAT) {
 		into("META-INF")
 	}
-	this.archiveClassifier = "neoforge-sources"
-	this.destinationDirectory = project.layout.buildDirectory.dir("devlibs/neoforge")
 }
 
-//region Mojmap
-val generateJarJarMetadata by tasks.registering(GenerateNeoForgeJiJDataTask::class) {
-	val includeConfig = project.configurations.getByName("mojmapIncludeInternal");
-	this.from(includeConfig)
-	this.outputFile.set(
-		project.layout.buildDirectory
-			.asFile
-			.map(File::toPath)
-			.map { path -> path.resolve("generated/jarjar/metadata.json").toFile() }
-			.get()
-	)
-}
+val mainSourceSet = sourceSets.main.get()
+lambdamcdev.replaceArtifactInConfiguration(mainSourceSet.apiConfigurationName, tasks.shadowJar)
+lambdamcdev.replaceArtifactInConfiguration(mainSourceSet.runtimeElementsConfigurationName, tasks.shadowJar)
 
-val mergedNeoForgeJar by tasks.registering(AssembleNeoForgeJarTask::class) {
+/*val mergedNeoForgeJar by tasks.registering(AssembleNeoForgeJarTask::class) {
 	this.group = "build"
 	this.dependsOn(
 		tasks.shadowJar,
@@ -316,7 +251,7 @@ val mergedNeoForgeSourcesJar by tasks.registering(AssembleNeoForgeJarTask::class
 	this.neoforgeJar.set(neoforgeSourcesJarTask.flatMap { it.archiveFile })
 	this.jarJarMetadata.set(generateJarJarMetadata.flatMap { it.outputFile })
 	this.archiveClassifier = "mojmap-sources"
-}
+}*
 
 val finalJar by tasks.registering(AssembleFinalJarTask::class) {
 	this.group = "build"
@@ -336,9 +271,7 @@ val finalJar by tasks.registering(AssembleFinalJarTask::class) {
 }
 
 tasks.assemble.get().dependsOn(finalJar, mergedNeoForgeSourcesJar)
-mojmap.setJarArtifact(mergedNeoForgeJar)
-mojmap.setSourcesArtifact(mergedNeoForgeSourcesJar)
-//endregion
+//endregion*/
 
 val packageModrinth by tasks.registering(PackageModrinthTask::class) {
 	this.group = "publishing"
@@ -355,13 +288,13 @@ val packageModrinth by tasks.registering(PackageModrinthTask::class) {
 	)
 	this.changelog.set(Utils.fetchChangelog(project))
 	this.readme.set(Utils.parseReadme(project))
-	this.files.setFrom(finalJar)
+	this.files.setFrom(tasks.shadowJar)
 }
 
 modrinth {
 	projectId = project.property("modrinth_id") as String
 	versionName = "${Constants.PRETTY_NAME} ${ldl.version()} (${McVersionLookup.getVersionTag(ldl.mcVersion())})"
-	uploadFile.set(finalJar)
+	uploadFile.set(tasks.shadowJar)
 	loaders.set(listOf("fabric", "quilt", "neoforge"))
 	gameVersions.set(ldl.compatibleMcVersions())
 	versionType.set(ldl.versionType().toString())
@@ -407,7 +340,7 @@ tasks.register<TaskPublishCurseForge>("curseforge") {
 		return@register
 	}
 
-	val mainFile = upload(project.property("curseforge_id"), finalJar)
+	val mainFile = upload(project.property("curseforge_id"), tasks.shadowJar)
 	mainFile.releaseType = ldl.versionType()
 	ldl.compatibleMcVersions().stream()
 		.map { McVersionLookup.getCurseForgeEquivalent(it) }

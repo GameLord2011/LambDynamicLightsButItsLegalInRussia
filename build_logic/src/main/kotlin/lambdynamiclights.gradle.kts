@@ -43,10 +43,6 @@ lambdamcdev {
 	}
 }
 
-dependencies {
-	mappings(loom.officialMojangMappings())
-}
-
 tasks.jar {
 	from(rootProject.file("LICENSE")) {
 		rename { "${it}_${Constants.NAME}" }

@@ -8,9 +8,6 @@ val prettyName = "${Constants.PRETTY_NAME} (API)"
 
 base.archivesName.set(Constants.NAME + "-api")
 
-val mojmap = lambdamcdev.setupMojmapRemapping()
-configurations["mojmapApi"].extendsFrom(configurations["api"])
-
 dependencies {
 	api(libs.yumi.commons.event) {
 		// Exclude Minecraft and loader-provided libraries.
@@ -55,23 +52,6 @@ lambdamcdev {
 
 	setupJarJarCompat()
 }
-
-tasks.jar {
-	this.dependsOn(tasks.processIncludeJars)
-	this.archiveClassifier = "mojmap"
-}
-
-loom.nestJars(
-	tasks.jar,
-	fileTree(tasks.processIncludeJars.flatMap { it.outputDirectory })
-)
-
-tasks.remapJar {
-	this.addNestedDependencies = false
-}
-
-mojmap.setJarArtifact(tasks.jar)
-mojmap.setSourcesArtifact(tasks["sourcesJar"])
 
 tasks.runClient {
 	this.enabled = false
