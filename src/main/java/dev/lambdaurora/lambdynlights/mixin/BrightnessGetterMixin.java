@@ -24,14 +24,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * Injecting into the default brightness getter allows to benefit from brightness caching in the Vanilla renderer.
  *
  * @author LambdAurora
- * @version 4.2.3
+ * @version 4.10.0
  * @since 4.2.3
  */
 @Mixin(value = LevelRenderer.BrightnessGetter.class, priority = 900)
 public interface BrightnessGetterMixin {
-	@SuppressWarnings("UnresolvedMixinReference")
 	@Inject(
-			method = {"method_68890", "lambda$static$0"},
+			method = "lambda$static$0",
 			at = @At("TAIL"),
 			cancellable = true,
 			remap = false,

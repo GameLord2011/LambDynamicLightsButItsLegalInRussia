@@ -142,5 +142,4 @@ jobs:
             ryoamiclights(incompatible)
             dynamiclights-reforged(incompatible)
           java: |
-            21
-            22
+            25
