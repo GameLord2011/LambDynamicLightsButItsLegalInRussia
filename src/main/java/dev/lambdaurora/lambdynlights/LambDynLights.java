@@ -54,7 +54,7 @@ import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockAndLightGetter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Unmodifiable;
 import org.joml.Vector3f;
@@ -403,15 +403,12 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 			this.config.getSelfLightSource().set(newValue);
 			this.config.save();
 
-			if (client.player != null) {
-				client.player.displayClientMessage(
-						Component.translatable(
-								LambDynLightsConstants.NAMESPACE + ".key.toggle_fps_dynamic_lighting.info",
-								toggleText.copy().withStyle(newValue ? ChatFormatting.GREEN : ChatFormatting.RED)
-						),
-						true
-				);
-			}
+			client.getChatListener().handleOverlay(
+					Component.translatable(
+							LambDynLightsConstants.NAMESPACE + ".key.toggle_fps_dynamic_lighting.info",
+							toggleText.copy().withStyle(newValue ? ChatFormatting.GREEN : ChatFormatting.RED)
+					)
+			);
 		}
 	}
 
@@ -423,7 +420,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	 * @param lightmap the vanilla lightmap coordinates
 	 * @return the modified lightmap coordinates
 	 */
-	public int getLightmapWithDynamicLight(BlockAndTintGetter level, BlockPos pos, int lightmap) {
+	public int getLightmapWithDynamicLight(BlockAndLightGetter level, BlockPos pos, int lightmap) {
 		if (!(level instanceof ClientLevel)) this.lightSourcesLock.readLock().lock();
 		double light = this.getDynamicLightLevel(pos);
 		if (!(level instanceof ClientLevel)) this.lightSourcesLock.readLock().unlock();

@@ -1,15 +1,15 @@
 [versions]
-minecraft = "26.1-snapshot-6"
+minecraft = "26.1-rc-2"
 fabric-loader = "0.18.4"
-neoforge-loader = "10.0.34"
-fabric-api = "0.143.2+26.1"
+neoforge-loader = "11.0.0"
+fabric-api = "0.144.0+26.1"
 mappings-parchment = "2024.07.28"
 
 # Dependencies
 yumi-commons = "2.0.0"
-yumi-mc-foundation = "1.0.0-beta.2+26.1-snapshot-6"
-spruceui = "9.2.0-alpha.1+26.1-snapshot-6"
-pridelib = "1.6.0-alpha.1+26.1-snapshot-6"
+yumi-mc-foundation = "1.0.0-beta.2+26.1"
+spruceui = "10.0.0+26.1"
+pridelib = "1.6.0+26.1"
 
 modmenu = "18.0.0-alpha.5"
 trinkets = "3.10.0"
@@ -22,7 +22,7 @@ nightconfig = "3.8.1"
 # Gradle
 gradle-licenser = "2.2.+"
 gradle-loom = "1.15.+"
-gradle-lambdamcdev = "1.9.+"
+gradle-lambdamcdev = "2.0.+"
 gson = "2.11.0"
 
 [libraries]

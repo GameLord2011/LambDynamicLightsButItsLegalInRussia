@@ -12,7 +12,7 @@ package dev.lambdaurora.lambdynlights.gui;
 import dev.lambdaurora.lambdynlights.LambDynLightsConstants;
 import dev.lambdaurora.spruceui.event.ScreenEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 import java.util.function.Predicate;
 
@@ -20,7 +20,7 @@ import java.util.function.Predicate;
  * Represents the development-mode GUI overlay.
  *
  * @author LambdAurora
- * @version 4.4.0
+ * @version 4.10.0
  * @since 4.0.0
  */
 public final class DevModeGui {
@@ -34,12 +34,12 @@ public final class DevModeGui {
 		}
 
 		ScreenEvents.AFTER_RENDER.register(
-				(screen, graphics, mouseX, mouseY, tickDelta) -> render(graphics.vanilla()),
+				(screen, graphics, mouseX, mouseY, tickDelta) -> extractRenderState(graphics.vanilla()),
 				Predicate.not(SettingsScreen.class::isInstance)
 		);
 	}
 
-	public static void render(GuiGraphics graphics) {
+	public static void extractRenderState(GuiGraphicsExtractor graphics) {
 		var client = Minecraft.getInstance();
 
 		if (client.isGameLoadFinished() && !client.getDebugOverlay().showDebugScreen()) {
@@ -51,7 +51,7 @@ public final class DevModeGui {
 					client.font.width(LambDynLightsConstants.DEV_MODE_OVERLAY_TEXT) + 4, bottom,
 					0xaa000000
 			);
-			graphics.drawString(client.font, LambDynLightsConstants.DEV_MODE_OVERLAY_TEXT, 2, y - 2, 0xffff0000);
+			graphics.text(client.font, LambDynLightsConstants.DEV_MODE_OVERLAY_TEXT, 2, y - 2, 0xffff0000);
 		}
 	}
 }

@@ -569,11 +569,14 @@
 
 - Fixed crash with Sodium on NeoForge ([#345](https://github.com/LambdAurora/LambDynamicLights/issues/345)).
 
-## 4.10.0-alpha.1
+## 4.10.0-rc.1
 
-- Updated to Minecraft 26.1-snapshot-6.
+- Notice: this is a release candidate of LambDynamicLights, it may be unstable on NeoForge until the platform stabilizes.
+- Updated to Minecraft 26.1.
 - Added Czech translations ([#357](https://github.com/LambdAurora/LambDynamicLights/pull/357)).
 - Updated Ukrainian translations ([#355](https://github.com/LambdAurora/LambDynamicLights/pull/355)).
+- Updated Traditional Chinese translations ([#363](https://github.com/LambdAurora/LambDynamicLights/pull/363)).
+- Updated Simplified Chinese translations ([#364](https://github.com/LambdAurora/LambDynamicLights/pull/364)).
 - Updated [SpruceUI].
 - Updated [Yumi Minecraft Libraries: Foundation].
 

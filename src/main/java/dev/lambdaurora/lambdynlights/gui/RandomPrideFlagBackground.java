@@ -25,8 +25,8 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
 import net.minecraft.network.chat.Component;
 import org.joml.Matrix3x2f;
 import org.jspecify.annotations.Nullable;
@@ -39,7 +39,7 @@ import java.util.Random;
  * If you have an issue with this, I don't care.
  *
  * @author LambdAurora
- * @version 4.6.0
+ * @version 4.10.0
  * @since 2.1.0
  */
 public class RandomPrideFlagBackground implements Background {
@@ -62,14 +62,14 @@ public class RandomPrideFlagBackground implements Background {
 	}
 
 	@Override
-	public void render(SpruceGuiGraphics graphics, SpruceWidget widget, int vOffset, int mouseX, int mouseY, float delta) {
+	public void extractRenderState(SpruceGuiGraphics graphics, SpruceWidget widget, int vOffset, int mouseX, int mouseY, float delta) {
 		int x = widget.getX();
 		int y = widget.getY();
 		int width = widget.getWidth();
 		int height = widget.getHeight();
 
 		if (this.getShape() instanceof HorizontalPrideFlagShape(var colors)) {
-			graphics.submitGuiElement(new SlantedPrideFlagRenderState(
+			graphics.addGuiElement(new SlantedPrideFlagRenderState(
 					RenderPipelines.GUI, TextureSetup.noTexture(),
 					graphics.pose(),
 					x, y, width, height,
@@ -77,10 +77,10 @@ public class RandomPrideFlagBackground implements Background {
 					null
 			));
 		} else {
-			this.flag.render(graphics.vanilla(), x, y, widget.getWidth(), widget.getHeight());
+			this.flag.extractRenderState(graphics.vanilla(), x, y, widget.getWidth(), widget.getHeight());
 		}
 
-		SECOND_LAYER.render(graphics, widget, vOffset, mouseX, mouseY, delta);
+		SECOND_LAYER.extractRenderState(graphics, widget, vOffset, mouseX, mouseY, delta);
 
 		if (this.nuhUh) {
 			var text = Component.literal("Nuh uh, you're not going to remove this, try harder :3c");
@@ -90,7 +90,7 @@ public class RandomPrideFlagBackground implements Background {
 			int startY = y + height - 24 - lines.size() * (font.lineHeight + 2);
 
 			for (var line : lines) {
-				graphics.drawCenteredShadowedText(font, line, x + width / 2, startY, 0xffff0000);
+				graphics.centeredShadowedText(font, line, x + width / 2, startY, 0xffff0000);
 				startY += font.lineHeight + 2;
 			}
 		}

@@ -12,7 +12,7 @@ package dev.lambdaurora.lambdynlights.mixin;
 import dev.lambdaurora.lambdynlights.LambDynLights;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockAndLightGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,7 +38,7 @@ public interface BrightnessGetterMixin {
 			require = 1
 	)
 	private static void onGetLightmapCoordinates(
-			BlockAndTintGetter level, BlockPos pos,
+			BlockAndLightGetter level, BlockPos pos,
 			CallbackInfoReturnable<Integer> cir
 	) {
 		if (!level.getBlockState(pos).isSolidRender() && LambDynLights.get().config.getDynamicLightsMode().isEnabled())

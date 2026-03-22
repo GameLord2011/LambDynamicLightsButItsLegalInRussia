@@ -327,13 +327,13 @@ public class LightSourceListWidget extends SpruceEntryListWidget<LightSourceList
 		/* Rendering */
 
 		@Override
-		protected void renderWidget(SpruceGuiGraphics graphics, int mouseX, int mouseY, float delta) {
-			this.forEach(widget -> widget.render(graphics, mouseX, mouseY, delta));
+		protected void extractWidgetRenderState(SpruceGuiGraphics graphics, int mouseX, int mouseY, float delta) {
+			this.forEach(widget -> widget.extractRenderState(graphics, mouseX, mouseY, delta));
 		}
 
 		@Override
-		protected void renderBackground(SpruceGuiGraphics graphics, int mouseX, int mouseY, float delta) {
-			this.background.render(graphics, this, 0, mouseX, mouseY, delta);
+		protected void extractBackground(SpruceGuiGraphics graphics, int mouseX, int mouseY, float delta) {
+			this.background.extractRenderState(graphics, this, 0, mouseX, mouseY, delta);
 		}
 
 		/* Narration */
