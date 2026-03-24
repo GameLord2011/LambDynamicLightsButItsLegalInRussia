@@ -571,7 +571,6 @@
 
 ## 4.10.0
 
-- Notice: this is a release candidate of LambDynamicLights, it may be unstable on NeoForge until the platform stabilizes.
 - Updated to Minecraft 26.1.
 - Added Czech translations ([#357](https://github.com/LambdAurora/LambDynamicLights/pull/357)).
 - Updated Ukrainian translations ([#355](https://github.com/LambdAurora/LambDynamicLights/pull/355)).
