@@ -569,6 +569,17 @@
 
 - Fixed crash with Sodium on NeoForge ([#345](https://github.com/LambdAurora/LambDynamicLights/issues/345)).
 
+## 4.10.0
+
+- Updated to Minecraft 26.1.
+- Added Czech translations ([#357](https://github.com/LambdAurora/LambDynamicLights/pull/357)).
+- Updated Ukrainian translations ([#355](https://github.com/LambdAurora/LambDynamicLights/pull/355)).
+- Updated Traditional Chinese translations ([#363](https://github.com/LambdAurora/LambDynamicLights/pull/363), [#365](https://github.com/LambdAurora/LambDynamicLights/pull/365)).
+- Updated Simplified Chinese translations ([#364](https://github.com/LambdAurora/LambDynamicLights/pull/364), [#365](https://github.com/LambdAurora/LambDynamicLights/pull/365)).
+- Updated Japanese translations ([#365](https://github.com/LambdAurora/LambDynamicLights/pull/365)).
+- Updated [SpruceUI].
+- Updated [Yumi Minecraft Libraries: Foundation].
+
 [SpruceUI]: https://github.com/LambdAurora/SpruceUI "SpruceUI page"
 [pridelib]: https://github.com/Queerbric/pridelib "Pridelib page"
 [Yumi Commons]: https://github.com/YumiProject/yumi-commons "Yumi Commons page"

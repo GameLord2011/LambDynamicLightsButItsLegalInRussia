@@ -34,7 +34,7 @@ import java.util.Optional;
  * @param predicate the predicate to select which entities emit the given luminance
  * @param luminances the luminance sources
  * @author LambdAurora
- * @version 4.2.0
+ * @version 4.10.0
  * @since 4.0.0
  */
 public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance> luminances) {
@@ -120,7 +120,7 @@ public record EntityLightSource(EntityPredicate predicate, List<EntityLuminance>
 		public boolean test(@Nullable Entity entity) {
 			if (entity == null) {
 				return false;
-			} else if (this.entityType.isPresent() && !this.entityType.get().matches(entity.getType())) {
+			} else if (this.entityType.isPresent() && !this.entityType.get().matches(entity.typeHolder())) {
 				return false;
 			} else if (this.located.isPresent() && !this.located.get().matches(entity.level(), entity.getX(), entity.getY(), entity.getZ())) {
 				return false;

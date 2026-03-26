@@ -10,7 +10,7 @@
 package dev.lambdaurora.lambdynlights.compat;
 
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
-import io.wispforest.accessories.api.AccessoriesCapability;
+//import io.wispforest.accessories.api.AccessoriesCapability;
 import net.minecraft.world.entity.LivingEntity;
 
 /**
@@ -24,7 +24,7 @@ final class AccessoriesCompat implements CompatLayer {
 	@Override
 	public int getLivingEntityLuminanceFromItems(ItemLightSourceManager itemLightSources, LivingEntity entity, boolean submergedInWater) {
 		int luminance = 0;
-		var component = AccessoriesCapability.get(entity);
+		/*var component = AccessoriesCapability.get(entity);
 
 		if (component != null) {
 			for (var equipped : component.getAllEquipped()) {
@@ -36,7 +36,7 @@ final class AccessoriesCompat implements CompatLayer {
 					}
 				}
 			}
-		}
+		}*/
 
 		return luminance;
 	}

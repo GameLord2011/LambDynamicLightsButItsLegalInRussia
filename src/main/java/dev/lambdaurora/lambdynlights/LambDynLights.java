@@ -45,16 +45,16 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.FireflyParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.SonicBoomParticle;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.util.profiling.Profiler;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockAndLightGetter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Unmodifiable;
 import org.joml.Vector3f;
@@ -74,7 +74,7 @@ import java.util.function.Predicate;
  * Represents the LambDynamicLights mod.
  *
  * @author LambdAurora
- * @version 4.9.0
+ * @version 4.10.0
  * @since 1.0.0
  */
 @ApiStatus.Internal
@@ -403,15 +403,12 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 			this.config.getSelfLightSource().set(newValue);
 			this.config.save();
 
-			if (client.player != null) {
-				client.player.displayClientMessage(
-						Component.translatable(
-								LambDynLightsConstants.NAMESPACE + ".key.toggle_fps_dynamic_lighting.info",
-								toggleText.copy().withStyle(newValue ? ChatFormatting.GREEN : ChatFormatting.RED)
-						),
-						true
-				);
-			}
+			client.getChatListener().handleOverlay(
+					Component.translatable(
+							LambDynLightsConstants.NAMESPACE + ".key.toggle_fps_dynamic_lighting.info",
+							toggleText.copy().withStyle(newValue ? ChatFormatting.GREEN : ChatFormatting.RED)
+					)
+			);
 		}
 	}
 
@@ -423,7 +420,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 	 * @param lightmap the vanilla lightmap coordinates
 	 * @return the modified lightmap coordinates
 	 */
-	public int getLightmapWithDynamicLight(BlockAndTintGetter level, BlockPos pos, int lightmap) {
+	public int getLightmapWithDynamicLight(BlockAndLightGetter level, BlockPos pos, int lightmap) {
 		if (!(level instanceof ClientLevel)) this.lightSourcesLock.readLock().lock();
 		double light = this.getDynamicLightLevel(pos);
 		if (!(level instanceof ClientLevel)) this.lightSourcesLock.readLock().unlock();
@@ -442,7 +439,7 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 			// lightmap is (skyLevel << 20 | blockLevel << 4)
 
 			// Get vanilla block light level.
-			int blockLevel = LightTexture.block(lightmap);
+			int blockLevel = LightCoordsUtil.block(lightmap);
 			if (dynamicLightLevel > blockLevel) {
 				// Equivalent to a << 4 bitshift with a little quirk: this one ensure more precision (more decimals are saved).
 				int luminance = (int) (dynamicLightLevel * 16.0);

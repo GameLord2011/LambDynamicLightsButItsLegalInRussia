@@ -9,7 +9,7 @@
 
 package dev.lambdaurora.lambdynlights.compat;
 
-import dev.emi.trinkets.api.TrinketsApi;
+//import dev.emi.trinkets.api.TrinketsApi;
 import dev.lambdaurora.lambdynlights.api.item.ItemLightSourceManager;
 import net.minecraft.world.entity.LivingEntity;
 
@@ -24,7 +24,7 @@ final class TrinketsCompat implements CompatLayer {
 	@Override
 	public int getLivingEntityLuminanceFromItems(ItemLightSourceManager itemLightSources, LivingEntity entity, boolean submergedInWater) {
 		int luminance = 0;
-		var component = TrinketsApi.getTrinketComponent(entity);
+		/*var component = TrinketsApi.getTrinketComponent(entity);
 
 		if (component.isPresent()) {
 			for (var equipped : component.get().getAllEquipped()) {
@@ -36,7 +36,7 @@ final class TrinketsCompat implements CompatLayer {
 					}
 				}
 			}
-		}
+		}*/
 
 		return luminance;
 	}

@@ -37,9 +37,9 @@ public final class FabricPlatform implements Platform {
 	@Override
 	public void registerReloader(LightSourceLoader<?> reloader) {
 		var resourceLoader = ResourceLoader.get(PackType.CLIENT_RESOURCES);
-		resourceLoader.registerReloader(reloader.id(), reloader);
+		resourceLoader.registerReloadListener(reloader.id(), reloader);
 		for (var dependency : reloader.dependencies()) {
-			resourceLoader.addReloaderOrdering(dependency, reloader.id());
+			resourceLoader.addListenerOrdering(dependency, reloader.id());
 		}
 	}
 

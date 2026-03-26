@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: 21
+          java-version: 25
       - name: "Set up Gradle"
         uses: gradle/actions/setup-gradle@v4
       - name: "Handle Loom Cache"
@@ -142,5 +142,4 @@ jobs:
             ryoamiclights(incompatible)
             dynamiclights-reforged(incompatible)
           java: |
-            21
-            22
+            25

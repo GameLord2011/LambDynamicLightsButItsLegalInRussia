@@ -39,6 +39,5 @@ public final class SodiumCompat implements ConfigEntryPoint {
 						))
 						.setScreenConsumer(screen -> Minecraft.getInstance().setScreen(new SettingsScreen(screen)))
 				);
-
 	}
 }

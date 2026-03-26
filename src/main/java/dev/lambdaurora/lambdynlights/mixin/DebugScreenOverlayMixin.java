@@ -27,12 +27,12 @@ import java.util.Map;
  * Adds a debug string for dynamic light sources tracking and updates.
  *
  * @author LambdAurora
- * @version 4.6.0
+ * @version 4.10.0
  * @since 1.3.2
  */
 @Mixin(DebugScreenOverlay.class)
 public class DebugScreenOverlayMixin {
-	@WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Ljava/util/Map;values()Ljava/util/Collection;"))
+	@WrapOperation(method = "extractRenderState", at = @At(value = "INVOKE", target = "Ljava/util/Map;values()Ljava/util/Collection;"))
 	private Collection<String> lambdynlights$onRender(
 			Map<Identifier, Collection<String>> instance,
 			Operation<Collection<String>> original
