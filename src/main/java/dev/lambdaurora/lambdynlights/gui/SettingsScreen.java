@@ -162,7 +162,6 @@ public class SettingsScreen extends SpruceScreen {
 		}
 
 		this.tabbedWidget = new SpruceTabbedWidget(Position.origin(), this.width, this.height - 40, this.title.copy(), Math.max(100, this.width / 8));
-		this.tabbedWidget.getList().setBackground(RandomPrideFlagBackground.random());
 		this.tabbedWidget.addTabEntry(Component.translatable("lambdynlights.menu.tabs.general"), null,
 				this.tabContainerBuilder(this::buildGeneralTab)
 		);

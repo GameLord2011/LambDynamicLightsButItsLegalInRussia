@@ -153,8 +153,6 @@ dependencies {
 	implementation(libs.nightconfig.toml)
 	implementation(libs.spruceui)
 	include(libs.spruceui)
-	implementation(libs.pridelib)
-	include(libs.pridelib)
 
 	compileOnly(libs.modmenu) {
 		this.isTransitive = false
@@ -173,6 +171,45 @@ dependencies {
 
 	"neoforgeCompileOnly"(libs.neoforge.loader)
 	"neoforgeImplementation"(sourceSets.main.get().output)
+
+	//region Mojmap
+	"mojmapInclude"(project(":api", configuration = "mojmapRuntimeElements"))
+	"mojmapApi"(project(":api")) {
+		attributes {
+			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
+		}
+	}
+	"mojmapImplementation"(libs.yumi.mc.foundation) {
+		attributes {
+			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
+		}
+	}
+	"mojmapInclude"(libs.yumi.mc.foundation) {
+		attributes {
+			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
+		}
+	}
+	"mojmapImplementation"(libs.spruceui) {
+		attributes {
+			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
+		}
+	}
+	"mojmapInclude"(libs.spruceui) {
+		attributes {
+			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
+		}
+	}
+	"mojmapImplementation"(libs.pridelib) {
+		attributes {
+			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
+		}
+	}
+	"mojmapInclude"(libs.pridelib) {
+		attributes {
+			attribute(MappingVariant.ATTRIBUTE, objects.named(MappingVariant.MOJMAP))
+		}
+	}
+	//endregion
 }
 
 loom.runs.getByName("client") {
