@@ -10,7 +10,6 @@
 		"DebugScreenOverlayMixin",
 		"EntityRendererMixin",
 		"EntityTypeMixin",
-		"GuiMixin",
 		"LevelRendererAccessor",
 		"MinecraftClientMixin",
 		"OptionsMixin",
