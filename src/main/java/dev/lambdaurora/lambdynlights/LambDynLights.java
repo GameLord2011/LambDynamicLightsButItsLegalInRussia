@@ -25,7 +25,6 @@ import dev.lambdaurora.lambdynlights.engine.source.DeferredDynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.DynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSource;
 import dev.lambdaurora.lambdynlights.engine.source.EntityDynamicLightSourceBehavior;
-import dev.lambdaurora.lambdynlights.gui.DevModeGui;
 import dev.lambdaurora.lambdynlights.platform.Platform;
 import dev.lambdaurora.lambdynlights.resource.LightSourceLoader;
 import dev.lambdaurora.lambdynlights.resource.entity.EntityLightSources;
@@ -126,7 +125,6 @@ public class LambDynLights implements ClientModInitializer, DynamicLightsContext
 		log(LOGGER, "Initializing LambDynamicLights...");
 
 		this.config.load();
-		DevModeGui.init();
 
 		CrashReportEvents.CREATE.register((report) -> {
 			var category = report.addCategory("Dynamic Lighting", 0);
