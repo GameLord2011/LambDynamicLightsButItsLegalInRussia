@@ -36,11 +36,6 @@ public final class LambDynLightsConstants {
 	public static final String VERSION = MOD_CONTAINER.getVersionString();
 
 	/**
-	 * The unsupported development mode text.
-	 */
-	public static final String DEV_MODE_OVERLAY_TEXT = "[LambDynamicLights Dev Version (Unsupported)]";
-
-	/**
 	 * `true` if error logging should be forced even if they are silenced, or `false` otherwise.
 	 */
 	public static final boolean FORCE_LOG_ERRORS = TriState.fromProperty("lambdynamiclights.resource.force_log_errors")

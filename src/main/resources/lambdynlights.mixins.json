@@ -7,7 +7,6 @@
 		"BrightnessGetterMixin",
 		"ClientLevelMixin",
 		"DebugRendererMixin",
-		"DebugScreenOverlayMixin",
 		"EntityRendererMixin",
 		"EntityTypeMixin",
 		"LevelRendererAccessor",
